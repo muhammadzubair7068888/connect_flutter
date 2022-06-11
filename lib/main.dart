@@ -15,12 +15,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        //   errorColor: Colors.red,
-        colorScheme:
-            ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")),
-      ),
-      home: SignInScreen(),
+      // theme: ThemeData(
+      //     errorColor: Colors.red,
+      //   colorScheme:
+      //       ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")
+      //       ),
+      // ),
+      home: WelcomeScreen(),
     );
   }
 }
