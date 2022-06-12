@@ -1,3 +1,4 @@
+import 'package:connect/screens/profile_screen.dart';
 import 'package:connect/screens/signIn_screen.dart';
 import 'package:connect/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // theme: ThemeData(
-      //     errorColor: Colors.red,
-      //   colorScheme:
-      //       ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")
-      //       ),
-      // ),
+      theme: ThemeData(
+        errorColor: Colors.red,
+        colorScheme:
+            ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")),
+      ),
       home: WelcomeScreen(),
     );
   }
