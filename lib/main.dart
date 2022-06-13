@@ -1,7 +1,7 @@
-import 'package:connect/screens/signIn_screen.dart';
-import 'package:connect/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import 'screens/dashboard_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,11 +16,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        //   errorColor: Colors.red,
+        errorColor: Colors.redAccent,
         colorScheme:
             ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")),
       ),
-      home: SignInScreen(),
+      home: const DashboardScreen(),
     );
   }
 }

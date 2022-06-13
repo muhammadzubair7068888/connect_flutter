@@ -11,25 +11,26 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
-    bool _isObscure = false;
+    bool isObscure = false;
     return Scaffold(
-        backgroundColor: HexColor("#30CED9"),
-        appBar: AppBar(
-          elevation: 0.0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () {},
-          ),
+      backgroundColor: HexColor("#30CED9"),
+      appBar: AppBar(
+        elevation: 0.0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {},
         ),
-        body: Stack(children: [
+      ),
+      body: Stack(
+        children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30))),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0),
             child: Text(
               "Sign in",
@@ -41,44 +42,40 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  child: TextField(
-                      decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    labelText: 'Entre your email',
-                    prefixIcon: Icon(Icons.mail),
-                  )),
-                ),
-                SizedBox(
+                TextField(
+                    decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  labelText: 'Entre your email',
+                  prefixIcon: const Icon(Icons.mail),
+                )),
+                const SizedBox(
                   height: 20,
                 ),
-                Container(
-                  child: TextField(
-                      obscureText: !_isObscure,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isObscure
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isObscure = !_isObscure;
-                              });
-                            },
-                          ))),
-
+                TextField(
+                  obscureText: !isObscure,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    labelText: 'Password',
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        isObscure ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isObscure = !isObscure;
+                        });
+                      },
+                    ),
+                  ),
                 )
-               
               ],
             ),
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }
