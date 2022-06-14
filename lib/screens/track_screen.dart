@@ -22,36 +22,16 @@ class _HistoryState extends State<History> {
           backgroundColor: HexColor("#F6F6F6"),
           leading: Icon(Icons.arrow_back_ios),
           actions: [
-            Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                        child: Container(
-                      width: MediaQuery.of(context).size.width * 0.225,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text("Track"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text("Date"),
-                          ),
-                          Container(
-                            child: TextField(
-                                decoration: InputDecoration(
-                              hintText: "$_dateTime",
-                            )),
-                          )
-                        ],
-                      ),
-                    ))
-                  ],
-                  offset: Offset(0, 50),
-                ))
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => IconScreen()));
+                });
+              },
+              icon: Icon(Icons.filter_list),
+              iconSize: 25,
+            ),
           ],
         ),
         body: SingleChildScrollView(
