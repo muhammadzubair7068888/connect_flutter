@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:intl/intl.dart';
 
 class History extends StatefulWidget {
   const History({Key? key}) : super(key: key);
@@ -10,6 +11,8 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
+  DateTime _dateTime = DateTime.now();
+  DateFormat _format = DateFormat('MM//dd/yyyy');
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -21,9 +24,35 @@ class _HistoryState extends State<History> {
           leading: Icon(Icons.arrow_back_ios),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Icon(Icons.menu_sharp),
-            )
+                padding: const EdgeInsets.only(right: 8.0),
+                child: PopupMenuButton(
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                        child: Container(
+                      width: MediaQuery.of(context).size.width * 0.225,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text("Track"),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text("Date"),
+                          ),
+                          Container(
+                            child: TextField(
+                                decoration: InputDecoration(
+                              hintText: "$_dateTime",
+                            )),
+                          )
+                        ],
+                      ),
+                    ))
+                  ],
+                  offset: Offset(0, 50),
+                ))
           ],
         ),
         body: SingleChildScrollView(
