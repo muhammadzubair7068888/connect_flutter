@@ -9,6 +9,7 @@ class VelocityAndTrack extends StatefulWidget {
 }
 
 class _VelocityAndTrackState extends State<VelocityAndTrack> {
+  Color color = Colors.white;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,67 +30,61 @@ class _VelocityAndTrackState extends State<VelocityAndTrack> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 15.0, left: 8, right: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 50,
-                child: Card(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Velocity ",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20),
+            padding: const EdgeInsets.only(top: 15.0, left: 8, right: 8),
+            child: Column(
+              children: [
+                Card(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size.fromHeight(50),
+                          primary: Colors.white),
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Velocity",
+                            style: TextStyle(
+                              color: HexColor("#161717"),
                             ),
-                            WidgetSpan(
-                              child: Icon(Icons.arrow_forward_ios, size: 24),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: SizedBox(
-                  height: 50,
-                  child: Card(
-                      color: HexColor("#30CED9"),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Track ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 20),
-                              ),
-                              WidgetSpan(
-                                child: Icon(Icons.arrow_forward_ios, size: 24),
-                              ),
-                            ],
                           ),
-                        ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
+                          )
+                        ],
                       )),
                 ),
-              ),
-            ],
-          ),
-        ));
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Card(
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size.fromHeight(50),
+                            primary: Colors.white),
+                        onPressed: () {
+                          setState(() {
+                            HexColor("#30CED9");
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Track",
+                              style: TextStyle(
+                                color: HexColor("#161717"),
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                            )
+                          ],
+                        )),
+                  ),
+                ),
+              ],
+            )));
   }
 }

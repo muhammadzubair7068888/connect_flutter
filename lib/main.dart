@@ -25,6 +25,6 @@ class MyApp extends StatelessWidget {
           colorScheme:
               ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")),
         ),
-        home: History());
+        home: VelocityAndTrack());
   }
 }
