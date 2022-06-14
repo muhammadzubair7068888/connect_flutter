@@ -1,4 +1,3 @@
-import 'package:connect/screens/signIn_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -13,36 +12,44 @@ class _TermAndConditionState extends State<TermAndCondition> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: HexColor("#FCFCFF"),
+      appBar: AppBar(
+        elevation: 0.0,
         backgroundColor: HexColor("#FCFCFF"),
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: HexColor("#FCFCFF"),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            color: HexColor("#1C1C1C"),
-          ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          color: HexColor("#1C1C1C"),
         ),
-        body: Column(children: [
+      ),
+      body: Column(
+        children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 25),
             child: RichText(
-                text: TextSpan(children: [
-              TextSpan(
-                  text: "Terms &",
-                  style: TextStyle(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Terms &",
+                    style: TextStyle(
                       color: HexColor("#1C1C1C"),
                       fontWeight: FontWeight.w700,
-                      fontSize: 25)),
-              TextSpan(
-                  text: "  Conditions",
-                  style: TextStyle(
+                      fontSize: 25,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "  Conditions",
+                    style: TextStyle(
                       color: HexColor("#30CED9"),
                       fontWeight: FontWeight.w700,
-                      fontSize: 25)),
-            ])),
+                      fontSize: 25,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 10, right: 30),
@@ -57,17 +64,20 @@ class _TermAndConditionState extends State<TermAndCondition> {
             padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
             child: SizedBox(
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shadowColor: Colors.green,
-                    minimumSize: Size.fromHeight(60),
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    "I Agree",
-                    style: TextStyle(fontSize: 20.0),
-                  )),
+                style: ElevatedButton.styleFrom(
+                  shadowColor: Colors.green,
+                  minimumSize: const Size.fromHeight(60),
+                ),
+                onPressed: () {},
+                child: const Text(
+                  "I Agree",
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
             ),
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }

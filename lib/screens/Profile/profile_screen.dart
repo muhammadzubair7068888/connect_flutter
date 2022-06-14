@@ -9,7 +9,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  @override
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -90,14 +89,14 @@ class _formFielfState extends State<formFielf> {
                               radius: 18,
                               backgroundColor: Colors.white70,
                               child: IconButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.camera_alt,
                                   color: Colors.black,
                                 ),
                                 onPressed: () {},
                               ),
                             )
-                          : CircleAvatar(
+                          : const CircleAvatar(
                               backgroundColor: Colors.transparent,
                             ),
                     )
@@ -130,7 +129,7 @@ class _formFielfState extends State<formFielf> {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: 120,
                   child: TextField(
                     enabled: btnPress,
@@ -151,20 +150,18 @@ class _formFielfState extends State<formFielf> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
-              child: Container(
-                child: TextField(
-                  enabled: btnPress,
-                  controller: TextEditingController()..text = '$email',
-                  onChanged: (eml) {
-                    email = eml;
-                  },
-                  decoration: InputDecoration(
-                      isCollapsed: true,
-                      contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0)),
-                      labelText: "Email"),
-                ),
+              child: TextField(
+                enabled: btnPress,
+                controller: TextEditingController()..text = '$email',
+                onChanged: (eml) {
+                  email = eml;
+                },
+                decoration: InputDecoration(
+                    isCollapsed: true,
+                    contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7.0)),
+                    labelText: "Email"),
               ),
             ),
             Padding(
@@ -172,7 +169,7 @@ class _formFielfState extends State<formFielf> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 140,
                     child: TextField(
                       enabled: btnPress,
@@ -188,7 +185,7 @@ class _formFielfState extends State<formFielf> {
                           labelText: "Starting Weight"),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: 140,
                     child: TextField(
                       enabled: btnPress,
@@ -198,7 +195,8 @@ class _formFielfState extends State<formFielf> {
                       },
                       decoration: InputDecoration(
                           isCollapsed: true,
-                          contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(7.0)),
                           labelText: "Handedness"),
@@ -212,7 +210,7 @@ class _formFielfState extends State<formFielf> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 140,
                     child: TextField(
                       enabled: btnPress,
@@ -222,13 +220,14 @@ class _formFielfState extends State<formFielf> {
                       },
                       decoration: InputDecoration(
                           isCollapsed: true,
-                          contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(7.0)),
                           labelText: "Age"),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: 140,
                     child: TextField(
                       enabled: btnPress,
@@ -238,7 +237,8 @@ class _formFielfState extends State<formFielf> {
                       },
                       decoration: InputDecoration(
                           isCollapsed: true,
-                          contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(7.0)),
                           labelText: "School"),
@@ -249,20 +249,18 @@ class _formFielfState extends State<formFielf> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
-              child: Container(
-                child: TextField(
-                  enabled: btnPress,
-                  controller: TextEditingController()..text = '$lvl',
-                  onChanged: (level) {
-                    lvl = level;
-                  },
-                  decoration: InputDecoration(
-                      isCollapsed: true,
-                      contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0)),
-                      labelText: "Level"),
-                ),
+              child: TextField(
+                enabled: btnPress,
+                controller: TextEditingController()..text = '$lvl',
+                onChanged: (level) {
+                  lvl = level;
+                },
+                decoration: InputDecoration(
+                    isCollapsed: true,
+                    contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7.0)),
+                    labelText: "Level"),
               ),
             ),
             Padding(
@@ -271,16 +269,19 @@ class _formFielfState extends State<formFielf> {
               child: SizedBox(
                 width: 180,
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size.fromHeight(50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                    onPressed: () {
-                      setState(() {
-                        btnPress = !btnPress;
-                      });
-                    },
-                    child: btnPress ? Text("Submit") : Text("Edit Profile")),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0))),
+                  onPressed: () {
+                    setState(() {
+                      btnPress = !btnPress;
+                    });
+                  },
+                  child: btnPress
+                      ? const Text("Submit")
+                      : const Text("Edit Profile"),
+                ),
               ),
             ),
           ],

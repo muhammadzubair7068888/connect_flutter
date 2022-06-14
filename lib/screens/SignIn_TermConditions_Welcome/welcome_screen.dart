@@ -1,6 +1,7 @@
-import 'package:connect/screens/signIn_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import 'signIn_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -34,11 +35,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Center(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                     height: 123,
                     width: 147,
                     child: Image(image: AssetImage("images/logo.png"))),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 25.0),
                   child: Text("CONNECT",
                       style: TextStyle(
@@ -64,7 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             fontSize: 27)),
                   ])),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 ),
                 Padding(
@@ -72,20 +73,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       vertical: 50.0, horizontal: 30.0),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        minimumSize: Size.fromHeight(50),
+                        minimumSize: const Size.fromHeight(50),
                         primary: HexColor("#30CED9"),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0))),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignInScreen()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignInScreen(),
+                        ),
+                      );
                     },
-                    child: Text("Sign In",
-                        style: TextStyle(
-                          fontSize: 20,
-                        )),
+                    child: const Text(
+                      "Sign In",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
                   ),
                 ),
               ],

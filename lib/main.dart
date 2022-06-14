@@ -1,10 +1,6 @@
-import 'package:connect/screens/profile_screen.dart';
-import 'package:connect/screens/signIn_screen.dart';
-import 'package:connect/screens/welcome_screen.dart';
+import 'package:connect/screens/SignIn_TermConditions_Welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-
-import 'screens/dashboard_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme:
             ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")),
       ),
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }
