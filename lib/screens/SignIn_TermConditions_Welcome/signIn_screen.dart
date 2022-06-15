@@ -59,7 +59,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     TextField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         labelText: 'Entre your email',
                         prefixIcon: const Icon(Icons.mail),
                       ),
