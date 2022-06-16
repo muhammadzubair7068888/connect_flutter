@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:connect/Info/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -10,8 +12,13 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-  bool isPressed = false;
-
+  bool trVel = true;
+  bool File = true;
+  bool EdtAsmt = true;
+  bool question = true;
+  bool users = true;
+  bool profile = true;
+  bool setting = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,14 +38,16 @@ class _InfoState extends State<Info> {
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
+                primary: trVel ? Colors.white : HexColor("#30CED9"),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
                 minimumSize: Size.fromHeight(50),
               ),
               onPressed: () {
                 setState(
-                  () {},
+                  () {
+                    trVel = !trVel;
+                  },
                 );
               },
               child: Row(
@@ -61,14 +70,16 @@ class _InfoState extends State<Info> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
+                  primary: File ? Colors.white : HexColor("#30CED9"),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
                   minimumSize: Size.fromHeight(50),
                 ),
                 onPressed: () {
                   setState(
-                    () {},
+                    () {
+                      File = !File;
+                    },
                   );
                 },
                 child: Row(
@@ -92,14 +103,16 @@ class _InfoState extends State<Info> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
+                  primary: EdtAsmt ? Colors.white : HexColor("#30CED9"),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
                   minimumSize: Size.fromHeight(47),
                 ),
                 onPressed: () {
                   setState(
-                    () {},
+                    () {
+                      EdtAsmt = !EdtAsmt;
+                    },
                   );
                 },
                 child: Row(
@@ -123,14 +136,16 @@ class _InfoState extends State<Info> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
+                  primary: question ? Colors.white : HexColor("#30CED9"),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
                   minimumSize: Size.fromHeight(50),
                 ),
                 onPressed: () {
                   setState(
-                    () {},
+                    () {
+                      question = !question;
+                    },
                   );
                 },
                 child: Row(
@@ -154,14 +169,16 @@ class _InfoState extends State<Info> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
+                  primary: users ? Colors.white : HexColor("#30CED9"),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
                   minimumSize: Size.fromHeight(50),
                 ),
                 onPressed: () {
                   setState(
-                    () {},
+                    () {
+                      users = !users;
+                    },
                   );
                 },
                 child: Row(
@@ -185,12 +202,16 @@ class _InfoState extends State<Info> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
+                  primary: profile ? Colors.white : HexColor("#30CED9"),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
-                  minimumSize: Size.fromHeight(50),
+                  minimumSize: const Size.fromHeight(50),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    profile = !profile;
+                  });
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -212,7 +233,7 @@ class _InfoState extends State<Info> {
               padding: const EdgeInsets.only(top: 8.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
+                  primary: setting ? Colors.white : HexColor("#30CED9"),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0)),
                   minimumSize: Size.fromHeight(50),
@@ -220,6 +241,7 @@ class _InfoState extends State<Info> {
                 onPressed: () {
                   setState(
                     () {
+                      setting = !setting;
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Setting()));
                     },

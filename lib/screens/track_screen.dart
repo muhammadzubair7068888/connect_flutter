@@ -59,7 +59,7 @@ class _HistoryState extends State<History> {
                       child: Container(
                         width: 150,
                         height: 35,
-                        child: TextField(
+                        child: const TextField(
                             decoration: InputDecoration(
                           prefixIcon: Icon(Icons.search),
                           isCollapsed: true,
