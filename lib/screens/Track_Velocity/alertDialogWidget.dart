@@ -41,3 +41,43 @@ class _AlertDialogWidgetState extends State<AlertDialogWidget> {
     );
   }
 }
+
+class AlertDialogueCopy extends StatefulWidget {
+  const AlertDialogueCopy({Key? key}) : super(key: key);
+
+  @override
+  State<AlertDialogueCopy> createState() => _AlertDialogueCopyState();
+}
+
+class _AlertDialogueCopyState extends State<AlertDialogueCopy> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      actionsAlignment: MainAxisAlignment.center,
+      title: Column(
+        children: const [
+          Icon(
+            Icons.file_copy,
+            size: 30,
+            color: Colors.red,
+          )
+        ],
+      ),
+      content: const Text(
+        "Are you sure want to duplicate this?",
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {},
+          child: const Text("Yes"),
+        ),
+        ElevatedButton(
+          onPressed: () {},
+          child: const Text("No"),
+        ),
+      ],
+      elevation: 24,
+    );
+  }
+}

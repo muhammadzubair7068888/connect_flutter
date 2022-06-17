@@ -1,4 +1,3 @@
-import 'dart:collection';
 
 import 'package:connect/Info/setting_screen.dart';
 import 'package:flutter/material.dart';

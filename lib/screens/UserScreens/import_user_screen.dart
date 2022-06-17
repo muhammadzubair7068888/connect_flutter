@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class ImportExercise extends StatefulWidget {
-  const ImportExercise({Key? key}) : super(key: key);
+class ImportUser extends StatefulWidget {
+  const ImportUser({Key? key}) : super(key: key);
 
   @override
-  State<ImportExercise> createState() => _ImportExerciseState();
+  State<ImportUser> createState() => _ImportUserState();
 }
 
-class _ImportExerciseState extends State<ImportExercise> {
+class _ImportUserState extends State<ImportUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,7 @@ class _ImportExerciseState extends State<ImportExercise> {
         foregroundColor: Colors.black,
         backgroundColor: HexColor("#F6F6F6"),
         title: const Text(
-          "Exercises",
+          "User",
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
         ),
         leading: IconButton(
@@ -30,15 +30,15 @@ class _ImportExerciseState extends State<ImportExercise> {
         children: [
           const SizedBox(height: 50),
           const Padding(
-            padding: EdgeInsets.only(left: 12.0),
+            padding: EdgeInsets.only(left: 25.0),
             child: Text(
-              "Import Exercises",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              "Import User",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
-              top: 18.0,
+              top: 20.0,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
