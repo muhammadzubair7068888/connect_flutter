@@ -1,3 +1,9 @@
+import 'package:connect/screens/Exercises/exercises_type_screen.dart';
+import 'package:connect/screens/Questionieries/questioneries_screen.dart';
+import 'package:connect/screens/Track_Velocity/track_screen.dart';
+import 'package:connect/screens/Track_Velocity/velocity_screen.dart';
+import 'package:connect/screens/UserScreens/user_detail_screen.dart';
+import 'package:connect/screens/leaderboard/leader_board_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'screens/SignIn_TermConditions_Welcome/welcome_screen.dart';
