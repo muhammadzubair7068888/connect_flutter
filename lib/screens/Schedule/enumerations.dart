@@ -1,0 +1,3 @@
+enum CalendarView {
+  month,
+}

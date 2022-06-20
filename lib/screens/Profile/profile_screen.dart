@@ -1,3 +1,4 @@
+import 'package:connect/screens/Dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -269,19 +270,27 @@ class _formFielfState extends State<formFielf> {
               child: SizedBox(
                 width: 180,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0))),
-                  onPressed: () {
-                    setState(() {
-                      btnPress = !btnPress;
-                    });
-                  },
-                  child: btnPress
-                      ? const Text("Submit")
-                      : const Text("Edit Profile"),
-                ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0))),
+                    onPressed: () {
+                      // setState(() {
+                      //   btnPress = !btnPress;
+                      // });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DashboardScreen(),
+                        ),
+                      );
+                    },
+                    child:
+                        //  btnPress
+                        // ?
+                        const Text("Submit")
+                    // : const Text("Edit Profile"),
+                    ),
               ),
             ),
           ],

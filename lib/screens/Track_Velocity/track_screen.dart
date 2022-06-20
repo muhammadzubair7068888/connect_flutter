@@ -19,11 +19,10 @@ class TrackScreen extends StatefulWidget {
 
 class _TrackScreenState extends State<TrackScreen> {
   int? _dropdownValue = 1;
+  DateTime dateTime = DateTime.now();
   bool filter = false;
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.now();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(

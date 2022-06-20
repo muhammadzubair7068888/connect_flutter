@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import 'view_screen.dart';
+
 class NewExercise extends StatefulWidget {
   const NewExercise({Key? key}) : super(key: key);
 
@@ -272,7 +274,12 @@ class _NewExerciseState extends State<NewExercise> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewScreen()));
+                        },
                         child: const Text("Submit")),
                   ),
                 ),

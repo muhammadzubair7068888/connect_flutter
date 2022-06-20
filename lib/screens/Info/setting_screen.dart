@@ -1,6 +1,8 @@
-import 'package:connect/Info/info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import '../BottomNavBar/bottomNavBar_screen.dart';
+import 'info_screen.dart';
 
 class Setting extends StatefulWidget {
   const Setting({Key? key}) : super(key: key);
@@ -42,9 +44,11 @@ class _SettingState extends State<Setting> {
               onPressed: () {
                 setState(() {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const GeneralSetting()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GeneralSetting(),
+                    ),
+                  );
                 });
               },
               child: Row(
@@ -102,7 +106,7 @@ class _SettingState extends State<Setting> {
           ],
         ),
       ),
-      bottomNavigationBar: const bottomNavigaion(),
+      // bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
@@ -205,7 +209,7 @@ class _GeneralSettingState extends State<GeneralSetting> {
           ),
         ],
       ),
-      bottomNavigationBar: const bottomNavigaion(),
+      // bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
@@ -583,7 +587,7 @@ class _DashBoardGraphState extends State<DashBoardGraph> {
           ]),
         ),
       ),
-      bottomNavigationBar: const bottomNavigaion(),
+      // bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

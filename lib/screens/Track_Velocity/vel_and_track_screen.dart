@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import 'track_screen.dart';
+import 'velocity_screen.dart';
+
 class VelocityAndTrack extends StatefulWidget {
   const VelocityAndTrack({Key? key}) : super(key: key);
 
@@ -38,7 +41,13 @@ class _VelocityAndTrackState extends State<VelocityAndTrack> {
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
                       primary: Colors.white),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VelocityScreen()));
+                    print("object");
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -63,9 +72,14 @@ class _VelocityAndTrackState extends State<VelocityAndTrack> {
                         minimumSize: const Size.fromHeight(50),
                         primary: Colors.white),
                     onPressed: () {
-                      setState(() {
-                        HexColor("#30CED9");
-                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TrackScreen()));
+                      print("object");
+                      // setState(() {
+                      //   HexColor("#30CED9");
+                      // });
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
