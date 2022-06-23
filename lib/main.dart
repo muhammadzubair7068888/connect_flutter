@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'screens/Chat/chatList_screen.dart';
 import 'screens/Chat/chat_screen.dart';
@@ -25,11 +26,12 @@ class _MyAppState extends State<MyApp> {
         primaryColor: HexColor("#30CED9"),
         splashColor: HexColor("#30CED9"),
         scaffoldBackgroundColor: HexColor("#FFFFFF"),
-        errorColor: Colors.red,
+        errorColor: Colors.redAccent,
         colorScheme:
             ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")),
       ),
       home: const WelcomeScreen(),
+      builder: EasyLoading.init(),
     );
   }
 }

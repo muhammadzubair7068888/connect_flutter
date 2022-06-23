@@ -10,7 +10,11 @@ import '../UserScreens/user_detail_screen.dart';
 import '../leaderboard/leader_board_screen.dart';
 
 class Info extends StatefulWidget {
-  const Info({Key? key}) : super(key: key);
+  final String role;
+  const Info({
+    Key? key,
+    required this.role,
+  }) : super(key: key);
 
   @override
   State<Info> createState() => _InfoState();
@@ -123,39 +127,43 @@ class _InfoState extends State<Info> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Questioneries(),
-                    ),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Questionnaire",
-                      style: TextStyle(
-                        color: HexColor("#161717"),
+            SizedBox(
+              child: widget.role != "user"
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Questioneries(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Questionnaire",
+                              style: TextStyle(
+                                color: HexColor("#161717"),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
                     )
-                  ],
-                ),
-              ),
+                  : null,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -191,41 +199,41 @@ class _InfoState extends State<Info> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Profile",
-                      style: TextStyle(
-                        color: HexColor("#161717"),
-                      ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
-                    )
-                  ],
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 8.0),
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(
+            //       primary: Colors.white,
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(10.0),
+            //       ),
+            //       minimumSize: const Size.fromHeight(50),
+            //     ),
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => const ProfileScreen(),
+            //         ),
+            //       );
+            //     },
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //       children: [
+            //         Text(
+            //           "Profile",
+            //           style: TextStyle(
+            //             color: HexColor("#161717"),
+            //           ),
+            //         ),
+            //         const Icon(
+            //           Icons.arrow_forward_ios,
+            //           color: Colors.black,
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: ElevatedButton(

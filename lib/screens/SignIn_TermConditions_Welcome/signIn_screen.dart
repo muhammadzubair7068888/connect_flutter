@@ -1,6 +1,12 @@
 // ignore: file_names
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:hexcolor/hexcolor.dart';
+import '../../Globals/globals.dart';
 import '../BottomNavBar/bottomNavBar_screen.dart';
 import 'term_and_condition.dart';
 
@@ -12,9 +18,79 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final storage = const FlutterSecureStorage();
   bool _isObscure = true;
   bool isChecked = false;
+  String? email;
+  String? password;
   final GlobalKey<FormState> _form = GlobalKey();
+
+  void _navigate(String role) {
+    Navigator.pushAndRemoveUntil<void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => BottomNavBar(
+          role: role,
+        ),
+      ),
+      (route) => false,
+    );
+  }
+
+  Future signIn() async {
+    await EasyLoading.show(
+      status: 'Processing...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    var uri = Uri.parse('${baseURL}signin');
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['email'] = email.toString();
+    request.fields['password'] = password.toString();
+
+    var response = await request.send();
+    var responseDecode = await http.Response.fromStream(response);
+    // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+    final result = jsonDecode(responseDecode.body);
+    if (response.statusCode == 200) {
+      await storage.write(key: "token", value: result["token"]);
+      await storage.write(key: "role", value: result["data"]["role"]);
+      await storage.write(key: "id", value: result["data"]["id"].toString());
+      _navigate(result["data"]["role"]);
+      await EasyLoading.dismiss();
+    } else if (response.statusCode == 203) {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Incorrect email or password'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } else {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +143,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            labelText: 'Entre your email',
+                            labelText: 'Enter your email',
                             prefixIcon: const Icon(Icons.mail),
                           ),
                           validator: (value) {
@@ -77,7 +153,11 @@ class _SignInScreenState extends State<SignInScreen> {
 
                             return null;
                           },
-                          onSaved: (value) {},
+                          onChanged: (value) {
+                            setState(() {
+                              email = value;
+                            });
+                          },
                         ),
                         const SizedBox(
                           height: 20,
@@ -108,7 +188,11 @@ class _SignInScreenState extends State<SignInScreen> {
 
                             return null;
                           },
-                          onSaved: (value) {},
+                          onChanged: (value) {
+                            setState(() {
+                              password = value;
+                            });
+                          },
                         ),
                         const SizedBox(
                           height: 10,
@@ -154,13 +238,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 if (!(_form.currentState?.validate() ?? true)) {
                                   return;
                                 }
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const BottomNavBar(),
-                                    ),
-                                    (route) => false);
+                                signIn();
                               },
                               child: const Text(
                                 "Sign In",
