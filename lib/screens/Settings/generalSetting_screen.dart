@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class ImportUser extends StatefulWidget {
-  const ImportUser({Key? key}) : super(key: key);
+class GeneralSettingScreen extends StatefulWidget {
+  const GeneralSettingScreen({Key? key}) : super(key: key);
 
   @override
-  State<ImportUser> createState() => _ImportUserState();
+  State<GeneralSettingScreen> createState() => _GeneralSettingScreenState();
 }
 
-class _ImportUserState extends State<ImportUser> {
+class _GeneralSettingScreenState extends State<GeneralSettingScreen> {
+  bool weight = true;
   @override
   Widget build(BuildContext context) {
+    bool switchBtn = true;
     return Scaffold(
       appBar: AppBar(
         shape: const RoundedRectangleBorder(
@@ -20,7 +22,7 @@ class _ImportUserState extends State<ImportUser> {
         ),
         centerTitle: true,
         title: const Text(
-          "User",
+          "Settings",
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
         ),
         leading: IconButton(
@@ -33,17 +35,17 @@ class _ImportUserState extends State<ImportUser> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           const Padding(
-            padding: EdgeInsets.only(left: 25.0),
+            padding: EdgeInsets.only(left: 10),
             child: Text(
-              "Import User",
+              "Custom Logo",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
-              top: 20.0,
+              top: 18.0,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -68,17 +70,37 @@ class _ImportUserState extends State<ImportUser> {
             ),
           ),
           const SizedBox(
-            height: 30,
+            height: 20,
           ),
           Center(
             child: ElevatedButton(
               onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0))),
-              child: const Text("Upload"),
+              child: const Text("Upload "),
             ),
-          )
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              side: const BorderSide(
+                color: Color.fromARGB(255, 199, 184, 184),
+              ),
+              primary: HexColor("#FFFFFF"),
+            ),
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text("Weight"),
+              activeColor: HexColor("#30CED9"),
+              onChanged: (value) => {
+                setState(
+                  () {
+                    weight = value;
+                  },
+                )
+              },
+              value: weight,
+            ),
+          ),
         ],
       ),
     );

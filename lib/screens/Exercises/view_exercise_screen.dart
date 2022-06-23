@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-class ViewScreen extends StatefulWidget {
-  const ViewScreen({Key? key}) : super(key: key);
+class ViewExerciseScreen extends StatefulWidget {
+  const ViewExerciseScreen({Key? key}) : super(key: key);
 
   @override
-  State<ViewScreen> createState() => _ViewScreenState();
+  State<ViewExerciseScreen> createState() => _ViewExerciseScreenState();
 }
 
-class _ViewScreenState extends State<ViewScreen> {
+class _ViewExerciseScreenState extends State<ViewExerciseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
+          ),
+        ),
         centerTitle: true,
-        foregroundColor: Colors.black,
-        backgroundColor: HexColor("#F6F6F6"),
         title: const Text(
           "View",
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Padding(
@@ -47,7 +52,7 @@ class _ViewScreenState extends State<ViewScreen> {
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
                     " Connection Program",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 15),
                   ),
                 ),
               ],
@@ -65,7 +70,7 @@ class _ViewScreenState extends State<ViewScreen> {
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
                     " Throwing Routine",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 15),
                   ),
                 ),
               ],

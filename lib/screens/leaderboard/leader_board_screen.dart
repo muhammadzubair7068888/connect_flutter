@@ -1,4 +1,3 @@
-import 'package:connect/Info/info_screen.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -17,26 +16,24 @@ class _LeaderBoardState extends State<LeaderBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Colors.black,
-        centerTitle: true,
-        title: const Text(
-          "Leadeboard",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
           ),
         ),
-        backgroundColor: HexColor("#FFFFFF"),
+        centerTitle: true,
+        title: const Text(
+          "Leaderboard",
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+        ),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: HexColor("#02010E"),
-          ),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         actions: [
           IconButton(
-            color: !_filter ? Colors.black : HexColor("#30CED9"),
             icon: const Icon(
               Icons.filter_list,
               size: 28,
@@ -183,11 +180,10 @@ class _LeaderBoardState extends State<LeaderBoard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 18.0, right: 8.0),
-                  child: SizedBox(
-                    height: 35,
-                    width: 170,
+                SizedBox(width: MediaQuery.of(context).size.width * 0.4),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 10, 0),
                     child: TextField(
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.search),
@@ -560,7 +556,6 @@ class _LeaderBoardState extends State<LeaderBoard> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomNavigaion(),
     );
   }
 }

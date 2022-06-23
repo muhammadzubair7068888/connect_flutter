@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:connect/screens/Dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -15,34 +17,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: HexColor("#FFFFFF"),
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: HexColor("#FFFFFF"),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: HexColor("#02010E"),
-            ),
-            onPressed: () {},
+      backgroundColor: HexColor("#FFFFFF"),
+      appBar: AppBar(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  "My Profile",
-                  style: TextStyle(
-                      color: HexColor("#222222"),
-                      fontSize: 30,
-                      fontWeight: FontWeight.w600),
-                ),
-                formFielf(formKey: _formKey)
-              ],
-            ),
+        centerTitle: true,
+        title: const Text(
+          "Profile",
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                "My Profile",
+                style: TextStyle(
+                    color: HexColor("#222222"),
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600),
+              ),
+              formFielf(formKey: _formKey)
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -59,6 +69,7 @@ class formFielf extends StatefulWidget {
   State<formFielf> createState() => _formFielfState();
 }
 
+// ignore: camel_case_types
 class _formFielfState extends State<formFielf> {
   String name = "  Alix";
   String height = " 22454";
@@ -79,7 +90,7 @@ class _formFielfState extends State<formFielf> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: CircleAvatar(
-                backgroundImage: AssetImage("images/profile.png"),
+                backgroundImage: const AssetImage("images/profile.png"),
                 radius: 55,
                 child: Stack(
                   children: [
@@ -110,18 +121,18 @@ class _formFielfState extends State<formFielf> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 18.0),
-                  child: Container(
+                  child: SizedBox(
                     width: 120,
                     child: TextField(
                       enabled: btnPress,
-                      controller: TextEditingController()..text = '$name',
+                      controller: TextEditingController()..text = name,
                       onChanged: (nam) {
                         name = nam;
                       },
                       autofocus: false,
                       decoration: InputDecoration(
                         isCollapsed: true,
-                        contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                         labelText: 'Name',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7.0),
@@ -134,14 +145,14 @@ class _formFielfState extends State<formFielf> {
                   width: 120,
                   child: TextField(
                     enabled: btnPress,
-                    controller: TextEditingController()..text = '$height',
+                    controller: TextEditingController()..text = height,
                     onChanged: (high) {
                       height = high;
                     },
                     decoration: InputDecoration(
                       labelText: "Height",
                       isCollapsed: true,
-                      contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                      contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7.0)),
                     ),
@@ -153,7 +164,7 @@ class _formFielfState extends State<formFielf> {
               padding: const EdgeInsets.only(top: 20.0),
               child: TextField(
                 enabled: btnPress,
-                controller: TextEditingController()..text = '$email',
+                controller: TextEditingController()..text = email,
                 onChanged: (eml) {
                   email = eml;
                 },
@@ -174,13 +185,14 @@ class _formFielfState extends State<formFielf> {
                     width: 140,
                     child: TextField(
                       enabled: btnPress,
-                      controller: TextEditingController()..text = '$strWeight',
+                      controller: TextEditingController()..text = strWeight,
                       onChanged: (weight) {
                         strWeight = weight;
                       },
                       decoration: InputDecoration(
                           isCollapsed: true,
-                          contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(7.0)),
                           labelText: "Starting Weight"),
@@ -190,17 +202,18 @@ class _formFielfState extends State<formFielf> {
                     width: 140,
                     child: TextField(
                       enabled: btnPress,
-                      controller: TextEditingController()..text = '$handedness',
+                      controller: TextEditingController()..text = handedness,
                       onChanged: (hndedness) {
                         handedness = hndedness;
                       },
                       decoration: InputDecoration(
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.0)),
-                          labelText: "Handedness"),
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7.0),
+                        ),
+                        labelText: "Handedness",
+                      ),
                     ),
                   ),
                 ],
@@ -215,7 +228,7 @@ class _formFielfState extends State<formFielf> {
                     width: 140,
                     child: TextField(
                       enabled: btnPress,
-                      controller: TextEditingController()..text = '$age',
+                      controller: TextEditingController()..text = age,
                       onChanged: (Age) {
                         age = Age;
                       },
@@ -224,7 +237,8 @@ class _formFielfState extends State<formFielf> {
                           contentPadding:
                               const EdgeInsets.fromLTRB(5, 10, 5, 10),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.0)),
+                            borderRadius: BorderRadius.circular(7.0),
+                          ),
                           labelText: "Age"),
                     ),
                   ),
@@ -232,7 +246,7 @@ class _formFielfState extends State<formFielf> {
                     width: 140,
                     child: TextField(
                       enabled: btnPress,
-                      controller: TextEditingController()..text = '$Scl',
+                      controller: TextEditingController()..text = Scl,
                       onChanged: (scol) {
                         Scl = scol;
                       },
@@ -241,7 +255,8 @@ class _formFielfState extends State<formFielf> {
                           contentPadding:
                               const EdgeInsets.fromLTRB(5, 10, 5, 10),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.0)),
+                            borderRadius: BorderRadius.circular(7.0),
+                          ),
                           labelText: "School"),
                     ),
                   ),
@@ -252,7 +267,7 @@ class _formFielfState extends State<formFielf> {
               padding: const EdgeInsets.only(top: 20.0),
               child: TextField(
                 enabled: btnPress,
-                controller: TextEditingController()..text = '$lvl',
+                controller: TextEditingController()..text = lvl,
                 onChanged: (level) {
                   lvl = level;
                 },
@@ -260,7 +275,8 @@ class _formFielfState extends State<formFielf> {
                     isCollapsed: true,
                     contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7.0)),
+                      borderRadius: BorderRadius.circular(7.0),
+                    ),
                     labelText: "Level"),
               ),
             ),
@@ -270,27 +286,21 @@ class _formFielfState extends State<formFielf> {
               child: SizedBox(
                 width: 180,
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                    onPressed: () {
-                      // setState(() {
-                      //   btnPress = !btnPress;
-                      // });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DashboardScreen(),
-                        ),
-                      );
-                    },
-                    child:
-                        //  btnPress
-                        // ?
-                        const Text("Submit")
-                    // : const Text("Edit Profile"),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      btnPress = !btnPress;
+                    });
+                  },
+                  child: btnPress
+                      ? const Text("Submit")
+                      : const Text("Edit Profile"),
+                ),
               ),
             ),
           ],

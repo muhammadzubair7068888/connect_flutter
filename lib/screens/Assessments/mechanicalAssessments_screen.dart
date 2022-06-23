@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../Exercises/shareDialogWidget.dart';
 import '../Track_Velocity/alertDialogWidget.dart';
 
 class MechanicalAssessments extends StatefulWidget {
@@ -194,6 +195,9 @@ class _MechanicalAssessmentsState extends State<MechanicalAssessments> {
                 DataColumn(
                   label: Text("Opportunity"),
                 ),
+                DataColumn(
+                  label: Text("  Action"),
+                ),
               ],
               rows: () {
                 rows.clear();
@@ -238,6 +242,43 @@ class _MechanicalAssessmentsState extends State<MechanicalAssessments> {
                               () => groupValue[i] = 3,
                             ),
                             textPosition: RadioButtonTextPosition.right,
+                          ),
+                        ),
+                        DataCell(
+                          Wrap(
+                            alignment: WrapAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 25,
+                                child: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  color: Colors.red,
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const AlertDialogWidget();
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: 25,
+                                child: IconButton(
+                                  icon: const Icon(Icons.share_outlined),
+                                  color: HexColor("#30CED9"),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const ShareDialogWidget();
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],

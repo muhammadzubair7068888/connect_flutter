@@ -12,7 +12,6 @@ class _AddUserState extends State<AddUser> {
   int? groupvalue;
   @override
   void initState() {
-    // TODO: implement initState
     groupvalue = 0;
   }
 
@@ -27,19 +26,21 @@ class _AddUserState extends State<AddUser> {
     return Scaffold(
       backgroundColor: HexColor("#FFFFFF"),
       appBar: AppBar(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
+          ),
+        ),
         centerTitle: true,
         title: const Text(
           "User",
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 22, color: Colors.black),
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
         ),
-        backgroundColor: HexColor("#FFFFFF"),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: HexColor("#02010E"),
-          ),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -47,15 +48,21 @@ class _AddUserState extends State<AddUser> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(
+              height: 20,
+            ),
             const Padding(
-              padding: EdgeInsets.only(top: 18.0, left: 20),
+              padding: EdgeInsets.only(left: 10),
               child: Text(
                 "Add New User",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 25),
+              padding: const EdgeInsets.only(left: 10),
               child: CircleAvatar(
                 backgroundImage: const AssetImage("images/profile.png"),
                 radius: 50,
@@ -79,289 +86,214 @@ class _AddUserState extends State<AddUser> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12),
-              child: Row(
-                children: const [
-                  Text("Name",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  SizedBox(
-                    width: 125,
-                  ),
-                  Text("Email",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                ],
-              ),
+            const SizedBox(
+              height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 150,
-                      child: TextField(
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          hintText: 'Name',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.0),
-                          ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        labelText: 'Name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 155,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "bw@cp.com",
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.0)),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 8.0),
-              child: Row(
-                children: const [
-                  Text("Password",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  SizedBox(
-                    width: 98,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      autofocus: false,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        labelText: 'Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
                   ),
-                  Text("Confirm Password",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: "Confirm Password",
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 150,
-                      child: TextField(
-                        obscureText: true,
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          hintText: '*******',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.0),
-                          ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      autofocus: false,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        labelText: 'Height',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 155,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Confirm Password",
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.0)),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: "Starting Height",
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0, top: 8.0),
-              child: Row(
-                children: const [
-                  Text("Height",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  SizedBox(
-                    width: 125,
-                  ),
-                  Text("Starting Weight",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 150,
-                      child: TextField(
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          hintText: 'Height',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.0),
-                          ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      autofocus: false,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        labelText: 'Handedness',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 155,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Starting Weight",
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.0)),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: "Age",
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0, top: 8.0),
-              child: Row(
-                children: const [
-                  Text("School",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                  SizedBox(
-                    width: 125,
-                  ),
-                  Text("Level",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 150,
-                      child: TextField(
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          hintText: 'School',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 155,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Level",
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.0)),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
             const Padding(
-              padding: EdgeInsets.all(18.0),
+              padding: EdgeInsets.all(10),
               child: Text(
                 "User Status",
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
               ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Radio(
-                  activeColor: HexColor("#30CED9"),
-                  value: 1,
-                  groupValue: groupvalue,
-                  onChanged: (int? val) {
-                    setGroupValue(val!);
-                  },
+                Row(
+                  children: [
+                    Radio(
+                      activeColor: HexColor("#30CED9"),
+                      value: 1,
+                      groupValue: groupvalue,
+                      onChanged: (int? val) {
+                        setGroupValue(val!);
+                      },
+                    ),
+                    const Text(
+                      "Active",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                    ),
+                  ],
                 ),
-                const Text(
-                  "Active",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Row(
+                    children: [
+                      Radio(
+                        activeColor: HexColor("#30CED9"),
+                        value: 2,
+                        groupValue: groupvalue,
+                        onChanged: (int? val) {
+                          setGroupValue(val!);
+                        },
+                      ),
+                      const Text(
+                        "Banned",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 15),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(width: 90),
-                Radio(
-                  activeColor: HexColor("#30CED9"),
-                  value: 2,
-                  groupValue: groupvalue,
-                  onChanged: (int? val) {
-                    setGroupValue(val!);
-                  },
-                ),
-                const Text(
-                  "Banned",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-                )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: SizedBox(
-                  height: 43,
-                  width: 120,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                      ),
-                      onPressed: () {},
-                      child: const Text("Submit")),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
+                onPressed: () {},
+                child: const Text("Submit"),
               ),
             )
           ],

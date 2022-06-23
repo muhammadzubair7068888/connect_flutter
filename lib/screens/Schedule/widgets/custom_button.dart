@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import '../app_colors.dart';
 
@@ -19,14 +20,14 @@ class _CustomButtonState extends State<CustomButton> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           vertical: 10,
           horizontal: 40,
         ),
         decoration: BoxDecoration(
-          color: AppColors.navyBlue,
-          borderRadius: BorderRadius.circular(7.0),
-          boxShadow: [
+          color: HexColor("#30CED9"),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
             BoxShadow(
               color: AppColors.black,
               offset: Offset(0, 4),
@@ -37,7 +38,7 @@ class _CustomButtonState extends State<CustomButton> {
         ),
         child: Text(
           widget.title,
-          style: TextStyle(
+          style: const TextStyle(
             color: AppColors.white,
             fontSize: 20,
           ),

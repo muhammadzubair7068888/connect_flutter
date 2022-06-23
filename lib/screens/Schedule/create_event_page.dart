@@ -29,23 +29,21 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        centerTitle: false,
-        leading: IconButton(
-          onPressed: context.pop,
-          icon: const Icon(
-            Icons.arrow_back,
-            color: AppColors.black,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
           ),
         ),
+        centerTitle: true,
         title: const Text(
-          "Create New Event",
-          style: TextStyle(
-            color: AppColors.black,
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
+          "Add Event",
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Padding(

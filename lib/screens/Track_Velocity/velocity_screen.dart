@@ -20,12 +20,21 @@ class _VelocityScreenState extends State<VelocityScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
+          ),
+        ),
         centerTitle: true,
-        foregroundColor: Colors.black,
-        backgroundColor: HexColor("#F6F6F6"),
+        title: const Text(
+          "Velocity",
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+        ),
         leading: IconButton(
-          onPressed: () {},
           icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         actions: [
           IconButton(

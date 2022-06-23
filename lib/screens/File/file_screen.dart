@@ -1,12 +1,6 @@
 import 'package:connect/screens/Track_Velocity/alertDialogWidget.dart';
-import 'package:date_field/date_field.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:data_table_2/data_table_2.dart';
-import 'package:intl/intl.dart';
-import 'package:one_context/one_context.dart';
 
 class FileScreen extends StatefulWidget {
   const FileScreen({Key? key}) : super(key: key);
@@ -16,21 +10,27 @@ class FileScreen extends StatefulWidget {
 }
 
 class _FileScreenState extends State<FileScreen> {
-  int? _dropdownValue = 1;
   bool filter = false;
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.now();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
+          ),
+        ),
         centerTitle: true,
-        foregroundColor: Colors.black,
-        backgroundColor: HexColor("#F6F6F6"),
+        title: const Text(
+          "Files",
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+        ),
         leading: IconButton(
-          onPressed: () {},
           icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -52,6 +52,9 @@ class _FileScreenState extends State<FileScreen> {
                       ElevatedButton(
                         onPressed: () {},
                         child: const Text("Upload File"),
+                        style: ElevatedButton.styleFrom(
+                          primary: HexColor("#13D13F"),
+                        ),
                       ),
                     ],
                   ),
@@ -119,7 +122,7 @@ class _FileScreenState extends State<FileScreen> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 15,
+                                  width: 25,
                                   child: IconButton(
                                     icon: const Icon(Icons.delete),
                                     color: Colors.red,
@@ -259,9 +262,7 @@ class _FileScreenState extends State<FileScreen> {
 
   void dropdownCallback(int? selectedValue) {
     if (selectedValue is int) {
-      setState(() {
-        _dropdownValue = selectedValue;
-      });
+      setState(() {});
       print(selectedValue);
     }
   }

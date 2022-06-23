@@ -13,16 +13,21 @@ class _ImportExerciseState extends State<ImportExercise> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
+          ),
+        ),
         centerTitle: true,
-        foregroundColor: Colors.black,
-        backgroundColor: HexColor("#F6F6F6"),
         title: const Text(
           "Exercises",
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Column(
