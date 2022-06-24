@@ -1,11 +1,40 @@
-// ignore_for_file: camel_case_types
+import 'dart:convert';
+import 'dart:io';
 
-import 'package:connect/screens/Dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../Globals/globals.dart';
+import '../BottomNavBar/bottomNavBar_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String role;
+  final String? imgUrl;
+  final String name;
+  final String height;
+  final String email;
+  final String strWeight;
+  final String handedness;
+  final int age;
+  final String school;
+  final String lvl;
+  const ProfileScreen({
+    Key? key,
+    required this.role,
+    required this.imgUrl,
+    required this.name,
+    required this.height,
+    required this.email,
+    required this.strWeight,
+    required this.handedness,
+    required this.age,
+    required this.school,
+    required this.lvl,
+  }) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -40,14 +69,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Center(
           child: Column(
             children: [
-              Text(
-                "My Profile",
-                style: TextStyle(
-                    color: HexColor("#222222"),
-                    fontSize: 30,
-                    fontWeight: FontWeight.w600),
-              ),
-              formFielf(formKey: _formKey)
+              formFielf(
+                formKey: _formKey,
+                age: widget.age,
+                email: widget.email,
+                height: widget.height,
+                handedness: widget.handedness,
+                imgUrl: widget.imgUrl,
+                lvl: widget.lvl,
+                name: widget.name,
+                school: widget.school,
+                strWeight: widget.strWeight,
+                role: widget.role,
+              )
             ],
           ),
         ),
@@ -57,8 +91,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 class formFielf extends StatefulWidget {
-  const formFielf({
+  final String role;
+  final String? imgUrl;
+  String name;
+  String height;
+  String email;
+  String strWeight;
+  String handedness;
+  int age;
+  String school;
+  String lvl;
+  formFielf({
     Key? key,
+    required this.role,
+    required this.imgUrl,
+    required this.name,
+    required this.height,
+    required this.email,
+    required this.strWeight,
+    required this.handedness,
+    required this.age,
+    required this.school,
+    required this.lvl,
     required GlobalKey<FormState> formKey,
   })  : _formKey = formKey,
         super(key: key);
@@ -71,15 +125,98 @@ class formFielf extends StatefulWidget {
 
 // ignore: camel_case_types
 class _formFielfState extends State<formFielf> {
-  String name = "  Alix";
-  String height = " 22454";
-  String email = " test@cp.com";
-  String strWeight = "   45";
-  String handedness = "   Left";
-  String age = "  45";
-  String Scl = "  Becon";
-  String lvl = "    4";
-  bool btnPress = false;
+  final storage = const FlutterSecureStorage();
+  File? _image;
+  final picker = ImagePicker();
+  Future choiceImage() async {
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (mounted) {
+      if (pickedImage != null) {
+        _image = File(pickedImage.path);
+        setState(() {});
+      } else {}
+    }
+  }
+
+  void _navigate() {
+    Navigator.pushAndRemoveUntil<void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => BottomNavBar(
+          role: widget.role,
+        ),
+      ),
+      (route) => false,
+    );
+  }
+
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
+  Future submit() async {
+    await EasyLoading.show(
+      status: 'Processing...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    String? id = await storage.read(key: "id");
+    var uri = Uri.parse('${apiURL}profile/update/$id');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    if (_image != null) {
+      request.files
+          .add(await http.MultipartFile.fromPath('file', _image!.path));
+    }
+    request.fields['height'] = widget.height;
+    request.fields['level'] = widget.lvl;
+    request.fields['starting_weight'] = widget.strWeight;
+    request.fields['age'] = widget.age.toString();
+    request.fields['handedeness'] = widget.handedness;
+    request.fields['school'] = widget.school;
+    request.fields['email'] = widget.email;
+    request.fields['name'] = widget.name;
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      _navigate();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: HexColor("#30CED9"),
+            dismissDirection: DismissDirection.vertical,
+            content: const Text('Updated successfully'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+      await EasyLoading.dismiss();
+    } else {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -89,32 +226,159 @@ class _formFielfState extends State<formFielf> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
-              child: CircleAvatar(
-                backgroundImage: const AssetImage("images/profile.png"),
-                radius: 55,
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: btnPress
-                          ? CircleAvatar(
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: _image == null && widget.imgUrl == null
+                    ? <Widget>[
+                        CircleAvatar(
+                          radius: 50.0,
+                          backgroundColor: Colors.grey[300],
+                        ),
+                        SizedBox(
+                            child:
+                                //  btnPress
+                                // ?
+                                CircleAvatar(
+                          radius: 18,
+                          backgroundColor: Colors.white70,
+                          child: IconButton(
+                            onPressed: () {
+                              choiceImage();
+                            },
+                            icon: Icon(
+                              Icons.photo_camera,
+                              color: HexColor("#30CED9"),
+                            ),
+                          ),
+                        )
+                            // : null,
+                            ),
+                      ]
+                    : _image != null && widget.imgUrl == null
+                        ? <Widget>[
+                            CircleAvatar(
+                              radius: 60.0,
+                              child: ClipOval(
+                                child: Image.file(
+                                  File(_image!.path).absolute,
+                                  fit: BoxFit.cover,
+                                  width: 120.0,
+                                  height: 120.0,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                                child:
+                                    // btnPress
+                                    // ?
+                                    CircleAvatar(
                               radius: 18,
                               backgroundColor: Colors.white70,
                               child: IconButton(
-                                icon: const Icon(
-                                  Icons.camera_alt,
-                                  color: Colors.black,
+                                onPressed: () {
+                                  choiceImage();
+                                },
+                                icon: Icon(
+                                  Icons.photo_camera,
+                                  color: HexColor("#30CED9"),
                                 ),
-                                onPressed: () {},
                               ),
                             )
-                          : const CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                            ),
-                    )
-                  ],
-                ),
+                                // : null,
+                                ),
+                          ]
+                        : _image != null && widget.imgUrl != null
+                            ? <Widget>[
+                                CircleAvatar(
+                                  radius: 60.0,
+                                  child: ClipOval(
+                                    child: Image.file(
+                                      File(_image!.path).absolute,
+                                      fit: BoxFit.cover,
+                                      width: 120.0,
+                                      height: 120.0,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                    child:
+                                        // btnPress
+                                        // ?
+                                        CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.white70,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      choiceImage();
+                                    },
+                                    icon: Icon(
+                                      Icons.photo_camera,
+                                      color: HexColor("#30CED9"),
+                                    ),
+                                  ),
+                                )
+                                    // : null,
+                                    ),
+                              ]
+                            : <Widget>[
+                                CircleAvatar(
+                                  radius: 60.0,
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      '$publicUrl${widget.imgUrl}',
+                                      width: 120.0,
+                                      height: 120.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                    child:
+                                        //  btnPress
+                                        // ?
+                                        CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.white70,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      choiceImage();
+                                    },
+                                    icon: Icon(
+                                      Icons.photo_camera,
+                                      color: HexColor("#30CED9"),
+                                    ),
+                                  ),
+                                )
+                                    // : null,
+                                    ),
+                              ],
               ),
+              // CircleAvatar(
+              //   backgroundImage: const AssetImage("images/profile.png"),
+              //   radius: 55,
+              //   child: Stack(
+              //     children: [
+              //       Align(
+              //         alignment: Alignment.bottomRight,
+              //         child: btnPress
+              //             ? CircleAvatar(
+              //                 radius: 18,
+              //                 backgroundColor: Colors.white70,
+              //                 child: IconButton(
+              //                   icon: const Icon(
+              //                     Icons.camera_alt,
+              //                     color: Colors.black,
+              //                   ),
+              //                   onPressed: () {},
+              //                 ),
+              //               )
+              //             : const CircleAvatar(
+              //                 backgroundColor: Colors.transparent,
+              //               ),
+              //       )
+              //     ],
+              //   ),
+              // ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,10 +388,11 @@ class _formFielfState extends State<formFielf> {
                   child: SizedBox(
                     width: 120,
                     child: TextField(
-                      enabled: btnPress,
-                      controller: TextEditingController()..text = name,
-                      onChanged: (nam) {
-                        name = nam;
+                      // enabled: btnPress,
+                      controller: TextEditingController()
+                        ..text = widget.name.toString(),
+                      onChanged: (value) {
+                        widget.name = value;
                       },
                       autofocus: false,
                       decoration: InputDecoration(
@@ -144,17 +409,20 @@ class _formFielfState extends State<formFielf> {
                 SizedBox(
                   width: 120,
                   child: TextField(
-                    enabled: btnPress,
-                    controller: TextEditingController()..text = height,
-                    onChanged: (high) {
-                      height = high;
+                    keyboardType: TextInputType.number,
+                    // enabled: btnPress,
+                    controller: TextEditingController()
+                      ..text = widget.height.toString(),
+                    onChanged: (value) {
+                      widget.height = value;
                     },
                     decoration: InputDecoration(
                       labelText: "Height",
                       isCollapsed: true,
                       contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0)),
+                        borderRadius: BorderRadius.circular(7.0),
+                      ),
                     ),
                   ),
                 ),
@@ -163,17 +431,20 @@ class _formFielfState extends State<formFielf> {
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: TextField(
-                enabled: btnPress,
-                controller: TextEditingController()..text = email,
-                onChanged: (eml) {
-                  email = eml;
+                // enabled: btnPress,
+                controller: TextEditingController()
+                  ..text = widget.email.toString(),
+                onChanged: (value) {
+                  widget.email = value;
                 },
                 decoration: InputDecoration(
-                    isCollapsed: true,
-                    contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7.0)),
-                    labelText: "Email"),
+                  isCollapsed: true,
+                  contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(7.0),
+                  ),
+                  labelText: "Email",
+                ),
               ),
             ),
             Padding(
@@ -184,27 +455,30 @@ class _formFielfState extends State<formFielf> {
                   SizedBox(
                     width: 140,
                     child: TextField(
-                      enabled: btnPress,
-                      controller: TextEditingController()..text = strWeight,
-                      onChanged: (weight) {
-                        strWeight = weight;
+                      keyboardType: TextInputType.number,
+                      // enabled: btnPress,
+                      controller: TextEditingController()
+                        ..text = widget.strWeight.toString(),
+                      onChanged: (value) {
+                        widget.strWeight = value;
                       },
                       decoration: InputDecoration(
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.0)),
-                          labelText: "Starting Weight"),
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7.0)),
+                        labelText: "Starting Weight",
+                      ),
                     ),
                   ),
                   SizedBox(
                     width: 140,
                     child: TextField(
-                      enabled: btnPress,
-                      controller: TextEditingController()..text = handedness,
-                      onChanged: (hndedness) {
-                        handedness = hndedness;
+                      // enabled: btnPress,
+                      controller: TextEditingController()
+                        ..text = widget.handedness.toString(),
+                      onChanged: (value) {
+                        widget.handedness = value;
                       },
                       decoration: InputDecoration(
                         isCollapsed: true,
@@ -227,28 +501,31 @@ class _formFielfState extends State<formFielf> {
                   SizedBox(
                     width: 140,
                     child: TextField(
-                      enabled: btnPress,
-                      controller: TextEditingController()..text = age,
-                      onChanged: (Age) {
-                        age = Age;
-                      },
                       decoration: InputDecoration(
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.0),
-                          ),
-                          labelText: "Age"),
+                        isCollapsed: true,
+                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7.0),
+                        ),
+                        labelText: "Age",
+                      ),
+                      keyboardType: TextInputType.number,
+                      // enabled: btnPress,
+                      controller: TextEditingController()
+                        ..text = widget.age.toString(),
+                      onChanged: (value) {
+                        widget.age = value as int;
+                      },
                     ),
                   ),
                   SizedBox(
                     width: 140,
                     child: TextField(
-                      enabled: btnPress,
-                      controller: TextEditingController()..text = Scl,
-                      onChanged: (scol) {
-                        Scl = scol;
+                      // enabled: btnPress,
+                      controller: TextEditingController()
+                        ..text = widget.school.toString(),
+                      onChanged: (value) {
+                        widget.school = value;
                       },
                       decoration: InputDecoration(
                           isCollapsed: true,
@@ -266,18 +543,21 @@ class _formFielfState extends State<formFielf> {
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: TextField(
-                enabled: btnPress,
-                controller: TextEditingController()..text = lvl,
-                onChanged: (level) {
-                  lvl = level;
-                },
                 decoration: InputDecoration(
-                    isCollapsed: true,
-                    contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(7.0),
-                    ),
-                    labelText: "Level"),
+                  isCollapsed: true,
+                  contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(7.0),
+                  ),
+                  labelText: "Level",
+                ),
+                keyboardType: TextInputType.number,
+                // enabled: btnPress,
+                controller: TextEditingController()
+                  ..text = widget.lvl.toString(),
+                onChanged: (value) {
+                  widget.lvl = value;
+                },
               ),
             ),
             Padding(
@@ -286,21 +566,33 @@ class _formFielfState extends State<formFielf> {
               child: SizedBox(
                 width: 180,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      btnPress = !btnPress;
-                    });
-                  },
-                  child: btnPress
-                      ? const Text("Submit")
-                      : const Text("Edit Profile"),
-                ),
+                    onPressed:
+                        // btnPress
+                        // ?
+                        () {
+                      // setState(() {
+                      //   btnPress = !btnPress;
+                      // });
+                      submit();
+                    },
+                    // : () {
+                    // setState(() {
+                    // btnPress = !btnPress;
+                    // });
+                    // },
+                    child:
+                        // btnPress
+                        // ?
+                        const Text("Update")
+                    // const Text("Submit")
+                    // : const Text("Edit Profile"),
+                    ),
               ),
             ),
           ],

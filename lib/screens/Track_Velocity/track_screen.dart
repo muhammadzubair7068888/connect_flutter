@@ -1,7 +1,9 @@
 import 'package:connect/screens/Track_Velocity/alertDialogWidget.dart';
 import 'package:date_field/date_field.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 
 class TrackScreen extends StatefulWidget {
   const TrackScreen({Key? key}) : super(key: key);
@@ -11,9 +13,32 @@ class TrackScreen extends StatefulWidget {
 }
 
 class _TrackScreenState extends State<TrackScreen> {
-  int? _dropdownValue = 1;
+  final GlobalKey<FormState> _form = GlobalKey();
+  late TextEditingController _controller;
   DateTime dateTime = DateTime.now();
+  // DateFormat formatter = DateFormat('yyyy-MM-dd');
+  // late String formatted = DateFormat("yyyy-MM-dd").format(dateTime);
+  // late DateTime dt = DateTime.parse(DateFormat("yyyy-MM-dd").format(dateTime));
+  String armPain = "1";
+  String weight = "";
   bool filter = false;
+
+  void _resetForm() {
+    _form.currentState?.reset();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,16 +95,6 @@ class _TrackScreenState extends State<TrackScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
-                        child: Text(
-                          "Date",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                         child: Container(
@@ -95,18 +110,22 @@ class _TrackScreenState extends State<TrackScreen> {
                           ),
                           child: DateTimeFormField(
                             decoration: const InputDecoration(
+                              hintStyle: TextStyle(color: Colors.black),
+                              errorStyle: TextStyle(color: Colors.redAccent),
                               border: InputBorder.none,
                               suffixIcon: Icon(Icons.arrow_drop_down_sharp),
                               contentPadding: EdgeInsets.all(20),
-                              hintText: 'Date',
+                              labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                              labelText: 'Date',
                             ),
+                            initialValue: dateTime,
                             mode: DateTimeFieldPickerMode.date,
                             autovalidateMode: AutovalidateMode.always,
-                            validator: (e) => (e?.day ?? 0) == 1
-                                ? 'Please not the first day'
-                                : null,
                             onDateSelected: (DateTime value) {
-                              // _date = value;
+                              // dt = DateTime.parse(formatted);
+                              value = dateTime;
                             },
                           ),
                         ),
@@ -119,57 +138,6 @@ class _TrackScreenState extends State<TrackScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
-                        child: Text(
-                          "Weight",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 2.0,
-                                    spreadRadius: 0.4)
-                              ],
-                            ),
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                hintText: 'Weight',
-                                contentPadding: EdgeInsets.only(left: 20),
-                                border: InputBorder.none,
-                              ),
-                              onChanged: (value) {},
-                            )),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
-                        child: Text(
-                          "Arm pain",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                         child: Container(
@@ -183,61 +151,88 @@ class _TrackScreenState extends State<TrackScreen> {
                                   spreadRadius: 0.4)
                             ],
                           ),
-                          child: DropdownButtonFormField(
-                            decoration: const InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.only(left: 20, right: 15),
-                              border: InputBorder.none,
+                          child: DropdownSearch<String>(
+                            dropdownDecoratorProps:
+                                const DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                hintStyle: TextStyle(color: Colors.black),
+                                errorStyle: TextStyle(color: Colors.redAccent),
+                                border: InputBorder.none,
+                                suffixIcon: Icon(Icons.arrow_drop_down_sharp),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                labelStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                                labelText: 'Arm Pain',
+                              ),
                             ),
-                            isExpanded: true,
-                            iconEnabledColor: HexColor("#30CED9"),
-                            onChanged: dropdownCallback,
-                            value: _dropdownValue,
-                            // underline: DropdownButtonHideUnderline(child: Container()),
+                            popupProps: const PopupProps.menu(
+                              showSelectedItems: true,
+                              // disabledItemFn: (String s) => s.startsWith('I'),
+                            ),
                             items: const [
-                              DropdownMenuItem<int>(
-                                value: 1,
-                                child: Text("1"),
-                              ),
-                              DropdownMenuItem(
-                                value: 2,
-                                child: Text("2"),
-                              ),
-                              DropdownMenuItem(
-                                value: 3,
-                                child: Text("3"),
-                              ),
-                              DropdownMenuItem(
-                                value: 4,
-                                child: Text("4"),
-                              ),
-                              DropdownMenuItem(
-                                value: 5,
-                                child: Text("5"),
-                              ),
-                              DropdownMenuItem(
-                                value: 6,
-                                child: Text("6"),
-                              ),
-                              DropdownMenuItem(
-                                value: 7,
-                                child: Text("7"),
-                              ),
-                              DropdownMenuItem(
-                                value: 8,
-                                child: Text("8"),
-                              ),
-                              DropdownMenuItem(
-                                value: 9,
-                                child: Text("9"),
-                              ),
-                              DropdownMenuItem(
-                                value: 10,
-                                child: Text("10"),
-                              ),
+                              "1",
+                              "2",
+                              "3",
+                              '4',
+                              '5',
+                              '6',
+                              '7',
+                              '8',
+                              '9',
+                              '10',
                             ],
+                            onChanged: (value) {
+                              armPain = value!;
+                            },
+                            selectedItem: armPain,
                           ),
                         ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 2.0,
+                                    spreadRadius: 0.4)
+                              ],
+                            ),
+                            child: Form(
+                              key: _form,
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Weight',
+                                  contentPadding: EdgeInsets.only(left: 20),
+                                  border: InputBorder.none,
+                                ),
+                                controller: _controller,
+                                validator: (value) {
+                                  if (value == null || value == "") {
+                                    return "Please enter weight";
+                                  }
+
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  weight = value;
+                                },
+                              ),
+                            )),
                       ),
                     ],
                   ),
@@ -251,8 +246,15 @@ class _TrackScreenState extends State<TrackScreen> {
                       ),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text("Yes"),
+                          onPressed: () {
+                            if (!(_form.currentState?.validate() ?? true)) {
+                              return;
+                            }
+                            print(dateTime);
+                            print(armPain);
+                            print(weight);
+                          },
+                          child: const Text("Submit"),
                         ),
                       ),
                       const SizedBox(
@@ -260,8 +262,10 @@ class _TrackScreenState extends State<TrackScreen> {
                       ),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text("No"),
+                          onPressed: () {
+                            _resetForm();
+                          },
+                          child: const Text("Clear"),
                         ),
                       ),
                       const SizedBox(
@@ -424,9 +428,7 @@ class _TrackScreenState extends State<TrackScreen> {
 
   void dropdownCallback(int? selectedValue) {
     if (selectedValue is int) {
-      setState(() {
-        _dropdownValue = selectedValue;
-      });
+      setState(() {});
       print(selectedValue);
     }
   }

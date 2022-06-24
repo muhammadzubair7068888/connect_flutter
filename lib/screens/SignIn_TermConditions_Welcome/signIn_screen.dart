@@ -37,12 +37,15 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future signIn() async {
     await EasyLoading.show(
       status: 'Processing...',
       maskType: EasyLoadingMaskType.black,
     );
-    var uri = Uri.parse('${baseURL}signin');
+    var uri = Uri.parse('${apiURL}signin');
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
       'Accept': 'application/json',
@@ -57,8 +60,8 @@ class _SignInScreenState extends State<SignInScreen> {
     var response = await request.send();
     var responseDecode = await http.Response.fromStream(response);
     // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
-    final result = jsonDecode(responseDecode.body);
     if (response.statusCode == 200) {
+      final result = jsonDecode(responseDecode.body);
       await storage.write(key: "token", value: result["token"]);
       await storage.write(key: "role", value: result["data"]["role"]);
       await storage.write(key: "id", value: result["data"]["id"].toString());
@@ -90,6 +93,9 @@ class _SignInScreenState extends State<SignInScreen> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   Widget build(BuildContext context) {
