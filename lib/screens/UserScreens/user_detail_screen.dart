@@ -1,12 +1,20 @@
+import 'package:connect/screens/BottomNavBar/bottomNavBar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../Info/info_screen.dart';
 import '../Track_Velocity/alertDialogWidget.dart';
 import 'add_user_screen.dart';
 import 'import_user_screen.dart';
 
 class UserDetail extends StatefulWidget {
-  const UserDetail({Key? key}) : super(key: key);
+  final String role;
+  final bool removed;
+  const UserDetail({
+    Key? key,
+    required this.role,
+    required this.removed,
+  }) : super(key: key);
 
   @override
   State<UserDetail> createState() => _UserDetailState();
@@ -29,9 +37,20 @@ class _UserDetailState extends State<UserDetail> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: widget.removed
+              ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BottomNavBar(
+                        role: widget.role,
+                      ),
+                    ),
+                  );
+                }
+              : () {
+                  Navigator.pop(context);
+                },
         ),
       ),
       body: Column(
@@ -40,69 +59,87 @@ class _UserDetailState extends State<UserDetail> {
             height: 20,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Text(
-                "User",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.1,
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: HexColor("#31D858"),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddUser(),
-                    ),
-                  );
-                },
-                child: const Text("Add New"),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ImportUser(),
-                    ),
-                  );
-                },
-                child: const Text("Import CSV"),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(width: MediaQuery.of(context).size.width * 0.4),
+
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      label: const Text("Search"),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: HexColor("#31D858"),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    // onChanged: searchBook,
                   ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddUser(
+                          role: widget.role,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text("Add New"),
                 ),
               ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.2,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+              ),
+              // Expanded(
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10.0),
+              //       ),
+              //     ),
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => const ImportUser(),
+              //         ),
+              //       );
+              //     },
+              //     child: const Text("Import CSV"),
+              //   ),
+              // ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.1,
+              ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          label: const Text("Search"),
+                        ),
+                        // onChanged: searchBook,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(
             height: 10,

@@ -1,5 +1,7 @@
+import 'package:connect/screens/BottomNavBar/bottomNavBar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'screens/Chat/chatList_screen.dart';
 import 'screens/Chat/chat_screen.dart';
@@ -18,6 +20,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+  final storage = const FlutterSecureStorage();
+  late String token;
+  late String role;
+  @override
+  void initState() {
+    super.initState();
+    token = storage.read(key: "token").toString();
+    role = storage.read(key: "role").toString();
+    print("welcome");
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,10 +40,14 @@ class _MyAppState extends State<MyApp> {
         splashColor: HexColor("#30CED9"),
         scaffoldBackgroundColor: HexColor("#FFFFFF"),
         errorColor: Colors.redAccent,
-        colorScheme:
-            ThemeData().colorScheme.copyWith(primary: HexColor("#30CED9")),
+        colorScheme: ThemeData().colorScheme.copyWith(
+              primary: HexColor("#30CED9"),
+            ),
       ),
-      home: const WelcomeScreen(),
+      // ignore: unnecessary_null_comparison
+      home: token == null || token == "" || token.isEmpty
+          ? const WelcomeScreen()
+          : BottomNavBar(role: role),
       builder: EasyLoading.init(),
     );
   }

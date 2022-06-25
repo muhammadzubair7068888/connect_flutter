@@ -154,7 +154,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value == "") {
-                              return "Please enter Email.";
+                              return "Please enter Email";
                             }
 
                             return null;
@@ -177,9 +177,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             labelText: 'Password',
                             prefixIcon: const Icon(Icons.lock),
                             suffixIcon: IconButton(
-                              icon: Icon(_isObscure
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
+                              icon: Icon(
+                                _isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
                               onPressed: () {
                                 setState(() {
                                   _isObscure = !_isObscure;
@@ -189,7 +191,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value == "") {
-                              return "Please enter Password.";
+                              return "Please enter Password";
                             }
 
                             return null;

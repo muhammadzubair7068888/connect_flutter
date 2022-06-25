@@ -178,7 +178,9 @@ class _InfoState extends State<Info> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const UserDetail(),
+                      builder: (context) => UserDetail(
+                        role: widget.role, removed:false,
+                      ),
                     ),
                   );
                 },
