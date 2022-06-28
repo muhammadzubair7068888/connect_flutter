@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:connect/screens/Track_Velocity/alertDialogWidget.dart';
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 import '../../Globals/globals.dart';
 
@@ -186,7 +184,6 @@ class _TrackScreenState extends State<TrackScreen> {
                               ),
                               onPressed: () {
                                 delete(jsonData['data'][i]['id']);
-
                                 Navigator.pop(context);
                               },
                               child: const Text("Yes"),
@@ -516,18 +513,15 @@ class _TrackScreenState extends State<TrackScreen> {
                         width: 50,
                       ),
                       Flexible(
-                        child: SizedBox(
-                          height: 40,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              label: const Text("Search"),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            // onChanged: searchBook,
+                            label: const Text("Search"),
                           ),
+                          // onChanged: searchBook,
                         ),
                       )
                     ],

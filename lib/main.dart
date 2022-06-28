@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'screens/Chat/chatList_screen.dart';
-import 'screens/Chat/chat_screen.dart';
 import 'screens/SignIn_TermConditions_Welcome/welcome_screen.dart';
 
 void main() {
@@ -65,3 +63,5 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+// adb tcpip 5555
+// adb connect 192.168.1.199:5555

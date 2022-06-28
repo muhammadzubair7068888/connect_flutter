@@ -6,7 +6,7 @@ import '../Profile/profile_screen.dart';
 import '../Questionieries/questioneries_screen.dart';
 import '../Settings/settings_screen.dart';
 import '../Track_Velocity/vel_and_track_screen.dart';
-import '../UserScreens/user_detail_screen.dart';
+import '../UserScreens/user_screen.dart';
 import '../leaderboard/leader_board_screen.dart';
 
 class Info extends StatefulWidget {
@@ -179,7 +179,8 @@ class _InfoState extends State<Info> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => UserDetail(
-                        role: widget.role, removed:false,
+                        role: widget.role,
+                        removed: false,
                       ),
                     ),
                   );

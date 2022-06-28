@@ -1,83 +1,70 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
 
-import '../Exercises/shareDialogWidget.dart';
+import '../../Globals/globals.dart';
 import '../Track_Velocity/alertDialogWidget.dart';
 
 class PhysicalAssessments extends StatefulWidget {
-  const PhysicalAssessments({Key? key}) : super(key: key);
+  const PhysicalAssessments({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PhysicalAssessments> createState() => _PhysicalAssessmentsState();
 }
 
 class _PhysicalAssessmentsState extends State<PhysicalAssessments> {
-  int _singleValue = 1;
+  final storage = const FlutterSecureStorage();
+  List data = [];
+  List<DataRow> rowsAdd = [];
   List<int> groupValue = [];
-  final rows = <DataRow>[];
-  List object = [
-    {
-      "name": "Gross Posture Anomalies",
-      "value": 1,
-    },
-    {
-      "name": "Shrugging",
-      "value": 2,
-    },
-    {
-      "name": "Asymmetrical Upward Rotation",
-      "value": 3,
-    },
-    {
-      "name": "Winging On Descent",
-      "value": 1,
-    },
-    {
-      "name": "Eccentric Control",
-      "value": 2,
-    },
-    {
-      "name": "Lat Activation",
-      "value": 3,
-    },
-    {
-      "name": "GIRD Deficit",
-      "value": 1,
-    },
-    {
-      "name": "Pec Quality",
-      "value": 2,
-    },
-    {
-      "name": "Flat Foot",
-      "value": 3,
-    },
-    {
-      "name": "Palms To Floor",
-      "value": 1,
-    },
-    {
-      "name": "Back Bridge",
-      "value": 2,
-    },
-    {
-      "name": "One Legged Balance Holds",
-      "value": 3,
-    },
-    {
-      "name": "Front Split",
-      "value": 1,
-    },
-    {
-      "name": "Side Split",
-      "value": 2,
-    },
-    {
-      "name": "Dead Hang",
-      "value": 3,
-    },
-  ];
+
+  Future getPhyAsses() async {
+    await EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    var url = Uri.parse('${apiURL}assessment/physical/index');
+    String? token = await storage.read(key: "token");
+    http.Response response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200) {
+      var jsonBody = response.body;
+      var jsonData = jsonDecode(jsonBody);
+      setState(() {
+        data = jsonData["data"];
+      });
+      await EasyLoading.dismiss();
+    } else {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPhyAsses();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,12 +119,12 @@ class _PhysicalAssessmentsState extends State<PhysicalAssessments> {
                 ),
               ],
               rows: () {
-                rows.clear();
-                for (var i = 0; i < object.length; i++) {
-                  String name = object[i]["name"];
-                  int val = object[i]["value"];
+                rowsAdd.clear();
+                for (var i = 0; i < data.length; i++) {
+                  String name = data[i]["name"];
+                  int val = int.parse(data[i]["status"]);
                   groupValue.add(val);
-                  rows.add(
+                  rowsAdd.add(
                     DataRow(
                       cells: [
                         DataCell(Text(name)),
@@ -195,21 +182,6 @@ class _PhysicalAssessmentsState extends State<PhysicalAssessments> {
                                   },
                                 ),
                               ),
-                              SizedBox(
-                                width: 25,
-                                child: IconButton(
-                                  icon: const Icon(Icons.share_outlined),
-                                  color: HexColor("#30CED9"),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const ShareDialogWidget();
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -217,7 +189,7 @@ class _PhysicalAssessmentsState extends State<PhysicalAssessments> {
                     ),
                   );
                 }
-                return rows;
+                return rowsAdd;
               }(),
             ),
           )

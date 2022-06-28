@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import '../Exercises/shareDialogWidget.dart';
 import '../Track_Velocity/alertDialogWidget.dart';
 
 class MechanicalAssessments extends StatefulWidget {
@@ -13,7 +12,7 @@ class MechanicalAssessments extends StatefulWidget {
 }
 
 class _MechanicalAssessmentsState extends State<MechanicalAssessments> {
-  int _singleValue = 1;
+  // int _singleValue = 1;
   List<int> groupValue = [];
   final rows = <DataRow>[];
   List object = [
@@ -258,21 +257,6 @@ class _MechanicalAssessmentsState extends State<MechanicalAssessments> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return const AlertDialogWidget();
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                width: 25,
-                                child: IconButton(
-                                  icon: const Icon(Icons.share_outlined),
-                                  color: HexColor("#30CED9"),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const ShareDialogWidget();
                                       },
                                     );
                                   },

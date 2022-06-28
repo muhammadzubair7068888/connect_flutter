@@ -90,6 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+// ignore: camel_case_types, must_be_immutable
 class formFielf extends StatefulWidget {
   final String role;
   final String? imgUrl;
@@ -114,10 +115,7 @@ class formFielf extends StatefulWidget {
     required this.school,
     required this.lvl,
     required GlobalKey<FormState> formKey,
-  })  : _formKey = formKey,
-        super(key: key);
-
-  final GlobalKey<FormState> _formKey;
+  }) : super(key: key);
 
   @override
   State<formFielf> createState() => _formFielfState();
@@ -220,382 +218,348 @@ class _formFielfState extends State<formFielf> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: _image == null && widget.imgUrl == null
-                    ? <Widget>[
-                        CircleAvatar(
-                          radius: 50.0,
-                          backgroundColor: Colors.grey[300],
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: _image == null && widget.imgUrl == null
+                  ? <Widget>[
+                      CircleAvatar(
+                        radius: 60.0,
+                        backgroundColor: Colors.grey[300],
+                      ),
+                      SizedBox(
+                          child:
+                              //  btnPress
+                              // ?
+                              CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.white70,
+                        child: IconButton(
+                          onPressed: () {
+                            choiceImage();
+                          },
+                          icon: Icon(
+                            Icons.photo_camera,
+                            color: HexColor("#30CED9"),
+                          ),
                         ),
-                        SizedBox(
-                            child:
-                                //  btnPress
-                                // ?
-                                CircleAvatar(
-                          radius: 18,
-                          backgroundColor: Colors.white70,
-                          child: IconButton(
-                            onPressed: () {
-                              choiceImage();
-                            },
-                            icon: Icon(
-                              Icons.photo_camera,
-                              color: HexColor("#30CED9"),
+                      )
+                          // : null,
+                          ),
+                    ]
+                  : _image != null && widget.imgUrl == null
+                      ? <Widget>[
+                          CircleAvatar(
+                            radius: 60.0,
+                            child: ClipOval(
+                              child: Image.file(
+                                File(_image!.path).absolute,
+                                fit: BoxFit.cover,
+                                width: 120.0,
+                                height: 120.0,
+                              ),
                             ),
                           ),
-                        )
-                            // : null,
-                            ),
-                      ]
-                    : _image != null && widget.imgUrl == null
-                        ? <Widget>[
-                            CircleAvatar(
-                              radius: 60.0,
-                              child: ClipOval(
-                                child: Image.file(
-                                  File(_image!.path).absolute,
-                                  fit: BoxFit.cover,
-                                  width: 120.0,
-                                  height: 120.0,
-                                ),
+                          SizedBox(
+                              child:
+                                  // btnPress
+                                  // ?
+                                  CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.white70,
+                            child: IconButton(
+                              onPressed: () {
+                                choiceImage();
+                              },
+                              icon: Icon(
+                                Icons.photo_camera,
+                                color: HexColor("#30CED9"),
                               ),
                             ),
-                            SizedBox(
-                                child:
-                                    // btnPress
-                                    // ?
-                                    CircleAvatar(
-                              radius: 18,
-                              backgroundColor: Colors.white70,
-                              child: IconButton(
-                                onPressed: () {
-                                  choiceImage();
-                                },
-                                icon: Icon(
-                                  Icons.photo_camera,
-                                  color: HexColor("#30CED9"),
+                          )
+                              // : null,
+                              ),
+                        ]
+                      : _image != null && widget.imgUrl != null
+                          ? <Widget>[
+                              CircleAvatar(
+                                radius: 60.0,
+                                child: ClipOval(
+                                  child: Image.file(
+                                    File(_image!.path).absolute,
+                                    fit: BoxFit.cover,
+                                    width: 120.0,
+                                    height: 120.0,
+                                  ),
                                 ),
                               ),
-                            )
-                                // : null,
-                                ),
-                          ]
-                        : _image != null && widget.imgUrl != null
-                            ? <Widget>[
-                                CircleAvatar(
-                                  radius: 60.0,
-                                  child: ClipOval(
-                                    child: Image.file(
-                                      File(_image!.path).absolute,
-                                      fit: BoxFit.cover,
-                                      width: 120.0,
-                                      height: 120.0,
-                                    ),
+                              SizedBox(
+                                  child:
+                                      // btnPress
+                                      // ?
+                                      CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.white70,
+                                child: IconButton(
+                                  onPressed: () {
+                                    choiceImage();
+                                  },
+                                  icon: Icon(
+                                    Icons.photo_camera,
+                                    color: HexColor("#30CED9"),
                                   ),
                                 ),
-                                SizedBox(
-                                    child:
-                                        // btnPress
-                                        // ?
-                                        CircleAvatar(
-                                  radius: 18,
-                                  backgroundColor: Colors.white70,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      choiceImage();
-                                    },
-                                    icon: Icon(
-                                      Icons.photo_camera,
-                                      color: HexColor("#30CED9"),
-                                    ),
+                              )
+                                  // : null,
                                   ),
-                                )
-                                    // : null,
-                                    ),
-                              ]
-                            : <Widget>[
-                                CircleAvatar(
-                                  radius: 60.0,
-                                  child: ClipOval(
-                                    child: Image.network(
-                                      '$publicUrl${widget.imgUrl}',
-                                      width: 120.0,
-                                      height: 120.0,
-                                      fit: BoxFit.cover,
-                                    ),
+                            ]
+                          : <Widget>[
+                              CircleAvatar(
+                                radius: 60.0,
+                                child: ClipOval(
+                                  child: Image.network(
+                                    '$publicUrl${widget.imgUrl}',
+                                    width: 120.0,
+                                    height: 120.0,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                SizedBox(
-                                    child:
-                                        //  btnPress
-                                        // ?
-                                        CircleAvatar(
-                                  radius: 18,
-                                  backgroundColor: Colors.white70,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      choiceImage();
-                                    },
-                                    icon: Icon(
-                                      Icons.photo_camera,
-                                      color: HexColor("#30CED9"),
-                                    ),
+                              ),
+                              SizedBox(
+                                  child:
+                                      //  btnPress
+                                      // ?
+                                      CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.white70,
+                                child: IconButton(
+                                  onPressed: () {
+                                    choiceImage();
+                                  },
+                                  icon: Icon(
+                                    Icons.photo_camera,
+                                    color: HexColor("#30CED9"),
                                   ),
-                                )
-                                    // : null,
-                                    ),
-                              ],
-              ),
-              // CircleAvatar(
-              //   backgroundImage: const AssetImage("images/profile.png"),
-              //   radius: 55,
-              //   child: Stack(
-              //     children: [
-              //       Align(
-              //         alignment: Alignment.bottomRight,
-              //         child: btnPress
-              //             ? CircleAvatar(
-              //                 radius: 18,
-              //                 backgroundColor: Colors.white70,
-              //                 child: IconButton(
-              //                   icon: const Icon(
-              //                     Icons.camera_alt,
-              //                     color: Colors.black,
-              //                   ),
-              //                   onPressed: () {},
-              //                 ),
-              //               )
-              //             : const CircleAvatar(
-              //                 backgroundColor: Colors.transparent,
-              //               ),
-              //       )
-              //     ],
-              //   ),
-              // ),
+                                ),
+                              )
+                                  // : null,
+                                  ),
+                            ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 18.0),
-                  child: SizedBox(
-                    width: 120,
-                    child: TextField(
-                      // enabled: btnPress,
-                      controller: TextEditingController()
-                        ..text = widget.name.toString(),
-                      onChanged: (value) {
-                        widget.name = value;
-                      },
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        isCollapsed: true,
-                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                        labelText: 'Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 18.0),
+                child: SizedBox(
+                  width: 120,
+                  child: TextField(
+                    // enabled: btnPress,
+                    controller: TextEditingController()
+                      ..text = widget.name.toString(),
+                    onChanged: (value) {
+                      widget.name = value;
+                    },
+                    autofocus: false,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      labelText: 'Name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
                 ),
+              ),
+              SizedBox(
+                width: 120,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  // enabled: btnPress,
+                  controller: TextEditingController()
+                    ..text = widget.height.toString(),
+                  onChanged: (value) {
+                    widget.height = value;
+                  },
+                  decoration: InputDecoration(
+                    labelText: "Height",
+                    contentPadding: const EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: TextField(
+              // enabled: btnPress,
+              controller: TextEditingController()
+                ..text = widget.email.toString(),
+              onChanged: (value) {
+                widget.email = value;
+              },
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(10),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                labelText: "Email",
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 SizedBox(
-                  width: 120,
+                  width: 140,
                   child: TextField(
                     keyboardType: TextInputType.number,
                     // enabled: btnPress,
                     controller: TextEditingController()
-                      ..text = widget.height.toString(),
+                      ..text = widget.strWeight.toString(),
                     onChanged: (value) {
-                      widget.height = value;
+                      widget.strWeight = value;
                     },
                     decoration: InputDecoration(
-                      labelText: "Height",
-                      isCollapsed: true,
-                      contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                      contentPadding: const EdgeInsets.all(10),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7.0),
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      labelText: "Starting Weight",
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 140,
+                  child: TextField(
+                    // enabled: btnPress,
+                    controller: TextEditingController()
+                      ..text = widget.handedness.toString(),
+                    onChanged: (value) {
+                      widget.handedness = value;
+                    },
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelText: "Handedness",
                     ),
                   ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: TextField(
-                // enabled: btnPress,
-                controller: TextEditingController()
-                  ..text = widget.email.toString(),
-                onChanged: (value) {
-                  widget.email = value;
-                },
-                decoration: InputDecoration(
-                  isCollapsed: true,
-                  contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(7.0),
-                  ),
-                  labelText: "Email",
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 140,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      // enabled: btnPress,
-                      controller: TextEditingController()
-                        ..text = widget.strWeight.toString(),
-                      onChanged: (value) {
-                        widget.strWeight = value;
-                      },
-                      decoration: InputDecoration(
-                        isCollapsed: true,
-                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.0)),
-                        labelText: "Starting Weight",
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 140,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      labelText: "Age",
                     ),
-                  ),
-                  SizedBox(
-                    width: 140,
-                    child: TextField(
-                      // enabled: btnPress,
-                      controller: TextEditingController()
-                        ..text = widget.handedness.toString(),
-                      onChanged: (value) {
-                        widget.handedness = value;
-                      },
-                      decoration: InputDecoration(
-                        isCollapsed: true,
-                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
-                        labelText: "Handedness",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 140,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        isCollapsed: true,
-                        contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
-                        labelText: "Age",
-                      ),
-                      keyboardType: TextInputType.number,
-                      // enabled: btnPress,
-                      controller: TextEditingController()
-                        ..text = widget.age.toString(),
-                      onChanged: (value) {
-                        widget.age = value as int;
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 140,
-                    child: TextField(
-                      // enabled: btnPress,
-                      controller: TextEditingController()
-                        ..text = widget.school.toString(),
-                      onChanged: (value) {
-                        widget.school = value;
-                      },
-                      decoration: InputDecoration(
-                          isCollapsed: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.0),
-                          ),
-                          labelText: "School"),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  isCollapsed: true,
-                  contentPadding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(7.0),
-                  ),
-                  labelText: "Level",
-                ),
-                keyboardType: TextInputType.number,
-                // enabled: btnPress,
-                controller: TextEditingController()
-                  ..text = widget.lvl.toString(),
-                onChanged: (value) {
-                  widget.lvl = value;
-                },
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
-              child: SizedBox(
-                width: 180,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    onPressed:
-                        // btnPress
-                        // ?
-                        () {
-                      // setState(() {
-                      //   btnPress = !btnPress;
-                      // });
-                      submit();
+                    keyboardType: TextInputType.number,
+                    // enabled: btnPress,
+                    controller: TextEditingController()
+                      ..text = widget.age.toString(),
+                    onChanged: (value) {
+                      widget.age = value as int;
                     },
-                    // : () {
-                    // setState(() {
-                    // btnPress = !btnPress;
-                    // });
-                    // },
-                    child:
-                        // btnPress
-                        // ?
-                        const Text("Update")
-                    // const Text("Submit")
-                    // : const Text("Edit Profile"),
+                  ),
+                ),
+                SizedBox(
+                  width: 140,
+                  child: TextField(
+                    // enabled: btnPress,
+                    controller: TextEditingController()
+                      ..text = widget.school.toString(),
+                    onChanged: (value) {
+                      widget.school = value;
+                    },
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelText: "School",
                     ),
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ));
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: TextField(
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(10),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                labelText: "Level",
+              ),
+              keyboardType: TextInputType.number,
+              // enabled: btnPress,
+              controller: TextEditingController()..text = widget.lvl.toString(),
+              onChanged: (value) {
+                widget.lvl = value;
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20),
+            child: SizedBox(
+              width: 180,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onPressed:
+                      // btnPress
+                      // ?
+                      () {
+                    // setState(() {
+                    //   btnPress = !btnPress;
+                    // });
+                    submit();
+                  },
+                  // : () {
+                  // setState(() {
+                  // btnPress = !btnPress;
+                  // });
+                  // },
+                  child:
+                      // btnPress
+                      // ?
+                      const Text("Update")
+                  // const Text("Submit")
+                  // : const Text("Edit Profile"),
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

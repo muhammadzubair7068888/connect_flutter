@@ -9,7 +9,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import '../../Globals/globals.dart';
-import 'user_detail_screen.dart';
+import 'user_screen.dart';
 
 class AddUser extends StatefulWidget {
   final String role;
@@ -45,7 +45,7 @@ class _AddUserState extends State<AddUser> {
   String cPassword = "";
   bool _isObscureCp = true;
   String height = "";
-  String startingHeight = "";
+  String startingWeight = "";
   String handedness = "";
   String age = "";
   String school = "";
@@ -96,7 +96,7 @@ class _AddUserState extends State<AddUser> {
     request.fields['name'] = name;
     request.fields['email'] = email;
     request.fields['height'] = height;
-    request.fields['starting_weight'] = startingHeight;
+    request.fields['starting_weight'] = startingWeight;
     request.fields['hand_type'] = handedness;
     request.fields['age'] = age;
     request.fields['school'] = school;
@@ -110,6 +110,7 @@ class _AddUserState extends State<AddUser> {
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
       // final result = jsonDecode(responseDecode.body);
+      FocusManager.instance.primaryFocus?.unfocus();
       _navigate();
       await EasyLoading.dismiss();
     } else {
@@ -160,67 +161,71 @@ class _AddUserState extends State<AddUser> {
             const SizedBox(
               height: 20,
             ),
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text(
-                "Add New User",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Text(
+                  "Add New User",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                // ignore: unnecessary_null_comparison
-                children: _image == null
-                    ? <Widget>[
-                        CircleAvatar(
-                          radius: 50.0,
-                          backgroundColor: Colors.grey[300],
-                        ),
-                        CircleAvatar(
-                          radius: 18,
-                          backgroundColor: Colors.white70,
-                          child: IconButton(
-                            onPressed: () {
-                              choiceImage();
-                            },
-                            icon: Icon(
-                              Icons.photo_camera,
-                              color: HexColor("#30CED9"),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  // ignore: unnecessary_null_comparison
+                  children: _image == null
+                      ? <Widget>[
+                          CircleAvatar(
+                            radius: 60.0,
+                            backgroundColor: Colors.grey[300],
+                          ),
+                          CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.white70,
+                            child: IconButton(
+                              onPressed: () {
+                                choiceImage();
+                              },
+                              icon: Icon(
+                                Icons.photo_camera,
+                                color: HexColor("#30CED9"),
+                              ),
                             ),
                           ),
-                        ),
-                      ]
-                    : <Widget>[
-                        CircleAvatar(
-                          radius: 50.0,
-                          child: ClipOval(
-                            child: Image.file(
-                              File(_image!.path).absolute,
-                              fit: BoxFit.cover,
-                              width: 120.0,
-                              height: 120.0,
+                        ]
+                      : <Widget>[
+                          CircleAvatar(
+                            radius: 60.0,
+                            child: ClipOval(
+                              child: Image.file(
+                                File(_image!.path).absolute,
+                                fit: BoxFit.cover,
+                                width: 120.0,
+                                height: 120.0,
+                              ),
                             ),
                           ),
-                        ),
-                        CircleAvatar(
-                          radius: 18,
-                          backgroundColor: Colors.white70,
-                          child: IconButton(
-                            onPressed: () {
-                              choiceImage();
-                            },
-                            icon: Icon(
-                              Icons.photo_camera,
-                              color: HexColor("#30CED9"),
+                          CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.white70,
+                            child: IconButton(
+                              onPressed: () {
+                                choiceImage();
+                              },
+                              icon: Icon(
+                                Icons.photo_camera,
+                                color: HexColor("#30CED9"),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                ),
               ),
             ),
             const SizedBox(
@@ -402,7 +407,7 @@ class _AddUserState extends State<AddUser> {
                           child: TextFormField(
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              labelText: "Starting Height",
+                              labelText: "Starting Weight",
                               contentPadding: const EdgeInsets.all(10),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -410,13 +415,13 @@ class _AddUserState extends State<AddUser> {
                             ),
                             validator: (value) {
                               if (value == null || value == "") {
-                                return "Please enter Starting Height";
+                                return "Please enter Starting Weight";
                               }
 
                               return null;
                             },
                             onChanged: (value) {
-                              startingHeight = value;
+                              startingWeight = value;
                             },
                           ),
                         ),
