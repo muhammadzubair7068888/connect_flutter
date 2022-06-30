@@ -138,6 +138,7 @@ class _UserDetailState extends State<UserDetail> {
                                   school: jsonData['data'][i]['school'],
                                   strWeight: jsonData['data'][i]
                                       ['starting_weight'],
+                                  id: jsonData['data'][i]['id'],
                                 ),
                               ),
                             );

@@ -9,19 +9,29 @@ import 'package:http/http.dart' as http;
 
 import '../../Globals/globals.dart';
 
-class NewExercise extends StatefulWidget {
-  const NewExercise({Key? key}) : super(key: key);
+class EditExercise extends StatefulWidget {
+  final int id;
+  late String title;
+  late String description;
+  late String type;
+  EditExercise({
+    Key? key,
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.type,
+  }) : super(key: key);
 
   @override
-  State<NewExercise> createState() => _NewExerciseState();
+  State<EditExercise> createState() => _EditExerciseState();
 }
 
-class _NewExerciseState extends State<NewExercise> {
+class _EditExerciseState extends State<EditExercise> {
   final GlobalKey<FormState> _form = GlobalKey();
   final storage = const FlutterSecureStorage();
-  String? name;
-  String? desc;
-  String? type;
+  String name = "";
+  String desc = "";
+  String type = "";
   var items = [];
   List<String> title = [];
   List<String> link = [];
@@ -29,12 +39,13 @@ class _NewExerciseState extends State<NewExercise> {
   List<String> reps = [];
   List<String> notes = [];
   bool visible = false;
+  final rows = <Widget>[];
 
-  void _resetForm() {
-    _form.currentState?.reset();
-  }
+  // void _resetForm() {
+  //   _form.currentState?.reset();
+  // }
 
-  var _details = <Widget>[];
+  final _details = <Widget>[];
 
   void _addCardWidget() {
     setState(() {
@@ -198,6 +209,188 @@ class _NewExerciseState extends State<NewExercise> {
 // --                                                               -- //
 // --                          START                                -- //
 // --                                                               -- //
+
+  Future getExDetail() async {
+    await EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    var url = Uri.parse('${apiURL}exercises/detail/${widget.id}');
+    String? token = await storage.read(key: "token");
+    http.Response response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200) {
+      var jsonBody = response.body;
+      var jsonData = jsonDecode(jsonBody);
+      setState(() {
+        for (var i = 0; i < jsonData['data'].length; i++) {
+          rows.add(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(
+                  thickness: 1,
+                  color: Colors.black,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(10),
+                          labelText: 'Title',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        initialValue: jsonData['data'][i]['title'],
+                        validator: (value) {
+                          if (value == null || value == "") {
+                            return "Please enter title";
+                          }
+
+                          return null;
+                        },
+                        onSaved: (value) {
+                          title.add(value!);
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: "Link",
+                          contentPadding: const EdgeInsets.all(10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        initialValue: jsonData['data'][i]['link'],
+                        validator: (value) {
+                          if (value == null || value == "") {
+                            return "Please enter link";
+                          }
+
+                          return null;
+                        },
+                        onSaved: (value) {
+                          link.add(value!);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(10),
+                          hintText: 'Sets',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        initialValue: jsonData['data'][i]['sets'],
+                        validator: (value) {
+                          if (value == null || value == "") {
+                            return "Please enter sets";
+                          }
+
+                          return null;
+                        },
+                        onSaved: (value) {
+                          sets.add(value!);
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "Reps",
+                          contentPadding: const EdgeInsets.all(10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        initialValue: jsonData['data'][i]['reps'],
+                        validator: (value) {
+                          if (value == null || value == "") {
+                            return "Please enter reps";
+                          }
+
+                          return null;
+                        },
+                        onSaved: (value) {
+                          reps.add(value!);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Notes",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  initialValue: jsonData['data'][i]['notes'],
+                  validator: (value) {
+                    if (value == null || value == "") {
+                      return "Please enter notes";
+                    }
+
+                    return null;
+                  },
+                  onSaved: (value) {
+                    notes.add(value!);
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      });
+      await EasyLoading.dismiss();
+    } else {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   Future getTypes() async {
     var url = Uri.parse('${apiURL}exercises/types');
     String? token = await storage.read(key: "token");
@@ -226,13 +419,13 @@ class _NewExerciseState extends State<NewExercise> {
     }
   }
 
-  Future submit() async {
+  Future update() async {
     FocusManager.instance.primaryFocus?.unfocus();
     await EasyLoading.show(
       status: 'Processing...',
       maskType: EasyLoadingMaskType.black,
     );
-    var uri = Uri.parse("${apiURL}exercises/add");
+    var uri = Uri.parse("${apiURL}exercises/edit/${widget.id}");
     String? token = await storage.read(key: "token");
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
@@ -244,9 +437,9 @@ class _NewExerciseState extends State<NewExercise> {
       uri,
     )..headers.addAll(headers);
 
-    request.fields['name'] = name!;
-    request.fields['description'] = desc!;
-    request.fields['ex_type'] = type!;
+    request.fields['name'] = name;
+    request.fields['description'] = desc;
+    request.fields['ex_type'] = type;
     for (String item in title) {
       request.files.add(http.MultipartFile.fromString('title[]', item));
     }
@@ -263,20 +456,23 @@ class _NewExerciseState extends State<NewExercise> {
       request.files.add(http.MultipartFile.fromString('notes[]', item));
     }
     var response = await request.send();
+    var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
-      _resetForm();
       await EasyLoading.dismiss();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: HexColor("#30CED9"),
             dismissDirection: DismissDirection.vertical,
-            content: const Text('Added successfully'),
+            content: const Text('Updated successfully'),
             duration: const Duration(seconds: 2),
           ),
         );
       }
     } else {
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      final result = jsonDecode(responseDecode.body);
+      print(result);
       await EasyLoading.dismiss();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -297,7 +493,11 @@ class _NewExerciseState extends State<NewExercise> {
   @override
   void initState() {
     super.initState();
+    name = widget.title;
+    desc = widget.description;
+    type = widget.type;
     getTypes();
+    getExDetail();
   }
 
   @override
@@ -350,6 +550,7 @@ class _NewExerciseState extends State<NewExercise> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        initialValue: name,
                         validator: (value) {
                           if (value == null || value == "") {
                             return "Please enter name";
@@ -374,6 +575,7 @@ class _NewExerciseState extends State<NewExercise> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        initialValue: desc,
                         validator: (value) {
                           if (value == null || value == "") {
                             return "Please enter description";
@@ -419,7 +621,7 @@ class _NewExerciseState extends State<NewExercise> {
                       // disabledItemFn: (String s) => s.startsWith('I'),
                     ),
                     items: (items).map((e) => e["name"] as String).toList(),
-                    // selectedItem: "Brazil",
+                    selectedItem: type,
                     validator: (value) {
                       if (value == null || value == "") {
                         return "Please select type";
@@ -428,7 +630,7 @@ class _NewExerciseState extends State<NewExercise> {
                       return null;
                     },
                     onChanged: (value) {
-                      type = value;
+                      type = value!;
                     },
                   ),
                 ),
@@ -452,134 +654,9 @@ class _NewExerciseState extends State<NewExercise> {
                     )
                   ],
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(10),
-                          labelText: 'Title',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter title";
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          title.add(value!);
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Link",
-                          contentPadding: const EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter link";
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          link.add(value!);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(10),
-                          hintText: 'Sets',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter sets";
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          sets.add(value!);
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Reps",
-                          contentPadding: const EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter reps";
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          reps.add(value!);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Notes",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(10),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value == "") {
-                      return "Please enter notes";
-                    }
-
-                    return null;
-                  },
-                  onSaved: (value) {
-                    notes.add(value!);
-                  },
+                Wrap(
+                  runSpacing: 20,
+                  children: rows,
                 ),
                 Column(
                   children: _details,
@@ -615,7 +692,7 @@ class _NewExerciseState extends State<NewExercise> {
                         return;
                       }
                       _form.currentState!.save();
-                      submit();
+                      update();
                     },
                     child: const Text("Submit"),
                   ),

@@ -234,9 +234,6 @@ class _QuestioneriesState extends State<Questioneries> {
     super.initState();
     _controller = TextEditingController();
     getQs();
-    var b = "20"; // A string
-    var c = int.parse(b);
-    print(c);
   }
 
   @override
