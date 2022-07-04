@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
+
+import '../../Globals/globals.dart';
 
 class DashboardSettingScreen extends StatefulWidget {
   const DashboardSettingScreen({Key? key}) : super(key: key);
@@ -11,17 +17,59 @@ class DashboardSettingScreen extends StatefulWidget {
 }
 
 class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
-  bool weight = true;
-  bool armPain = true;
-  bool pd3 = true;
-  bool pd4 = true;
-  bool pd5 = true;
-  bool pd6 = true;
-  bool pd7 = true;
-  bool Slt = true;
-  bool Mtw = true;
-  bool Dchd = true;
-  bool klt = true;
+  final storage = const FlutterSecureStorage();
+  final GlobalKey<FormState> _form = GlobalKey();
+  List data = [];
+  List<Widget> rowsAdd = [];
+  List all = [];
+  List<String> name = [];
+  List<int> groupValue = [];
+  List<int> id = [];
+
+  Future getPhyAsses() async {
+    // await EasyLoading.show(
+    //   status: 'Loading...',
+    //   maskType: EasyLoadingMaskType.black,
+    // );
+    var url = Uri.parse('${apiURL}site/setting');
+    String? token = await storage.read(key: "token");
+    http.Response response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200) {
+      var jsonBody = response.body;
+      var jsonData = jsonDecode(jsonBody);
+      if (mounted) {
+        setState(() {
+          data = jsonData["data"];
+        });
+        print(data);
+        await EasyLoading.dismiss();
+      }
+    } else {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPhyAsses();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,301 +96,133 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
         scrollDirection: Axis.vertical,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text(
-              "Dashboard Graphs",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
+          child: Form(
+            key: _form,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Dashboard Graphs",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Weight"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        weight = value;
+                Column(
+                  children: () {
+                    rowsAdd.clear();
+                    for (var i = 0; i < data.length; i++) {
+                      // for (var i = 0; i < 1; i++) {
+                      String key = data[i]["key"];
+                      int val = int.parse(data[i]["status"]);
+                      groupValue.add(val);
+                      id.add(data[i]["id"]);
+                      name.add(data[i]["name"]);
+                      rowsAdd.add(
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    labelText: key,
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value == "") {
+                                      return "Required";
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: name[i],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      name[i] = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text("Yes"),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: RadioButton(
+                                      description: "",
+                                      value: 1,
+                                      groupValue: groupValue[i],
+                                      onChanged: (value) => {
+                                        setState(
+                                          () {
+                                            groupValue[i] = 1;
+                                          },
+                                        ),
+                                      },
+                                      textPosition:
+                                          RadioButtonTextPosition.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text("No"),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: RadioButton(
+                                      description: "",
+                                      value: 0,
+                                      groupValue: groupValue[i],
+                                      onChanged: (value) => {
+                                        setState(
+                                          () {
+                                            groupValue[i] = 0;
+                                          },
+                                        ),
+                                      },
+                                      textPosition:
+                                          RadioButtonTextPosition.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    return rowsAdd;
+                  }(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  child: SizedBox(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(45),
+                        primary: HexColor("#30CED9"),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (!(_form.currentState?.validate() ?? true)) {
+                          return;
+                        }
+                        print(name);
+                        print(groupValue);
+                        print(id);
                       },
-                    )
-                  },
-                  value: weight,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Arm Pain"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () => armPain = value,
+                      child: const Text(
+                        "Update",
+                        style: TextStyle(fontSize: 20.0),
+                      ),
                     ),
-                  },
-                  value: armPain,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Pull Down 3"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        pd3 = value;
-                      },
-                    )
-                  },
-                  value: pd3,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Pull Down 4"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        pd4 = value;
-                      },
-                    )
-                  },
-                  value: pd4,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Pull Down 5"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        pd5 = value;
-                      },
-                    )
-                  },
-                  value: pd5,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Pull Down 6"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        pd6 = value;
-                      },
-                    )
-                  },
-                  value: pd6,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Pull Down 7"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        pd7 = value;
-                      },
-                    )
-                  },
-                  value: pd7,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Standing Long Toss"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        Slt = value;
-                      },
-                    )
-                  },
-                  value: Slt,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Mound Throw Velocity"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        Mtw = value;
-                      },
-                    )
-                  },
-                  value: Mtw,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: const Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Double Crow Hop Distance"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () => Dchd = value,
-                    )
-                  },
-                  value: Dchd,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 199, 184, 184),
-                  ),
-                  primary: HexColor("#FFFFFF"),
-                ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text("Kneeling Long Toss"),
-                  activeColor: HexColor("#30CED9"),
-                  onChanged: (value) => {
-                    setState(
-                      () {
-                        klt = value;
-                      },
-                    )
-                  },
-                  value: klt,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15, top: 20),
-              child: Center(
-                child: SizedBox(
-                  height: 43,
-                  width: 120,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                    ),
-                    onPressed: () {},
-                    child: const Text("Update "),
                   ),
                 ),
-              ),
+              ],
             ),
-          ]),
+          ),
         ),
       ),
     );
