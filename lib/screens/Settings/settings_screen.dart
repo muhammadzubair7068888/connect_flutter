@@ -37,36 +37,36 @@ class _SettingScreenState extends State<SettingScreen> {
         padding: const EdgeInsets.only(top: 15.0, left: 8, right: 8),
         child: Column(
           children: [
-            Card(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    primary: Colors.white),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const GeneralSettingScreen(),
-                    ),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "General Settings",
-                      style: TextStyle(
-                        color: HexColor("#161717"),
-                      ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
-                    )
-                  ],
-                ),
-              ),
-            ),
+            // Card(
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(
+            //         minimumSize: const Size.fromHeight(50),
+            //         primary: Colors.white),
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => const GeneralSettingScreen(),
+            //         ),
+            //       );
+            //     },
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //       children: [
+            //         Text(
+            //           "General Settings",
+            //           style: TextStyle(
+            //             color: HexColor("#161717"),
+            //           ),
+            //         ),
+            //         const Icon(
+            //           Icons.arrow_forward_ios,
+            //           color: Colors.black,
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Card(

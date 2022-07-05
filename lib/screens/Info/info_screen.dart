@@ -4,6 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 import '../File/file_screen.dart';
 import '../Profile/profile_screen.dart';
 import '../Questionieries/questioneries_screen.dart';
+import '../Settings/dashboardSetting_screen.dart';
 import '../Settings/settings_screen.dart';
 import '../Track_Velocity/vel_and_track_screen.dart';
 import '../UserScreens/user_screen.dart';
@@ -247,10 +248,16 @@ class _InfoState extends State<Info> {
                   minimumSize: const Size.fromHeight(50),
                 ),
                 onPressed: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const SettingScreen(),
+                  //   ),
+                  // );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const SettingScreen(),
+                      builder: (context) => const DashboardSettingScreen(),
                     ),
                   );
                 },

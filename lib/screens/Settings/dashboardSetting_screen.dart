@@ -21,16 +21,16 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
   final GlobalKey<FormState> _form = GlobalKey();
   List data = [];
   List<Widget> rowsAdd = [];
-  List all = [];
-  List<String> name = [];
-  List<int> groupValue = [];
-  List<int> id = [];
+  List<Object> list = [];
 
-  Future getPhyAsses() async {
-    // await EasyLoading.show(
-    //   status: 'Loading...',
-    //   maskType: EasyLoadingMaskType.black,
-    // );
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
+  Future getGraphSettings() async {
+    await EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
     var url = Uri.parse('${apiURL}site/setting');
     String? token = await storage.read(key: "token");
     http.Response response = await http.get(url, headers: {
@@ -46,7 +46,18 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
         setState(() {
           data = jsonData["data"];
         });
-        print(data);
+        for (var i = 0; i < data.length; i++) {
+          list.add(
+            Object(
+              id: data[i]["id"],
+              name: data[i]["name"],
+              key: data[i]["key"],
+              placeholder: data[i]["placeholder"],
+              status: int.parse(data[i]["status"]),
+              label: data[i]["label"],
+            ),
+          );
+        }
         await EasyLoading.dismiss();
       }
     } else {
@@ -64,10 +75,67 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
     }
   }
 
+  Future addTrack() async {
+    await EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    var uri = Uri.parse('${apiURL}velocity/graph/settings');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    for (var i = 0; i < list.length; i++) {
+      request.fields[list[i].label] = list[i].name;
+      request.fields[list[i].key] = list[i].status.toString();
+    }
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      await EasyLoading.dismiss();
+      // final result = jsonDecode(responseDecode.body);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      FocusManager.instance.primaryFocus?.unfocus();
+      // getTracks();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: HexColor("#30CED9"),
+            dismissDirection: DismissDirection.vertical,
+            content: const Text('Updated successfully'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } else {
+      await EasyLoading.dismiss();
+      FocusManager.instance.primaryFocus?.unfocus();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
   @override
   void initState() {
     super.initState();
-    getPhyAsses();
+    getGraphSettings();
   }
 
   @override
@@ -109,12 +177,6 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
                   children: () {
                     rowsAdd.clear();
                     for (var i = 0; i < data.length; i++) {
-                      // for (var i = 0; i < 1; i++) {
-                      String key = data[i]["key"];
-                      int val = int.parse(data[i]["status"]);
-                      groupValue.add(val);
-                      id.add(data[i]["id"]);
-                      name.add(data[i]["name"]);
                       rowsAdd.add(
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
@@ -124,7 +186,7 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
                                 child: TextFormField(
                                   decoration: InputDecoration(
                                     border: const OutlineInputBorder(),
-                                    labelText: key,
+                                    labelText: list[i].placeholder,
                                   ),
                                   validator: (value) {
                                     if (value == null || value == "") {
@@ -132,10 +194,10 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
                                     }
                                     return null;
                                   },
-                                  initialValue: name[i],
+                                  initialValue: list[i].name,
                                   onChanged: (value) {
                                     setState(() {
-                                      name[i] = value;
+                                      list[i].name = value;
                                     });
                                   },
                                 ),
@@ -149,11 +211,11 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
                                     child: RadioButton(
                                       description: "",
                                       value: 1,
-                                      groupValue: groupValue[i],
+                                      groupValue: list[i].status,
                                       onChanged: (value) => {
                                         setState(
                                           () {
-                                            groupValue[i] = 1;
+                                            list[i].status = 1;
                                           },
                                         ),
                                       },
@@ -172,11 +234,11 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
                                     child: RadioButton(
                                       description: "",
                                       value: 0,
-                                      groupValue: groupValue[i],
+                                      groupValue: list[i].status,
                                       onChanged: (value) => {
                                         setState(
                                           () {
-                                            groupValue[i] = 0;
+                                            list[i].status = 0;
                                           },
                                         ),
                                       },
@@ -209,9 +271,8 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
                         if (!(_form.currentState?.validate() ?? true)) {
                           return;
                         }
-                        print(name);
-                        print(groupValue);
-                        print(id);
+                        print(list.length);
+                        addTrack();
                       },
                       child: const Text(
                         "Update",
@@ -226,5 +287,28 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
         ),
       ),
     );
+  }
+}
+
+class Object {
+  late int id;
+  late String name;
+  late String key;
+  late String label;
+  late String placeholder;
+  late int status;
+
+  Object({
+    required this.id,
+    required this.name,
+    required this.key,
+    required this.label,
+    required this.placeholder,
+    required this.status,
+  });
+
+  @override
+  String toString() {
+    return '{id: $id, name: $name, key: $key, label: $label, placeholder: $placeholder, status: $status}';
   }
 }
