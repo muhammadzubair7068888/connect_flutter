@@ -57,7 +57,7 @@ class _MoundThrowsVelocityWidgetState extends State<MoundThrowsVelocityWidget> {
           name: 'Mound Throws Velocity',
           color: HexColor("#30CED9"),
           dataSource: data,
-          dashArray: const <double>[5, 5],
+          // dashArray: const <double>[5, 5],
           // splineType: SplineType.monotonic,
           xValueMapper: (_SalesData data, _) => data.year,
           yValueMapper: (_SalesData data, _) => data.weight,

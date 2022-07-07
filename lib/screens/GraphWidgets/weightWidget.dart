@@ -52,11 +52,12 @@ class _WeightWidgetState extends State<WeightWidget> {
       legend: Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <ChartSeries>[
-        StackedLineSeries<_SalesData, String>(
+        // StackedLineSeries<_SalesData, String>(
+        SplineSeries<_SalesData, String>(
           name: 'Weight',
           color: HexColor("#30CED9"),
           dataSource: data,
-          dashArray: const <double>[5, 5],
+          // dashArray: const <double>[5, 5],
           xValueMapper: (_SalesData weight, _) => weight.year,
           yValueMapper: (_SalesData weight, _) => weight.weight,
           markerSettings: const MarkerSettings(isVisible: true),

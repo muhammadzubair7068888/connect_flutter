@@ -40,23 +40,6 @@ class _LeaderBoardState extends State<LeaderBoard> {
   String sqt = "";
   String dLift = "";
   String vJump = "";
-  String wghValue = "0";
-  String armPValue = "0";
-  String pDVelValue = "0";
-  String mTVelValue = "0";
-  String pD3Value = "0";
-  String pD4Value = "0";
-  String pD5Value = "0";
-  String pD6Value = "0";
-  String pD7Value = "0";
-  String lTDistValue = "0";
-  String p7LabValue = "0";
-  String p5LabValue = "0";
-  String p3Value = "0";
-  String benValue = "0";
-  String sqtValue = "0";
-  String dLiftValue = "0";
-  String vJumpValue = "0";
   bool filter = false;
   final storage = const FlutterSecureStorage();
   List<DataRow> rowsAdd = [];
@@ -68,11 +51,59 @@ class _LeaderBoardState extends State<LeaderBoard> {
 // --                                                               -- //
 // --                          START                                -- //
 // --                                                               -- //
+  // Future filterL() async {
+  //   var uri = Uri.parse('${apiURL}users/leaderboard/filter');
+  //   String? token = await storage.read(key: "token");
+  //   Map<String, String> headers = {
+  //     'Content-Type': 'multipart/form-data',
+  //     'Accept': 'application/json',
+  //     'Authorization': 'Bearer $token',
+  //   };
+  //   var request = http.MultipartRequest(
+  //     'POST',
+  //     uri,
+  //   )..headers.addAll(headers);
+  //   request.fields['start'] = dateTime.toString();
+  //   request.fields['end'] = dateTimeEnd.toString();
+  //   var response = await request.send();
+  //   // var responseDecode = await http.Response.fromStream(response);
+  //   if (response.statusCode == 200) {
+  //     // final result = jsonDecode(responseDecode.body);
+  //     // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+  //     FocusManager.instance.primaryFocus?.unfocus();
+  //     _resetForm();
+  //     getLeaderBoard();
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           backgroundColor: HexColor("#30CED9"),
+  //           dismissDirection: DismissDirection.vertical,
+  //           content: const Text('Added successfully'),
+  //           duration: const Duration(seconds: 2),
+  //         ),
+  //       );
+  //     }
+  //   } else {
+  //     // await EasyLoading.dismiss();
+  //     FocusManager.instance.primaryFocus?.unfocus();
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           backgroundColor: Colors.redAccent,
+  //           dismissDirection: DismissDirection.vertical,
+  //           content: Text('Server Error'),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
+
   Future getLeaderBoard() async {
-    // await EasyLoading.show(
-    //   status: 'Loading...',
-    //   maskType: EasyLoadingMaskType.black,
-    // );
+    await EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
     var url = Uri.parse('${apiURL}users/leaderboard');
     String? token = await storage.read(key: "token");
     http.Response response = await http.get(url, headers: {
@@ -132,31 +163,30 @@ class _LeaderBoardState extends State<LeaderBoard> {
         vJump = filteredList[0]["name"];
         rowsAdd = [];
         for (var i = 0; i < jsonData['uservel'].length; i++) {
-          if (jsonData['uservel'][i]['uservelocity'][i]["velocity_key"] ==
-              "weight") {
-            wghValue = jsonData['uservel'][i]['uservelocity'][i]["value"];
-          }
           rowsAdd.add(
             DataRow(
               cells: [
                 DataCell(Text(jsonData['uservel'][i]["name"])),
-                DataCell(Text(wghValue)),
-                DataCell(Text(armPValue)),
-                DataCell(Text(pDVelValue)),
-                DataCell(Text(mTVelValue)),
-                DataCell(Text(pD3Value)),
-                DataCell(Text(pD4Value)),
-                DataCell(Text(pD5Value)),
-                DataCell(Text(pD6Value)),
-                DataCell(Text(pD7Value)),
-                DataCell(Text(lTDistValue)),
-                DataCell(Text(p7LabValue)),
-                DataCell(Text(p5LabValue)),
-                DataCell(Text(p3Value)),
-                DataCell(Text(benValue)),
-                DataCell(Text(sqtValue)),
-                DataCell(Text(dLiftValue)),
-                DataCell(Text(vJumpValue)),
+                DataCell(Text("${jsonData['uservel'][i]["weight"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["arm_pain"]}")),
+                DataCell(
+                    Text("${jsonData['uservel'][i]["pull_down_velocity"]}")),
+                DataCell(
+                    Text("${jsonData['uservel'][i]["mound_throws_velocity"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["pull_down_3"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["pull_down_4"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["pull_down_5"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["pull_down_6"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["pull_down_7"]}")),
+                DataCell(
+                    Text("${jsonData['uservel'][i]["long_toss_distance"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["pylo_7"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["pylo_5"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["pylo_3"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["bench"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["squat"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["deadlift"]}")),
+                DataCell(Text("${jsonData['uservel'][i]["vertical_jump"]}")),
               ],
             ),
           );
@@ -215,16 +245,16 @@ class _LeaderBoardState extends State<LeaderBoard> {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              setState(() {
-                filter = !filter;
-              });
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.filter_list),
+        //     onPressed: () {
+        //       setState(() {
+        //         filter = !filter;
+        //       });
+        //     },
+        //   ),
+        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -314,7 +344,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                               autovalidateMode: AutovalidateMode.always,
                               validator: (value) {
                                 if (value == null || value == "") {
-                                  return "*Please enter end date";
+                                  return "Enter end date";
                                 }
 
                                 return null;
@@ -347,7 +377,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                               if (!(_form.currentState?.validate() ?? true)) {
                                 return;
                               }
-                              // addVelocity();
+                              // filterL();
                             },
                             child: const Text("Submit"),
                           ),
@@ -412,6 +442,9 @@ class _LeaderBoardState extends State<LeaderBoard> {
                         ),
                       )
                     ],
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                 ],
               ),

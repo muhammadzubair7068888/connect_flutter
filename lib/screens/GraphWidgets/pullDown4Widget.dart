@@ -52,11 +52,11 @@ class _PullDown4WidgetState extends State<PullDown4Widget> {
       legend: Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <ChartSeries>[
-        StepLineSeries<_SalesData, String>(
+        SplineSeries<_SalesData, String>(
           name: 'Pull Down 4',
           color: HexColor("#30CED9"),
           dataSource: data,
-          dashArray: const <double>[5, 5],
+          // dashArray: const <double>[5, 5],
           xValueMapper: (_SalesData weight, _) => weight.year,
           yValueMapper: (_SalesData weight, _) => weight.weight,
           markerSettings: const MarkerSettings(isVisible: true),

@@ -52,19 +52,13 @@ class _PullDown3WidgetState extends State<PullDown3Widget> {
       legend: Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <ChartSeries>[
-        ScatterSeries<_SalesData, String>(
+        SplineSeries<_SalesData, String>(
           name: 'Pull Down 3',
           color: HexColor("#30CED9"),
           dataSource: data,
-          markerSettings: const MarkerSettings(
-            height: 15,
-            width: 15,
-            // Scatter will render in diamond shape
-            shape: DataMarkerType.diamond,
-          ),
           xValueMapper: (_SalesData weight, _) => weight.year,
           yValueMapper: (_SalesData weight, _) => weight.weight,
-          // markerSettings: const MarkerSettings(isVisible: true),
+          markerSettings: const MarkerSettings(isVisible: true),
         )
       ],
     );

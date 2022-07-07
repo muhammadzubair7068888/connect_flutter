@@ -53,19 +53,13 @@ class _ArmPainWidgetState extends State<ArmPainWidget> {
       legend: Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <ChartSeries>[
-        ScatterSeries<_SalesData, String>(
+        SplineSeries<_SalesData, String>(
           name: 'Arm Pain',
           color: HexColor("#30CED9"),
           dataSource: data,
-          markerSettings: const MarkerSettings(
-            height: 15,
-            width: 15,
-            // Scatter will render in diamond shape
-            shape: DataMarkerType.circle,
-          ),
           xValueMapper: (_SalesData weight, _) => weight.year,
           yValueMapper: (_SalesData weight, _) => weight.weight,
-          // markerSettings: const MarkerSettings(isVisible: true),
+          markerSettings: const MarkerSettings(isVisible: true),
         )
       ],
     );

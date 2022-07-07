@@ -54,7 +54,7 @@ class _DoubleCrowHopDistanceWidgetState
       legend: Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <ChartSeries>[
-        StepLineSeries<_SalesData, String>(
+        SplineSeries<_SalesData, String>(
           name: 'Double Crow Hop Distance',
           color: HexColor("#30CED9"),
           dataSource: data,
