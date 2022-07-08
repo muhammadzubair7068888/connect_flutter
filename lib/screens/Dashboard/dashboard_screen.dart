@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -51,6 +52,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 // --                          START                                -- //
 // --                                                               -- //
   Future getVelocities() async {
+    await EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
     var url = Uri.parse('${apiURL}velocity/graph');
     String? token = await storage.read(key: "token");
     http.Response response = await http.get(url, headers: {
@@ -61,6 +66,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
+      await EasyLoading.dismiss();
       setState(() {
         for (var i = 0; i < jsonData['weight'].length; i++) {
           weight.add(
@@ -150,11 +156,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           );
         }
-        for (var i = 0; i < jsonData['arm_pain'].length; i++) {
+        for (var i = 0; i < jsonData['pylo5'].length; i++) {
           p5.add(
             _SalesData(
-              jsonData['arm_pain'][i]["date"],
-              jsonData['arm_pain'][i]["arm_pain"],
+              jsonData['pylo5'][i]["date"],
+              jsonData['pylo5'][i]["pylo5"],
             ),
           );
         }
@@ -200,6 +206,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       });
     } else {
+      await EasyLoading.dismiss();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -437,63 +444,360 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const KneelingLongTossWidget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pull Down Velocity'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pull Down Velocity',
+                  color: HexColor("#30CED9"),
+                  dataSource: pDVel,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const StandingLongTossWidget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Mount Throw Velocity'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Mount Throw Velocity',
+                  color: HexColor("#30CED9"),
+                  dataSource: mTVel,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const MoundThrowsVelocityWidget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pull Down 3'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pull Down 3',
+                  color: HexColor("#30CED9"),
+                  dataSource: pD3,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const PullDown3Widget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pull Down 4'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pull Down 4',
+                  color: HexColor("#30CED9"),
+                  dataSource: pD4,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const PullDown4Widget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pull Down 5'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pull Down 5',
+                  color: HexColor("#30CED9"),
+                  dataSource: pD5,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const PullDown5Widget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pull Down 6'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pull Down 6',
+                  color: HexColor("#30CED9"),
+                  dataSource: pD6,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const PullDown6Widget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pull Down 7'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pull Down 7',
+                  color: HexColor("#30CED9"),
+                  dataSource: pD7,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const DoubleCrowHopDistanceWidget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Long Toss Distance'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Long Toss Distance',
+                  color: HexColor("#30CED9"),
+                  dataSource: lTDis,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
-            child: const PullDown7Widget(),
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pylo 7'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pylo 7',
+                  color: HexColor("#30CED9"),
+                  dataSource: p7,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pylo 5'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pylo 5',
+                  color: HexColor("#30CED9"),
+                  dataSource: p5,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Pylo 3'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Pylo 3',
+                  color: HexColor("#30CED9"),
+                  dataSource: p3,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Bench'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Bench',
+                  color: HexColor("#30CED9"),
+                  dataSource: bench,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Squat'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Squat',
+                  color: HexColor("#30CED9"),
+                  dataSource: squat,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'DeadLift'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'DeadLift',
+                  color: HexColor("#30CED9"),
+                  dataSource: deadLift,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: SfCartesianChart(
+              backgroundColor: Colors.white,
+              primaryXAxis: CategoryAxis(),
+              primaryYAxis: NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+              title: ChartTitle(text: 'Vertical Jump'),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <ChartSeries>[
+                SplineSeries<_SalesData, String>(
+                  name: 'Vertical Jump',
+                  color: HexColor("#30CED9"),
+                  dataSource: verticalJump,
+                  xValueMapper: (_SalesData weight, _) => weight.year,
+                  yValueMapper: (_SalesData weight, _) => weight.weight,
+                  markerSettings: const MarkerSettings(isVisible: true),
+                )
+              ],
+            ),
           ),
           const SizedBox(
             height: 30,
