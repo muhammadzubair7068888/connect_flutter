@@ -8,5 +8,7 @@ const Map<String, String> headers = {
 };
 // const String apiURL =
 //     "http://connectperformance-env.eba-3i2m7pmh.us-east-1.elasticbeanstalk.com/public/api/";
+// const String downloadUrl =
+//     "http://connectperformance-env.eba-3i2m7pmh.us-east-1.elasticbeanstalk.com/public/uploads/";
 // const String publicUrl =
 //     "http://connectperformance-env.eba-3i2m7pmh.us-east-1.elasticbeanstalk.com/public/";

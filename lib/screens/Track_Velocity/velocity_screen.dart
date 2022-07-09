@@ -322,7 +322,7 @@ class _VelocityScreenState extends State<VelocityScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Track",
+                          "Velocity",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,

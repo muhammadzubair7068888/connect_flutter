@@ -118,10 +118,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   Future getProfile() async {
-    await EasyLoading.show(
-      status: 'Loading...',
-      maskType: EasyLoadingMaskType.black,
-    );
+    // await EasyLoading.show(
+    //   status: 'Loading...',
+    //   maskType: EasyLoadingMaskType.black,
+    // );
     var url = Uri.parse('${apiURL}profile');
     String? token = await storage.read(key: "token");
     http.Response response = await http.get(url, headers: {
