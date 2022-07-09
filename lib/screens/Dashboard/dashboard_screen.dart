@@ -231,8 +231,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();
-      var jsonBody = response.body;
-      var jsonData = jsonDecode(jsonBody);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
