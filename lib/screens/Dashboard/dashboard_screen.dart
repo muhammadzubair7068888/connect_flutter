@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -11,7 +12,11 @@ import '../../Globals/globals.dart';
 import 'package:http/http.dart' as http;
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  final String role;
+  const DashboardScreen({
+    Key? key,
+    required this.role,
+  }) : super(key: key);
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -28,22 +33,56 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String user = '';
   var users = [];
   List<_SalesData> weight = [];
+  int minWeight = 0;
+  int maxWeight = 0;
   List<_SalesData> armPain = [];
+  int minArmPain = 0;
+  int maxArmPain = 0;
   List<_SalesData> pDVel = [];
+  int minPDVel = 0;
+  int maxPDVel = 0;
   List<_SalesData> mTVel = [];
+  int minMTVel = 0;
+  int maxMTVel = 0;
   List<_SalesData> pD3 = [];
+  int minPD3 = 0;
+  int maxPD3 = 0;
   List<_SalesData> pD4 = [];
+  int minPD4 = 0;
+  int maxPD4 = 0;
   List<_SalesData> pD5 = [];
+  int minPD5 = 0;
+  int maxPD5 = 0;
   List<_SalesData> pD6 = [];
+  int minPD6 = 0;
+  int maxPD6 = 0;
   List<_SalesData> pD7 = [];
+  int minPD7 = 0;
+  int maxPD7 = 0;
   List<_SalesData> lTDis = [];
+  int minLTDis = 0;
+  int maxLTDis = 0;
   List<_SalesData> p7 = [];
+  int minP7 = 0;
+  int maxP7 = 0;
   List<_SalesData> p5 = [];
+  int minP5 = 0;
+  int maxP5 = 0;
   List<_SalesData> p3 = [];
+  int minP3 = 0;
+  int maxP3 = 0;
   List<_SalesData> bench = [];
+  int minBench = 0;
+  int maxBench = 0;
   List<_SalesData> squat = [];
+  int minSquat = 0;
+  int maxSquat = 0;
   List<_SalesData> deadLift = [];
+  int minDeadLift = 0;
+  int maxDeadLift = 0;
   List<_SalesData> verticalJump = [];
+  int minVerticalJump = 0;
+  int maxVerticalJump = 0;
 
 // --                                                               -- //
 // --                          START                                -- //
@@ -90,6 +129,232 @@ class _DashboardScreenState extends State<DashboardScreen> {
           squat = [];
           deadLift = [];
           verticalJump = [];
+
+          dynamic min = jsonData['weight'].first;
+          dynamic max = jsonData['weight'].first;
+          jsonData['weight'].forEach((e) {
+            if (e['weight'] < min['weight']) min = e;
+          });
+          jsonData['weight'].forEach((e) {
+            if (e['weight'] > max['weight']) max = e;
+          });
+          minWeight = min['weight'];
+          maxWeight = max['weight'];
+
+          // -----------------------------------------------
+
+          dynamic min2 = jsonData['arm_pain'].first;
+          dynamic max2 = jsonData['arm_pain'].first;
+          jsonData['arm_pain'].forEach((e) {
+            if (e['arm_pain'] < min2['arm_pain']) min2 = e;
+          });
+          jsonData['arm_pain'].forEach((e) {
+            if (e['arm_pain'] > max2['arm_pain']) max2 = e;
+          });
+          minArmPain = min2['arm_pain'];
+          maxArmPain = max2['arm_pain'];
+
+          // -----------------------------------------------
+
+          dynamic min3 = jsonData['pull_down_velocity'].first;
+          dynamic max3 = jsonData['pull_down_velocity'].first;
+          jsonData['pull_down_velocity'].forEach((e) {
+            if (e['pull_down_velocity'] < min3['pull_down_velocity']) min3 = e;
+          });
+          jsonData['pull_down_velocity'].forEach((e) {
+            if (e['pull_down_velocity'] > max3['pull_down_velocity']) max3 = e;
+          });
+          minPDVel = min3['pull_down_velocity'];
+          maxPDVel = max3['pull_down_velocity'];
+
+          // -----------------------------------------------
+
+          dynamic min4 = jsonData['mount_throw_velocit'].first;
+          dynamic max4 = jsonData['mount_throw_velocit'].first;
+          jsonData['mount_throw_velocit'].forEach((e) {
+            if (e['mount_throw_velocit'] < min4['mount_throw_velocit'])
+              min4 = e;
+          });
+          jsonData['mount_throw_velocit'].forEach((e) {
+            if (e['mount_throw_velocit'] > max4['mount_throw_velocit'])
+              max4 = e;
+          });
+          minMTVel = min4['mount_throw_velocit'];
+          maxMTVel = max4['mount_throw_velocit'];
+
+          // -----------------------------------------------
+
+          dynamic min5 = jsonData['pull_down_3'].first;
+          dynamic max5 = jsonData['pull_down_3'].first;
+          jsonData['pull_down_3'].forEach((e) {
+            if (e['pull_down_3'] < min5['pull_down_3']) min5 = e;
+          });
+          jsonData['pull_down_3'].forEach((e) {
+            if (e['pull_down_3'] > max5['pull_down_3']) max5 = e;
+          });
+          minPD3 = min5['pull_down_3'];
+          maxPD3 = max5['pull_down_3'];
+
+          // -----------------------------------------------
+
+          dynamic min6 = jsonData['pull_down_4'].first;
+          dynamic max6 = jsonData['pull_down_4'].first;
+          jsonData['pull_down_4'].forEach((e) {
+            if (e['pull_down_4'] < min6['pull_down_4']) min6 = e;
+          });
+          jsonData['pull_down_4'].forEach((e) {
+            if (e['pull_down_4'] > max6['pull_down_4']) max6 = e;
+          });
+          minPD4 = min6['pull_down_4'];
+          maxPD4 = max6['pull_down_4'];
+
+          // -----------------------------------------------
+
+          dynamic min7 = jsonData['pull_down_5'].first;
+          dynamic max7 = jsonData['pull_down_5'].first;
+          jsonData['pull_down_5'].forEach((e) {
+            if (e['pull_down_5'] < min7['pull_down_5']) min7 = e;
+          });
+          jsonData['pull_down_5'].forEach((e) {
+            if (e['pull_down_5'] > max7['pull_down_5']) max7 = e;
+          });
+          minPD5 = min7['pull_down_5'];
+          maxPD5 = max7['pull_down_5'];
+
+          // -----------------------------------------------
+
+          dynamic min8 = jsonData['pull_down_6'].first;
+          dynamic max8 = jsonData['pull_down_6'].first;
+          jsonData['pull_down_6'].forEach((e) {
+            if (e['pull_down_6'] < min8['pull_down_6']) min8 = e;
+          });
+          jsonData['pull_down_6'].forEach((e) {
+            if (e['pull_down_6'] > max8['pull_down_6']) max8 = e;
+          });
+          minPD6 = min8['pull_down_6'];
+          maxPD6 = max8['pull_down_6'];
+
+          // -----------------------------------------------
+
+          dynamic min9 = jsonData['pull_down_7'].first;
+          dynamic max9 = jsonData['pull_down_7'].first;
+          jsonData['pull_down_7'].forEach((e) {
+            if (e['pull_down_7'] < min9['pull_down_7']) min9 = e;
+          });
+          jsonData['pull_down_7'].forEach((e) {
+            if (e['pull_down_7'] > max9['pull_down_7']) max9 = e;
+          });
+          minPD7 = min9['pull_down_7'];
+          maxPD7 = max9['pull_down_7'];
+
+          // -----------------------------------------------
+
+          dynamic min10 = jsonData['long_toss_distance'].first;
+          dynamic max10 = jsonData['long_toss_distance'].first;
+          jsonData['long_toss_distance'].forEach((e) {
+            if (e['long_toss_distance'] < min10['long_toss_distance'])
+              min10 = e;
+          });
+          jsonData['long_toss_distance'].forEach((e) {
+            if (e['long_toss_distance'] > max10['long_toss_distance'])
+              max10 = e;
+          });
+          minLTDis = min10['long_toss_distance'];
+          maxLTDis = max10['long_toss_distance'];
+
+          // -----------------------------------------------
+
+          dynamic min11 = jsonData['pylo7'].first;
+          dynamic max11 = jsonData['pylo7'].first;
+          jsonData['pylo7'].forEach((e) {
+            if (e['pylo7'] < min11['pylo7']) min11 = e;
+          });
+          jsonData['pylo7'].forEach((e) {
+            if (e['pylo7'] > max11['pylo7']) max11 = e;
+          });
+          minP7 = min11['pylo7'];
+          maxP7 = max11['pylo7'];
+
+          // -----------------------------------------------
+
+          dynamic min12 = jsonData['pylo5'].first;
+          dynamic max12 = jsonData['pylo5'].first;
+          jsonData['pylo5'].forEach((e) {
+            if (e['pylo5'] < min12['pylo5']) min12 = e;
+          });
+          jsonData['pylo5'].forEach((e) {
+            if (e['pylo5'] > max12['pylo5']) max12 = e;
+          });
+          minP5 = min12['pylo5'];
+          maxP5 = max12['pylo5'];
+
+          // -----------------------------------------------
+
+          dynamic min13 = jsonData['bench_all'].first;
+          dynamic max13 = jsonData['bench_all'].first;
+          jsonData['bench_all'].forEach((e) {
+            if (e['bench'] < min13['bench']) min13 = e;
+          });
+          jsonData['bench_all'].forEach((e) {
+            if (e['bench'] > max13['bench']) max13 = e;
+          });
+          minP3 = min13['bench'];
+          maxP3 = max13['bench'];
+
+          // -----------------------------------------------
+
+          dynamic min14 = jsonData['pylo3'].first;
+          dynamic max14 = jsonData['pylo3'].first;
+          jsonData['pylo3'].forEach((e) {
+            if (e['pylo3'] < min14['pylo3']) min14 = e;
+          });
+          jsonData['pylo3'].forEach((e) {
+            if (e['pylo3'] > max14['pylo3']) max14 = e;
+          });
+          minBench = min14['pylo3'];
+          maxBench = max14['pylo3'];
+
+          // -----------------------------------------------
+
+          dynamic min15 = jsonData['squat'].first;
+          dynamic max15 = jsonData['squat'].first;
+          jsonData['squat'].forEach((e) {
+            if (e['squat'] < min15['squat']) min15 = e;
+          });
+          jsonData['squat'].forEach((e) {
+            if (e['squat'] > max15['squat']) max15 = e;
+          });
+          minSquat = min15['squat'];
+          maxSquat = max15['squat'];
+
+          // -----------------------------------------------
+
+          dynamic min16 = jsonData['deadlift'].first;
+          dynamic max16 = jsonData['deadlift'].first;
+          jsonData['deadlift'].forEach((e) {
+            if (e['deadlift'] < min16['deadlift']) min16 = e;
+          });
+          jsonData['deadlift'].forEach((e) {
+            if (e['deadlift'] > max16['deadlift']) max16 = e;
+          });
+          minDeadLift = min16['deadlift'];
+          maxDeadLift = max16['deadlift'];
+
+          // -----------------------------------------------
+
+          dynamic min17 = jsonData['vertical_jump'].first;
+          dynamic max17 = jsonData['vertical_jump'].first;
+          jsonData['vertical_jump'].forEach((e) {
+            if (e['vertical_jump'] < min17['vertical_jump']) min17 = e;
+          });
+          jsonData['vertical_jump'].forEach((e) {
+            if (e['vertical_jump'] > max17['vertical_jump']) max17 = e;
+          });
+          minVerticalJump = min17['vertical_jump'];
+          maxVerticalJump = max17['vertical_jump'];
+
+          // -----------------------------------------------
+
           for (var i = 0; i < jsonData['weight'].length; i++) {
             weight.add(
               _SalesData(
@@ -194,11 +459,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             );
           }
-          for (var i = 0; i < jsonData['bench_all'].length; i++) {
+          for (var i = 0; i < jsonData['pylo3'].length; i++) {
             bench.add(
               _SalesData(
-                jsonData['bench_all'][i]["date"],
-                jsonData['bench_all'][i]["bench"],
+                jsonData['pylo3'][i]["date"],
+                jsonData['pylo3'][i]["pylo3"],
               ),
             );
           }
@@ -304,54 +569,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
         key: _form,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(15, 30, 15, 0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 2.0,
-                      spreadRadius: 0.4,
-                    )
-                  ],
-                ),
-                child: DropdownSearch<String>(
-                  dropdownDecoratorProps: const DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      hintStyle: TextStyle(color: Colors.black),
-                      errorStyle: TextStyle(color: Colors.redAccent),
-                      border: InputBorder.none,
-                      suffixIcon: Icon(Icons.arrow_drop_down_sharp),
-                      contentPadding:
-                          EdgeInsets.only(left: 20, top: 10, bottom: 10),
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                      labelText: 'Select User',
-                    ),
-                  ),
-                  popupProps: const PopupProps.menu(
-                    showSelectedItems: true,
-                    // disabledItemFn: (String s) => s.startsWith('I'),
-                  ),
-                  items: (users).map((e) => e["name"] as String).toList(),
-                  selectedItem: user,
-                  validator: (value) {
-                    if (value == null || value == "") {
-                      return "Please select user";
-                    }
+            SizedBox(
+              child: widget.role != "user"
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 30, 15, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 2.0,
+                              spreadRadius: 0.4,
+                            )
+                          ],
+                        ),
+                        child: DropdownSearch<String>(
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              hintStyle: TextStyle(color: Colors.black),
+                              errorStyle: TextStyle(color: Colors.redAccent),
+                              border: InputBorder.none,
+                              suffixIcon: Icon(Icons.arrow_drop_down_sharp),
+                              contentPadding: EdgeInsets.only(
+                                  left: 20, top: 10, bottom: 10),
+                              labelStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                              labelText: 'Select User',
+                            ),
+                          ),
+                          popupProps: const PopupProps.menu(
+                            showSelectedItems: true,
+                            // disabledItemFn: (String s) => s.startsWith('I'),
+                          ),
+                          items:
+                              (users).map((e) => e["name"] as String).toList(),
+                          selectedItem: user,
+                          validator: (value) {
+                            if (value == null || value == "") {
+                              return "Please select user";
+                            }
 
-                    return null;
-                  },
-                  onChanged: (value) {
-                    user = value!;
-                  },
-                ),
-              ),
+                            return null;
+                          },
+                          onChanged: (value) {
+                            user = value!;
+                          },
+                        ),
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(
               height: 30,
@@ -458,6 +728,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ElevatedButton(
                     onPressed: () {
                       // Respond to button press
+                      print(weight);
                     },
                     style: ElevatedButton.styleFrom(
                       maximumSize: const Size(150, 50),
@@ -482,8 +753,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: SfCartesianChart(
                 backgroundColor: Colors.white,
                 primaryXAxis: CategoryAxis(),
-                primaryYAxis:
-                    NumericAxis(minimum: -1, maximum: 1, interval: 0.2),
+                primaryYAxis: NumericAxis(
+                  minimum: maxWeight == 0 ? -1 : minWeight.toDouble(),
+                  maximum: maxWeight == 0 ? 1 : maxWeight.toDouble(),
+                  interval: maxWeight > 500
+                      ? 100
+                      : maxWeight > 400
+                          ? 80
+                          : maxWeight > 300
+                              ? 60
+                              : maxWeight > 200
+                                  ? 40
+                                  : maxWeight > 100
+                                      ? 200
+                                      : 10,
+                ),
                 title: ChartTitle(text: 'Weight'),
                 legend: Legend(isVisible: true),
                 tooltipBehavior: TooltipBehavior(enable: true),

@@ -50,7 +50,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
   String lvl = "";
 
   final List<Widget> _widgetOptions = <Widget>[
-    const DashboardScreen(),
+    const DashboardScreen(
+      role: 'admin',
+    ),
     const ExerciseScreen(),
     const Info(
       role: 'admin',
@@ -59,7 +61,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const AssessmentScreen(),
   ];
   final List<Widget> _widgetOptionsUser = <Widget>[
-    const DashboardScreen(),
+    const DashboardScreen(
+      role: 'user',
+    ),
     const Info(
       role: 'user',
     ),
@@ -601,7 +605,208 @@ class _BottomNavBarState extends State<BottomNavBar> {
                               ),
                             ),
                 )
-              : null,
+              : AppBar(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(10),
+                    ),
+                  ),
+                  centerTitle: true,
+                  actions: [
+                    IconButton(
+                      onPressed: () => {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              actionsAlignment: MainAxisAlignment.center,
+                              title: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            color: Colors.grey,
+                                            blurRadius: 2.0,
+                                            spreadRadius: 0.4)
+                                      ],
+                                    ),
+                                    child: DropdownSearch<String>(
+                                      dropdownDecoratorProps:
+                                          const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                          hintStyle:
+                                              TextStyle(color: Colors.black),
+                                          errorStyle: TextStyle(
+                                              color: Colors.redAccent),
+                                          border: InputBorder.none,
+                                          suffixIcon:
+                                              Icon(Icons.arrow_drop_down_sharp),
+                                          contentPadding: EdgeInsets.all(20),
+                                          labelStyle: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                          labelText: 'Select User',
+                                        ),
+                                      ),
+                                      popupProps: const PopupProps.menu(
+                                        showSelectedItems: true,
+                                        // disabledItemFn: (String s) => s.startsWith('I'),
+                                      ),
+                                      items: const [
+                                        "Adam",
+                                        "John",
+                                        "Katty",
+                                        'Ariana',
+                                      ],
+                                      onChanged: context.pop,
+                                      // selectedItem: "Brazil",
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            color: Colors.grey,
+                                            blurRadius: 2.0,
+                                            spreadRadius: 0.4)
+                                      ],
+                                    ),
+                                    child: DateTimeFormField(
+                                      decoration: const InputDecoration(
+                                        hintStyle:
+                                            TextStyle(color: Colors.black),
+                                        errorStyle:
+                                            TextStyle(color: Colors.redAccent),
+                                        border: InputBorder.none,
+                                        suffixIcon:
+                                            Icon(Icons.arrow_drop_down_sharp),
+                                        contentPadding: EdgeInsets.all(20),
+                                        labelStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                        labelText: 'Schedule Date',
+                                      ),
+                                      mode: DateTimeFieldPickerMode.date,
+                                      autovalidateMode: AutovalidateMode.always,
+                                      validator: (e) => (e?.day ?? 0) == 1
+                                          ? 'Please not the first day'
+                                          : null,
+                                      onDateSelected: (DateTime value) {
+                                        // _date = value;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  child: const Text("Print Schedule"),
+                                ),
+                              ],
+                              elevation: 24,
+                            );
+                          },
+                        ),
+                      },
+                      icon: const Icon(Icons.search),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Icon(Icons.chat_rounded),
+                    ),
+                  ],
+                  leading: PopupMenuButton(
+                    onSelected: (value) {
+                      if (value == MenuItem.item1) {
+                        //
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileScreen(
+                              age: age,
+                              email: email,
+                              height: height,
+                              handedness: handedness,
+                              imgUrl: imgUrl,
+                              lvl: lvl,
+                              name: name,
+                              school: school,
+                              strWeight: strWeight,
+                              role: widget.role,
+                            ),
+                          ),
+                        );
+                      } else if (value == MenuItem.item2) {
+                        //
+                      } else if (value == MenuItem.item3) {
+                        //
+                        logout();
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              border: Border.all(
+                                color:
+                                    HexColor("#30CED9"), // red as border color
+                              ),
+                            ),
+                            child: CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(1),
+                                child: ClipOval(
+                                  child: imgUrl != null
+                                      ? Image.network(
+                                          '$publicUrl$imgUrl',
+                                          fit: BoxFit.cover,
+                                          width: 80.0,
+                                          height: 80.0,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: MenuItem.item1,
+                        child: Text("My Profile"),
+                      ),
+                      const PopupMenuItem(
+                        value: MenuItem.item2,
+                        child: Text("Contact Us"),
+                      ),
+                      const PopupMenuItem(
+                        value: MenuItem.item3,
+                        child: Text("Sign Out"),
+                      )
+                    ],
+                  ),
+                  title: const Text(
+                    "Schedule",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
       body: widget.role == "user"
           ? _widgetOptionsUser[_selecIndex]
           : _widgetOptions[_selecIndex],

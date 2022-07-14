@@ -27,6 +27,95 @@ class _TrackScreenState extends State<TrackScreen> {
   final storage = const FlutterSecureStorage();
   List<DataRow> rowsAdd = [];
 
+  List data = [];
+  List search = [];
+  TextEditingController controller = TextEditingController();
+  onSearch(String text) async {
+    search.clear();
+    if (text.isEmpty) {
+      getTracks();
+    }
+
+    for (var f in data) {
+      if (f["weight"].contains(text) ||
+          f["date"].contains(text) ||
+          f['arm_pain'].toString().contains(text)) {
+        search.add(f);
+      }
+    }
+    setState(() {
+      if (search.isNotEmpty) {
+        rowsAdd = [];
+        for (var i = 0; i < search.length; i++) {
+          rowsAdd.add(
+            DataRow(
+              cells: [
+                DataCell(Text(search[i]['date'])),
+                DataCell(Text(search[i]['weight'])),
+                DataCell(Text("${search[i]['arm_pain']}")),
+                DataCell(
+                  const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          actionsAlignment: MainAxisAlignment.center,
+                          title: Column(
+                            children: const [
+                              Image(
+                                image: AssetImage("images/delete.png"),
+                                width: 30,
+                                height: 30,
+                              ),
+                            ],
+                          ),
+                          content: const Text(
+                            "Are you sure want to delete?",
+                            textAlign: TextAlign.center,
+                          ),
+                          actions: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                delete(search[i]['id']);
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Yes"),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("No"),
+                            ),
+                          ],
+                          elevation: 24,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    });
+  }
+
   void _resetForm() {
     _form.currentState?.reset();
   }
@@ -143,6 +232,7 @@ class _TrackScreenState extends State<TrackScreen> {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
       setState(() {
+        data = jsonData['data'];
         rowsAdd = [];
         for (var i = 0; i < jsonData['data'].length; i++) {
           rowsAdd.add(
@@ -514,6 +604,8 @@ class _TrackScreenState extends State<TrackScreen> {
                       ),
                       Flexible(
                         child: TextField(
+                          controller: controller,
+                          onChanged: onSearch,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search),
                             border: OutlineInputBorder(

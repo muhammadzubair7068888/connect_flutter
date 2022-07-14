@@ -44,6 +44,53 @@ class _LeaderBoardState extends State<LeaderBoard> {
   final storage = const FlutterSecureStorage();
   List<DataRow> rowsAdd = [];
 
+  List data = [];
+  List search = [];
+  TextEditingController controller = TextEditingController();
+  onSearch(String text) async {
+    search.clear();
+    if (text.isEmpty) {
+      getLeaderBoard();
+    }
+
+    for (var f in data) {
+      if (f["name"].contains(text)) {
+        search.add(f);
+      }
+    }
+    setState(() {
+      if (search.isNotEmpty) {
+        rowsAdd = [];
+        for (var i = 0; i < search.length; i++) {
+          rowsAdd.add(
+            DataRow(
+              cells: [
+                DataCell(Text(search[i]["name"])),
+                DataCell(Text("${search[i]["weight"]}")),
+                DataCell(Text("${search[i]["arm_pain"]}")),
+                DataCell(Text("${search[i]["pull_down_velocity"]}")),
+                DataCell(Text("${search[i]["mound_throws_velocity"]}")),
+                DataCell(Text("${search[i]["pull_down_3"]}")),
+                DataCell(Text("${search[i]["pull_down_4"]}")),
+                DataCell(Text("${search[i]["pull_down_5"]}")),
+                DataCell(Text("${search[i]["pull_down_6"]}")),
+                DataCell(Text("${search[i]["pull_down_7"]}")),
+                DataCell(Text("${search[i]["long_toss_distance"]}")),
+                DataCell(Text("${search[i]["pylo_7"]}")),
+                DataCell(Text("${search[i]["pylo_5"]}")),
+                DataCell(Text("${search[i]["pylo_3"]}")),
+                DataCell(Text("${search[i]["bench"]}")),
+                DataCell(Text("${search[i]["squat"]}")),
+                DataCell(Text("${search[i]["deadlift"]}")),
+                DataCell(Text("${search[i]["vertical_jump"]}")),
+              ],
+            ),
+          );
+        }
+      }
+    });
+  }
+
   void _resetForm() {
     _form.currentState?.reset();
   }
@@ -115,6 +162,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
       setState(() {
+        data = jsonData['uservelocity'];
         var outputList = jsonData["velocitynames"] as List;
         var filteredList;
         filteredList = outputList.where((e) => e["key"] == "weight").toList();
@@ -162,31 +210,32 @@ class _LeaderBoardState extends State<LeaderBoard> {
             outputList.where((e) => e["key"] == "vertical_jump").toList();
         vJump = filteredList[0]["name"];
         rowsAdd = [];
-        for (var i = 0; i < jsonData['uservel'].length; i++) {
+        for (var i = 0; i < jsonData['uservelocity'].length; i++) {
           rowsAdd.add(
             DataRow(
               cells: [
-                DataCell(Text(jsonData['uservel'][i]["name"])),
-                DataCell(Text("${jsonData['uservel'][i]["weight"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["arm_pain"]}")),
+                DataCell(Text(jsonData['uservelocity'][i]["name"])),
+                DataCell(Text("${jsonData['uservelocity'][i]["weight"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["arm_pain"]}")),
+                DataCell(Text(
+                    "${jsonData['uservelocity'][i]["pull_down_velocity"]}")),
+                DataCell(Text(
+                    "${jsonData['uservelocity'][i]["mound_throws_velocity"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_3"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_4"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_5"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_6"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_7"]}")),
+                DataCell(Text(
+                    "${jsonData['uservelocity'][i]["long_toss_distance"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["pylo_7"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["pylo_5"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["pylo_3"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["bench"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["squat"]}")),
+                DataCell(Text("${jsonData['uservelocity'][i]["deadlift"]}")),
                 DataCell(
-                    Text("${jsonData['uservel'][i]["pull_down_velocity"]}")),
-                DataCell(
-                    Text("${jsonData['uservel'][i]["mound_throws_velocity"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["pull_down_3"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["pull_down_4"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["pull_down_5"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["pull_down_6"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["pull_down_7"]}")),
-                DataCell(
-                    Text("${jsonData['uservel'][i]["long_toss_distance"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["pylo_7"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["pylo_5"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["pylo_3"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["bench"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["squat"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["deadlift"]}")),
-                DataCell(Text("${jsonData['uservel'][i]["vertical_jump"]}")),
+                    Text("${jsonData['uservelocity'][i]["vertical_jump"]}")),
               ],
             ),
           );
@@ -431,6 +480,8 @@ class _LeaderBoardState extends State<LeaderBoard> {
                       ),
                       Flexible(
                         child: TextField(
+                          controller: controller,
+                          onChanged: onSearch,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search),
                             border: OutlineInputBorder(

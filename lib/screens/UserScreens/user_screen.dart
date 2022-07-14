@@ -29,7 +29,174 @@ class UserDetail extends StatefulWidget {
 class _UserDetailState extends State<UserDetail> {
   final storage = const FlutterSecureStorage();
   List<DataRow> rowsAdd = [];
+
+  List data = [];
+  List search = [];
+  TextEditingController controller = TextEditingController();
+  onSearch(String text) async {
+    search.clear();
+    if (text.isEmpty) {
+      getUsers();
+    }
+
+    for (var f in data) {
+      if (f["name"].contains(text) ||
+          f["role"].contains(text) ||
+          f['height'].contains(text) ||
+          f['starting_weight'].contains(text)) {
+        search.add(f);
+      }
+    }
+    setState(() {
+      if (search.isNotEmpty) {
+        rowsAdd = [];
+
+        for (var i = 0; i < search.length; i++) {
+          if (search[i]['last_login'] == null) {
+            search[i]['last_login'] = "";
+          }
+          rowsAdd.add(
+            DataRow(
+              cells: [
+                //  DataCell(Text("${jsonData['data'][i]['id']}")),
+                DataCell(Text(search[i]['name'])),
+                DataCell(Text(search[i]['role'])),
+                DataCell(Text(userName!)),
+                DataCell(Text(search[i]['height'])),
+                DataCell(Text(search[i]['starting_weight'])),
+                DataCell(Text(search[i]['last_login'])),
+                DataCell(
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 30,
+                        child: IconButton(
+                          icon: const Icon(Icons.remove_red_eye),
+                          color: Colors.black,
+                          iconSize: 18,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewUserDetailScreen(
+                                  age: search[i]['age'],
+                                  email: search[i]['email'],
+                                  handedness: search[i]['handedness'],
+                                  height: search[i]['height'],
+                                  imgUrl: search[i]['avatar'],
+                                  lvl: search[i]['level'],
+                                  name: search[i]['name'],
+                                  school: search[i]['school'],
+                                  strWeight: search[i]['starting_weight'],
+                                  id: search[i]['id'],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 30,
+                        child: IconButton(
+                          icon: const Icon(Icons.edit),
+                          color: Colors.black,
+                          iconSize: 18,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditUserScreen(
+                                  age: search[i]['age'],
+                                  email: search[i]['email'],
+                                  handedness: search[i]['handedness'],
+                                  height: search[i]['height'],
+                                  imgUrl: search[i]['avatar'],
+                                  lvl: search[i]['level'],
+                                  name: search[i]['name'],
+                                  school: search[i]['school'],
+                                  strWeight: search[i]['starting_weight'],
+                                  id: search[i]['id'],
+                                  status: int.parse(search[i]['status']),
+                                  role: widget.role,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 30,
+                        child: IconButton(
+                          icon: const Icon(Icons.delete),
+                          color: Colors.red,
+                          iconSize: 18,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  title: Column(
+                                    children: const [
+                                      Image(
+                                        image: AssetImage("images/delete.png"),
+                                        width: 30,
+                                        height: 30,
+                                      ),
+                                    ],
+                                  ),
+                                  content: const Text(
+                                    "Are you sure want to delete?",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        delete(search[i]['id']);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("Yes"),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("No"),
+                                    ),
+                                  ],
+                                  elevation: 24,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+      }
+    });
+  }
+
   String? userName;
+
 // --                                                               -- //
 // --                          START                                -- //
 // --                                                               -- //
@@ -93,6 +260,7 @@ class _UserDetailState extends State<UserDetail> {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
       setState(() {
+        data = jsonData['data'];
         rowsAdd = [];
         if (jsonData["data"] == []) {
           userName!.isEmpty;
@@ -381,6 +549,8 @@ class _UserDetailState extends State<UserDetail> {
                   children: [
                     Flexible(
                       child: TextField(
+                        controller: controller,
+                        onChanged: onSearch,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.search),
                           border: OutlineInputBorder(

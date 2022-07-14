@@ -16,7 +16,11 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../Globals/globals.dart';
 
 class FileScreen extends StatefulWidget {
-  const FileScreen({Key? key}) : super(key: key);
+  final String role;
+  const FileScreen({
+    Key? key,
+    required this.role,
+  }) : super(key: key);
 
   @override
   State<FileScreen> createState() => _FileScreenState();
@@ -522,74 +526,86 @@ class _FileScreenState extends State<FileScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Uploaded Files",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                              color: HexColor("#222222"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Form(
-                        key: _form,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 2.0,
-                                    spreadRadius: 0.4)
-                              ],
-                            ),
-                            child: DropdownSearch<String>(
-                              dropdownDecoratorProps:
-                                  const DropDownDecoratorProps(
-                                dropdownSearchDecoration: InputDecoration(
-                                  hintStyle: TextStyle(color: Colors.black),
-                                  errorStyle:
-                                      TextStyle(color: Colors.redAccent),
-                                  border: InputBorder.none,
-                                  suffixIcon: Icon(Icons.arrow_drop_down_sharp),
-                                  contentPadding: EdgeInsets.only(
-                                      left: 20, top: 10, bottom: 10),
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                      SizedBox(
+                        child: widget.role != "user"
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Uploaded Files",
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500,
+                                      color: HexColor("#222222"),
+                                    ),
                                   ),
-                                  labelText: 'Select User',
-                                ),
-                              ),
-                              popupProps: const PopupProps.menu(
-                                showSelectedItems: true,
-                                // disabledItemFn: (String s) => s.startsWith('I'),
-                              ),
-                              items: (users)
-                                  .map((e) => e["name"] as String)
-                                  .toList(),
-                              selectedItem: user,
-                              validator: (value) {
-                                if (value == null || value == "") {
-                                  return "Please select user";
-                                }
+                                ],
+                              )
+                            : null,
+                      ),
+                      SizedBox(
+                        child: widget.role != "user"
+                            ? Form(
+                                key: _form,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            color: Colors.grey,
+                                            blurRadius: 2.0,
+                                            spreadRadius: 0.4)
+                                      ],
+                                    ),
+                                    child: DropdownSearch<String>(
+                                      dropdownDecoratorProps:
+                                          const DropDownDecoratorProps(
+                                        dropdownSearchDecoration:
+                                            InputDecoration(
+                                          hintStyle:
+                                              TextStyle(color: Colors.black),
+                                          errorStyle: TextStyle(
+                                              color: Colors.redAccent),
+                                          border: InputBorder.none,
+                                          suffixIcon:
+                                              Icon(Icons.arrow_drop_down_sharp),
+                                          contentPadding: EdgeInsets.only(
+                                              left: 20, top: 10, bottom: 10),
+                                          labelStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                          labelText: 'Select User',
+                                        ),
+                                      ),
+                                      popupProps: const PopupProps.menu(
+                                        showSelectedItems: true,
+                                        // disabledItemFn: (String s) => s.startsWith('I'),
+                                      ),
+                                      items: (users)
+                                          .map((e) => e["name"] as String)
+                                          .toList(),
+                                      selectedItem: user,
+                                      validator: (value) {
+                                        if (value == null || value == "") {
+                                          return "Please select user";
+                                        }
 
-                                return null;
-                              },
-                              onChanged: (value) {
-                                user = value!;
-                                getFiles();
-                              },
-                            ),
-                          ),
-                        ),
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        user = value!;
+                                        getFiles();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : null,
                       ),
                     ],
                   ),

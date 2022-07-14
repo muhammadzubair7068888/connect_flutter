@@ -25,6 +25,97 @@ class _QuestioneriesState extends State<Questioneries> {
   final storage = const FlutterSecureStorage();
   String? question;
   List<DataRow> rowsAdd = [];
+
+  List data = [];
+  List search = [];
+  TextEditingController controller = TextEditingController();
+  onSearch(String text) async {
+    search.clear();
+    if (text.isEmpty) {
+      getQs();
+    }
+
+    for (var f in data) {
+      if (f["name"].contains(text)) {
+        search.add(f);
+      }
+    }
+    setState(() {
+      if (search.isNotEmpty) {
+        rowsAdd = [];
+        for (var i = 0; i < search.length; i++) {
+          rowsAdd.add(
+            DataRow(
+              cells: [
+                DataCell(
+                  Wrap(
+                    children: [
+                      Text(search[i]["name"]),
+                    ],
+                  ),
+                ),
+                DataCell(
+                  const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            actionsAlignment: MainAxisAlignment.center,
+                            title: Column(
+                              children: const [
+                                Image(
+                                  image: AssetImage("images/delete.png"),
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              ],
+                            ),
+                            content: const Text(
+                              "Are you sure want to delete?",
+                              textAlign: TextAlign.center,
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  delete(search[i]['id']);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Yes"),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("No"),
+                              ),
+                            ],
+                            elevation: 24,
+                          );
+                        });
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    });
+  }
+
   void _resetForm() {
     _form.currentState?.reset();
   }
@@ -138,6 +229,7 @@ class _QuestioneriesState extends State<Questioneries> {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
       setState(() {
+        data = jsonData['data'];
         rowsAdd = [];
         for (var i = 0; i < jsonData['data'].length; i++) {
           rowsAdd.add(
@@ -359,6 +451,8 @@ class _QuestioneriesState extends State<Questioneries> {
                     children: [
                       Flexible(
                         child: TextField(
+                          controller: controller,
+                          onChanged: onSearch,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search),
                             border: OutlineInputBorder(

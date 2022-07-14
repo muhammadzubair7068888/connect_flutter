@@ -22,6 +22,147 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   final storage = const FlutterSecureStorage();
   List<DataRow> rowsAdd = [];
 
+  List data = [];
+  List search = [];
+  TextEditingController controller = TextEditingController();
+  onSearch(String text) async {
+    search.clear();
+    if (text.isEmpty) {
+      getExercises();
+    }
+
+    for (var f in data) {
+      if (f["name"].contains(text) ||
+          f['exercise_type']['name'].contains(text) ||
+          f['description'].contains(text)) {
+        search.add(f);
+      }
+    }
+    setState(() {
+      if (search.isNotEmpty) {
+        rowsAdd = [];
+        for (var i = 0; i < search.length; i++) {
+          rowsAdd.add(
+            DataRow(
+              cells: [
+                DataCell(Text(search[i]['name'])),
+                DataCell(Text(search[i]['exercise_type']['name'])),
+                DataCell(Text(search[i]['description'])),
+                DataCell(
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 30,
+                        child: IconButton(
+                          icon: const Icon(Icons.remove_red_eye),
+                          iconSize: 18,
+                          color: HexColor("#30CED9"),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewExerciseScreen(
+                                  id: search[i]['id'],
+                                  description: search[i]['description'],
+                                  title: search[i]['name'],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 30,
+                        child: IconButton(
+                          icon: const Icon(Icons.edit_outlined),
+                          iconSize: 18,
+                          color: HexColor("#30CED9"),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditExercise(
+                                  id: search[i]['id'],
+                                  description: search[i]['description'],
+                                  title: search[i]['name'],
+                                  type: search[i]['exercise_type']['name'],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 30,
+                        child: IconButton(
+                          icon: const Icon(Icons.delete),
+                          iconSize: 18,
+                          color: Colors.red,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  title: Column(
+                                    children: const [
+                                      Image(
+                                        image: AssetImage("images/delete.png"),
+                                        width: 30,
+                                        height: 30,
+                                      ),
+                                    ],
+                                  ),
+                                  content: const Text(
+                                    "Are you sure want to delete?",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        delete(search[i]['id']);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("Yes"),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text("No"),
+                                    ),
+                                  ],
+                                  elevation: 24,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+      }
+    });
+  }
+
   Future delete(int id) async {
     var uri = Uri.parse('${apiURL}exercises/del');
     String? token = await storage.read(key: "token");
@@ -82,8 +223,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
       setState(() {
+        data = jsonData['data'];
         rowsAdd = [];
-
         for (var i = 0; i < jsonData['data'].length; i++) {
           rowsAdd.add(
             DataRow(
@@ -306,6 +447,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                     children: [
                       Flexible(
                         child: TextField(
+                          controller: controller,
+                          onChanged: onSearch,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search),
                             border: OutlineInputBorder(

@@ -641,27 +641,56 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
               ),
             ),
             SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                constraints: BoxConstraints(
-                  minWidth:
-                      MediaQuery.of(context).size.width * 1, // minimum width
-                ),
-                child: DataTable(
-                  headingRowColor: MaterialStateColor.resolveWith(
-                      (states) => HexColor("#30CED9")),
-                  sortColumnIndex: 0,
-                  sortAscending: true,
-                  columns: const [
-                    DataColumn(
-                      label: Text("Question"),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Questionnaire",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                                color: HexColor("#222222"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    DataColumn(
-                      label: Text("Answer"),
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Container(
+                      constraints: BoxConstraints(
+                        minWidth: MediaQuery.of(context).size.width *
+                            1, // minimum width
+                      ),
+                      child: DataTable(
+                        headingRowColor: MaterialStateColor.resolveWith(
+                            (states) => HexColor("#30CED9")),
+                        sortColumnIndex: 0,
+                        sortAscending: true,
+                        columns: const [
+                          DataColumn(
+                            label: Text("Question"),
+                          ),
+                          DataColumn(
+                            label: Text("Answer"),
+                          ),
+                        ],
+                        rows: rowsAddQ,
+                      ),
                     ),
-                  ],
-                  rows: rowsAddQ,
-                ),
+                  ),
+                ],
               ),
             ),
           ],
