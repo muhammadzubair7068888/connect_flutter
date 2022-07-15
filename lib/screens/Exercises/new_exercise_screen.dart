@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:regexed_validator/regexed_validator.dart';
 
 import '../../Globals/globals.dart';
 
@@ -33,6 +34,16 @@ class _NewExerciseState extends State<NewExercise> {
 
   void _resetForm() {
     _form.currentState?.reset();
+    setState(() {
+      title = [];
+      link = [];
+      sets = [];
+      reps = [];
+      notes = [];
+      name = "";
+      desc = "";
+      // type = "";
+    });
   }
 
   var _details = <Widget>[];
@@ -88,8 +99,8 @@ class _NewExerciseState extends State<NewExercise> {
                       ),
                     ),
                     validator: (value) {
-                      if (value == null || value == "") {
-                        return "Please enter link";
+                      if (!validator.url(value!)) {
+                        return 'Please enter a valid url';
                       }
 
                       return null;
@@ -115,6 +126,7 @@ class _NewExerciseState extends State<NewExercise> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value == "") {
                         return "Please enter sets";
@@ -139,6 +151,7 @@ class _NewExerciseState extends State<NewExercise> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value == "") {
                         return "Please enter reps";
@@ -267,6 +280,13 @@ class _NewExerciseState extends State<NewExercise> {
     if (response.statusCode == 200) {
       _resetForm();
       await EasyLoading.dismiss();
+      // ignore: use_build_context_synchronously
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => const ExerciseScreen(),
+      //   ),
+      // );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -492,8 +512,8 @@ class _NewExerciseState extends State<NewExercise> {
                           ),
                         ),
                         validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter link";
+                          if (!validator.url(value!)) {
+                            return 'Please enter a valid url';
                           }
 
                           return null;
@@ -519,6 +539,7 @@ class _NewExerciseState extends State<NewExercise> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value == "") {
                             return "Please enter sets";
@@ -543,6 +564,7 @@ class _NewExerciseState extends State<NewExercise> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value == "") {
                             return "Please enter reps";

@@ -1,19 +1,26 @@
+import 'dart:convert';
+
 import 'package:calendar_view/calendar_view.dart';
+import 'package:date_field/date_field.dart';
+import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
+import '../../../Globals/globals.dart';
+import '../../Exercises/user_model.dart';
 import '../app_colors.dart';
-import '../constants.dart';
-import '../extension.dart';
 import '../model/event.dart';
 import 'custom_button.dart';
-import 'date_time_selector.dart';
 
 class AddEventWidget extends StatefulWidget {
   final void Function(CalendarEventData<Event>)? onEventAdd;
-
-  const AddEventWidget({
+  List schedule;
+  AddEventWidget({
     Key? key,
+    required this.schedule,
     this.onEventAdd,
   }) : super(key: key);
 
@@ -25,31 +32,81 @@ class _AddEventWidgetState extends State<AddEventWidget> {
   final GlobalKey<FormState> _form = GlobalKey();
   late FocusNode _dateNode;
   late TextEditingController _startDateController;
-  late DateTime _startDate;
   late FocusNode _titleNode;
-  String _title = "";
   Color _color = Colors.blue;
-  // late DateTime _endDate;
-  // DateTime? _startTime;
-  // DateTime? _endTime;
-  // String _description = "";
-  // late FocusNode _descriptionNode;
+  String exercise = "";
+  List<String> exercises = [];
+  List exer = [];
+  int? free_id;
+  DateTime dateTime = DateTime.now();
+  final storage = const FlutterSecureStorage();
+  int? ids;
+  Future id() async {
+    String? id = await storage.read(key: "id");
+    setState(() {
+      ids = int.parse(id!);
+    });
+  }
 
-  // late TextEditingController _startTimeController;
-  // late TextEditingController _endTimeController;
-  // late TextEditingController _endDateController;
+  Future addExercise() async {
+    var uri = Uri.parse('${apiURL}exercises/schedule/update');
+    String? token = await storage.read(key: "token");
+    String? id = await storage.read(key: "id");
+    setState(() {
+      ids = int.parse(id!);
+    });
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var body = widget.schedule;
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['events'] = jsonEncode(widget.schedule);
+    request.fields['id'] = id.toString();
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      FocusManager.instance.primaryFocus?.unfocus();
+      _resetForm();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: HexColor("#30CED9"),
+            dismissDirection: DismissDirection.vertical,
+            content: const Text('Added successfully'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } else {
+      // await EasyLoading.dismiss();
+      FocusManager.instance.primaryFocus?.unfocus();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-
+    id();
     _titleNode = FocusNode();
     _dateNode = FocusNode();
     _startDateController = TextEditingController();
-    // _descriptionNode = FocusNode();
-    // _endDateController = TextEditingController();
-    // _startTimeController = TextEditingController();
-    // _endTimeController = TextEditingController();
   }
 
   @override
@@ -57,10 +114,6 @@ class _AddEventWidgetState extends State<AddEventWidget> {
     _titleNode.dispose();
     _dateNode.dispose();
     _startDateController.dispose();
-    // _descriptionNode.dispose();
-    // _endDateController.dispose();
-    // _startTimeController.dispose();
-    // _endTimeController.dispose();
 
     super.dispose();
   }
@@ -72,159 +125,123 @@ class _AddEventWidgetState extends State<AddEventWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextFormField(
-            decoration: AppConstants.inputDecoration.copyWith(
-              labelText: "Event Title",
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.grey, blurRadius: 2.0, spreadRadius: 0.4)
+              ],
             ),
-            style: const TextStyle(
-              color: AppColors.black,
-              fontSize: 17.0,
+            child: DropdownSearch<UserModel>(
+              onChanged: (value) {
+                free_id = value!.id;
+                exercise = value.name;
+              },
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                labelText: "Select Exercise Type",
+                hintText: "Select Exercise Type",
+              )),
+              asyncItems: (String? filter) => getData(filter),
+              popupProps: PopupPropsMultiSelection.modalBottomSheet(
+                showSelectedItems: true,
+                itemBuilder: _customPopupItemBuilderExample2,
+                showSearchBox: true,
+              ),
+              compareFn: (item, sItem) => item.id == sItem.id,
             ),
-            onSaved: (value) => _title = value?.trim() ?? "",
-            validator: (value) {
-              if (value == null || value == "") {
-                return "Please enter event title.";
-              }
-
-              return null;
-            },
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
           ),
+          // Container(
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     borderRadius: BorderRadius.circular(10.0),
+          //     boxShadow: const [
+          //       BoxShadow(
+          //           color: Colors.grey, blurRadius: 2.0, spreadRadius: 0.4)
+          //     ],
+          //   ),
+          //   child: DropdownSearch<String>(
+          //     dropdownDecoratorProps: const DropDownDecoratorProps(
+          //       dropdownSearchDecoration: InputDecoration(
+          //         hintStyle: TextStyle(color: Colors.black),
+          //         errorStyle: TextStyle(color: Colors.redAccent),
+          //         border: InputBorder.none,
+          //         suffixIcon: Icon(Icons.arrow_drop_down_sharp),
+          //         contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+          //         labelStyle: TextStyle(
+          //             fontWeight: FontWeight.bold, color: Colors.black),
+          //         labelText: 'Exercise Type',
+          //       ),
+          //     ),
+          //     popupProps: const PopupProps.menu(
+          //       showSelectedItems: true,
+          //       // disabledItemFn: (String s) => s.startsWith('I'),
+          //     ),
+          //     validator: (velocity) {
+          //       if (velocity == null || velocity == "") {
+          //         return "Please select exercise type";
+          //       }
+          //       return null;
+          //     },
+          //     items: exercises,
+          //     onChanged: (value) {
+          //       exercise = value!;
+          //     },
+          //     // selectedItem: velocity,
+          //   ),
+          // ),
           const SizedBox(
             height: 15,
           ),
           Row(
             children: [
               Expanded(
-                child: DateTimeSelectorFormField(
-                  controller: _startDateController,
-                  decoration: AppConstants.inputDecoration.copyWith(
-                    labelText: "Start Date",
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 2.0,
+                          spreadRadius: 0.4)
+                    ],
                   ),
-                  validator: (value) {
-                    if (value == null || value == "") {
-                      return "Please select date.";
-                    }
-
-                    return null;
-                  },
-                  textStyle: const TextStyle(
-                    color: AppColors.black,
-                    fontSize: 17.0,
+                  child: DateTimeFormField(
+                    decoration: const InputDecoration(
+                      hintStyle: TextStyle(color: Colors.black),
+                      errorStyle: TextStyle(color: Colors.redAccent),
+                      border: InputBorder.none,
+                      suffixIcon: Icon(Icons.arrow_drop_down_sharp),
+                      contentPadding: EdgeInsets.all(20),
+                      labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
+                      labelText: 'Select Date',
+                    ),
+                    initialValue: dateTime,
+                    mode: DateTimeFieldPickerMode.date,
+                    autovalidateMode: AutovalidateMode.always,
+                    onDateSelected: (DateTime value) {
+                      // dt = DateTime.parse(formatted);
+                      dateTime = value;
+                      print(dateTime);
+                    },
                   ),
-                  onSave: (date) => _startDate = date,
-                  type: DateTimeSelectionType.date,
                 ),
               ),
-              // const SizedBox(width: 20.0),
-              // Expanded(
-              //   child: DateTimeSelectorFormField(
-              //     controller: _endDateController,
-              //     decoration: AppConstants.inputDecoration.copyWith(
-              //       labelText: "End Date",
-              //     ),
-              //     validator: (value) {
-              //       if (value == null || value == "") {
-              //         return "Please select date.";
-              //       }
-
-              //       return null;
-              //     },
-              //     textStyle: const TextStyle(
-              //       color: AppColors.black,
-              //       fontSize: 17.0,
-              //     ),
-              //     onSave: (date) => _endDate = date,
-              //     type: DateTimeSelectionType.date,
-              //   ),
-              // ),
             ],
           ),
           const SizedBox(
             height: 15,
           ),
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: DateTimeSelectorFormField(
-          //         controller: _startTimeController,
-          //         decoration: AppConstants.inputDecoration.copyWith(
-          //           labelText: "Start Time",
-          //         ),
-          //         validator: (value) {
-          //           if (value == null || value == "") {
-          //             return "Please select start time.";
-          //           }
-
-          //           return null;
-          //         },
-          //         onSave: (date) => _startTime = date,
-          //         textStyle: const TextStyle(
-          //           color: AppColors.black,
-          //           fontSize: 17.0,
-          //         ),
-          //         type: DateTimeSelectionType.time,
-          //       ),
-          //     ),
-          //     const SizedBox(width: 20.0),
-          //     Expanded(
-          //       child: DateTimeSelectorFormField(
-          //         controller: _endTimeController,
-          //         decoration: AppConstants.inputDecoration.copyWith(
-          //           labelText: "End Time",
-          //         ),
-          //         validator: (value) {
-          //           if (value == null || value == "") {
-          //             return "Please select end time.";
-          //           }
-
-          //           return null;
-          //         },
-          //         onSave: (date) => _endTime = date,
-          //         textStyle: const TextStyle(
-          //           color: AppColors.black,
-          //           fontSize: 17.0,
-          //         ),
-          //         type: DateTimeSelectionType.time,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // const SizedBox(
-          //   height: 15,
-          // ),
-          // TextFormField(
-          //   focusNode: _descriptionNode,
-          //   style: const TextStyle(
-          //     color: AppColors.black,
-          //     fontSize: 17.0,
-          //   ),
-          //   keyboardType: TextInputType.multiline,
-          //   textInputAction: TextInputAction.newline,
-          //   selectionControls: MaterialTextSelectionControls(),
-          //   minLines: 1,
-          //   maxLines: 10,
-          //   maxLength: 1000,
-          //   validator: (value) {
-          //     if (value == null || value.trim() == "") {
-          //       return "Please enter event description.";
-          //     }
-
-          //     return null;
-          //   },
-          //   onSaved: (value) => _description = value?.trim() ?? "",
-          //   decoration: AppConstants.inputDecoration.copyWith(
-          //     hintText: "Event Description",
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 15.0,
-          // ),
           Row(
             children: [
               const Text(
-                "Event Color: ",
+                "Color: ",
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 17,
@@ -243,7 +260,25 @@ class _AddEventWidgetState extends State<AddEventWidget> {
             height: 15,
           ),
           CustomButton(
-            onTap: _createEvent,
+            onTap: () {
+              // addExercise();
+              setState(() {
+                widget.schedule.add(
+                  dataObject(
+                    backgroundColor: "#30CED9",
+                    borderColor: '#30CED9',
+                    extendedProps: ExtendedProps(
+                        exerciseID: free_id.toString(),
+                        user_id: ids.toString()),
+                    start: dateTime.toString(),
+                    title: exercise,
+                  ).toJson(),
+                );
+              });
+              print("1");
+              print(widget.schedule);
+              addExercise();
+            },
             title: "Add Event",
           ),
         ],
@@ -251,27 +286,24 @@ class _AddEventWidgetState extends State<AddEventWidget> {
     );
   }
 
-  void _createEvent() {
-    if (!(_form.currentState?.validate() ?? true)) return;
-
-    _form.currentState?.save();
-
-    final event = CalendarEventData<Event>(
-      date: _startDate,
-      color: _color,
-      // endTime: _endTime,
-      // startTime: _startTime,
-      // description: _description,
-      // endDate: _endDate,
-      title: _title,
-      event: Event(
-        title: _title,
-      ),
-    );
-
-    widget.onEventAdd?.call(event);
-    _resetForm();
-  }
+  // void _createEvent() {
+  //   if (!(_form.currentState?.validate() ?? true)) return;
+  //   _form.currentState?.save();
+  //   final event = CalendarEventData<Event>(
+  //     date: _startDate,
+  //     color: _color,
+  //     // endTime: _endTime,
+  //     // startTime: _startTime,
+  //     // description: _description,
+  //     // endDate: _endDate,
+  //     title: _title,
+  //     event: Event(
+  //       title: _title,
+  //     ),
+  //   );
+  //   widget.onEventAdd?.call(event);
+  //   _resetForm();
+  // }
 
   void _resetForm() {
     _form.currentState?.reset();
@@ -312,6 +344,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
           ColorPicker(
             displayThumbColor: true,
             enableAlpha: false,
+            paletteType: PaletteType.rgb,
             pickerColor: _color,
             onColorChanged: (c) {
               color = c;
@@ -328,7 +361,8 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                       _color = color;
                     });
                   }
-                  context.pop();
+                  print(_color);
+                  // context.pop();
                 },
               ),
             ),
@@ -337,4 +371,100 @@ class _AddEventWidgetState extends State<AddEventWidget> {
       ),
     );
   }
+
+  Widget _customPopupItemBuilderExample2(
+    BuildContext context,
+    UserModel? item,
+    bool isSelected,
+  ) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8),
+      decoration: !isSelected
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: ListTile(
+          selected: isSelected,
+          title: Text(item?.name ?? ''),
+        ),
+      ),
+    );
+  }
+
+  Future<List<UserModel>> getData(filter) async {
+    String? token = await storage.read(key: "token");
+    var response = await Dio().get(
+      "${apiURL}exercises/index",
+      queryParameters: {"filter": filter},
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+    final data = response.data["data"];
+    if (data != null) {
+      return UserModel.fromJsonList(data);
+    }
+
+    return [];
+  }
+}
+
+class dataObject {
+  String start;
+  String title;
+  String borderColor;
+  ExtendedProps extendedProps;
+  String backgroundColor;
+
+  dataObject(
+      {required this.start,
+      required this.title,
+      required this.borderColor,
+      required this.backgroundColor,
+      required this.extendedProps});
+
+  factory dataObject.fromJson(Map<String, dynamic> json) => dataObject(
+        start: json["start"],
+        title: json["title"],
+        borderColor: json["borderColor"],
+        extendedProps: ExtendedProps.fromJson(json["extendedProps"]),
+        backgroundColor: json["backgroundColor"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "start": start,
+        "title": title,
+        "borderColor": borderColor,
+        "extendedProps": extendedProps.toJson(),
+        "backgroundColor": backgroundColor,
+      };
+}
+
+class ExtendedProps {
+  String user_id;
+  String exerciseID;
+
+  ExtendedProps({
+    required this.user_id,
+    required this.exerciseID,
+  });
+
+  factory ExtendedProps.fromJson(Map<String, dynamic> json) => ExtendedProps(
+        user_id: json["user_id"],
+        exerciseID: json["exerciseID"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "user_id": user_id,
+        "exerciseID": exerciseID,
+      };
 }

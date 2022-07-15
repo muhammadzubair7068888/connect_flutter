@@ -6,9 +6,13 @@ import 'widgets/add_event_widget.dart';
 
 class CreateEventPage extends StatefulWidget {
   final bool withDuration;
+  final List schedule;
 
-  const CreateEventPage({Key? key, this.withDuration = false})
-      : super(key: key);
+  const CreateEventPage({
+    Key? key,
+    this.withDuration = false,
+    required this.schedule,
+  }) : super(key: key);
 
   @override
   _CreateEventPageState createState() => _CreateEventPageState();
@@ -50,6 +54,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
         padding: const EdgeInsets.all(20.0),
         child: AddEventWidget(
           onEventAdd: context.pop,
+          schedule: widget.schedule,
         ),
       ),
     );
