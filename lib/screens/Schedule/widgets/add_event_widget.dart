@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:calendar_view/calendar_view.dart';
+import 'package:connect/screens/Schedule/extension.dart';
 import 'package:date_field/date_field.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -9,18 +10,27 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import '../../../Globals/globals.dart';
+import '../../BottomNavBar/bottomNavBar_screen.dart';
 import '../../Exercises/user_model.dart';
 import '../app_colors.dart';
 import '../model/event.dart';
+import '../pages/month_view_page.dart';
 import 'custom_button.dart';
 
 class AddEventWidget extends StatefulWidget {
   final void Function(CalendarEventData<Event>)? onEventAdd;
   List schedule;
+  String userId;
+  String username;
+  final String role;
   AddEventWidget({
     Key? key,
+    required this.username,
     required this.schedule,
+    required this.userId,
+    required this.role,
     this.onEventAdd,
   }) : super(key: key);
 
@@ -33,28 +43,18 @@ class _AddEventWidgetState extends State<AddEventWidget> {
   late FocusNode _dateNode;
   late TextEditingController _startDateController;
   late FocusNode _titleNode;
-  Color _color = Colors.blue;
+  Color _color = const Color(0xff30CED9);
   String exercise = "";
   List<String> exercises = [];
   List exer = [];
   int? free_id;
-  DateTime dateTime = DateTime.now();
+  String? dateTime;
   final storage = const FlutterSecureStorage();
-  int? ids;
-  Future id() async {
-    String? id = await storage.read(key: "id");
-    setState(() {
-      ids = int.parse(id!);
-    });
-  }
 
   Future addExercise() async {
     var uri = Uri.parse('${apiURL}exercises/schedule/update');
     String? token = await storage.read(key: "token");
-    String? id = await storage.read(key: "id");
-    setState(() {
-      ids = int.parse(id!);
-    });
+
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
       'Accept': 'application/json',
@@ -66,14 +66,27 @@ class _AddEventWidgetState extends State<AddEventWidget> {
       uri,
     )..headers.addAll(headers);
     request.fields['events'] = jsonEncode(widget.schedule);
-    request.fields['id'] = id.toString();
+    request.fields['id'] = widget.userId;
     var response = await request.send();
     // var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
       FocusManager.instance.primaryFocus?.unfocus();
-      _resetForm();
+      // _resetForm();
+      // ignore: use_build_context_synchronously
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BottomNavBar(
+            role: widget.role,
+            index: 3,
+            i: widget.userId,
+            u: widget.username,
+          ),
+        ),
+        (Route<dynamic> route) => false,
+      );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -103,7 +116,6 @@ class _AddEventWidgetState extends State<AddEventWidget> {
   @override
   void initState() {
     super.initState();
-    id();
     _titleNode = FocusNode();
     _dateNode = FocusNode();
     _startDateController = TextEditingController();
@@ -139,6 +151,13 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                 free_id = value!.id;
                 exercise = value.name;
               },
+              validator: (value) {
+                if (free_id == null || exercise == "") {
+                  return "Select exercise type";
+                }
+
+                return null;
+              },
               dropdownDecoratorProps: const DropDownDecoratorProps(
                   dropdownSearchDecoration: InputDecoration(
                 border: InputBorder.none,
@@ -155,45 +174,6 @@ class _AddEventWidgetState extends State<AddEventWidget> {
               compareFn: (item, sItem) => item.id == sItem.id,
             ),
           ),
-          // Container(
-          //   decoration: BoxDecoration(
-          //     color: Colors.white,
-          //     borderRadius: BorderRadius.circular(10.0),
-          //     boxShadow: const [
-          //       BoxShadow(
-          //           color: Colors.grey, blurRadius: 2.0, spreadRadius: 0.4)
-          //     ],
-          //   ),
-          //   child: DropdownSearch<String>(
-          //     dropdownDecoratorProps: const DropDownDecoratorProps(
-          //       dropdownSearchDecoration: InputDecoration(
-          //         hintStyle: TextStyle(color: Colors.black),
-          //         errorStyle: TextStyle(color: Colors.redAccent),
-          //         border: InputBorder.none,
-          //         suffixIcon: Icon(Icons.arrow_drop_down_sharp),
-          //         contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-          //         labelStyle: TextStyle(
-          //             fontWeight: FontWeight.bold, color: Colors.black),
-          //         labelText: 'Exercise Type',
-          //       ),
-          //     ),
-          //     popupProps: const PopupProps.menu(
-          //       showSelectedItems: true,
-          //       // disabledItemFn: (String s) => s.startsWith('I'),
-          //     ),
-          //     validator: (velocity) {
-          //       if (velocity == null || velocity == "") {
-          //         return "Please select exercise type";
-          //       }
-          //       return null;
-          //     },
-          //     items: exercises,
-          //     onChanged: (value) {
-          //       exercise = value!;
-          //     },
-          //     // selectedItem: velocity,
-          //   ),
-          // ),
           const SizedBox(
             height: 15,
           ),
@@ -222,13 +202,21 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                           fontWeight: FontWeight.bold, color: Colors.black),
                       labelText: 'Select Date',
                     ),
-                    initialValue: dateTime,
+                    // initialValue: dateTime,
                     mode: DateTimeFieldPickerMode.date,
                     autovalidateMode: AutovalidateMode.always,
                     onDateSelected: (DateTime value) {
                       // dt = DateTime.parse(formatted);
-                      dateTime = value;
-                      print(dateTime);
+                      String formatDate = DateFormat("yyyy-MM-dd")
+                          .format(DateTime.parse(value.toString()));
+                      dateTime = formatDate;
+                    },
+                    validator: (value) {
+                      if (dateTime == null || dateTime == "") {
+                        return "Select date";
+                      }
+
+                      return null;
                     },
                   ),
                 ),
@@ -261,25 +249,27 @@ class _AddEventWidgetState extends State<AddEventWidget> {
           ),
           CustomButton(
             onTap: () {
-              // addExercise();
+              if (!(_form.currentState?.validate() ?? true)) return;
               setState(() {
+                String hello = _color.toString();
+                String ello = hello.substring(10);
+                var str = ello.substring(0, ello.length - 1);
                 widget.schedule.add(
                   dataObject(
-                    backgroundColor: "#30CED9",
-                    borderColor: '#30CED9',
+                    backgroundColor: "#$str",
+                    borderColor: '#$str',
                     extendedProps: ExtendedProps(
-                        exerciseID: free_id.toString(),
-                        user_id: ids.toString()),
+                      user_id: widget.userId,
+                      exerciseID: free_id.toString(),
+                    ),
                     start: dateTime.toString(),
                     title: exercise,
                   ).toJson(),
                 );
               });
-              print("1");
-              print(widget.schedule);
               addExercise();
             },
-            title: "Add Event",
+            title: "Add",
           ),
         ],
       ),
@@ -304,13 +294,12 @@ class _AddEventWidgetState extends State<AddEventWidget> {
   //   widget.onEventAdd?.call(event);
   //   _resetForm();
   // }
-
-  void _resetForm() {
-    _form.currentState?.reset();
-    _startDateController.text = "";
-    // _endTimeController.text = "";
-    // _startTimeController.text = "";
-  }
+  // void _resetForm() {
+  //   _form.currentState?.reset();
+  //   _startDateController.text = "";
+  //   // _endTimeController.text = "";
+  //   // _startTimeController.text = "";
+  // }
 
   void _displayColorPicker() {
     var color = _color;
@@ -327,10 +316,10 @@ class _AddEventWidgetState extends State<AddEventWidget> {
             width: 2,
           ),
         ),
-        contentPadding: EdgeInsets.all(20.0),
+        contentPadding: const EdgeInsets.all(20.0),
         children: [
           const Text(
-            "Event Color",
+            "Color",
             style: TextStyle(
               color: AppColors.black,
               fontSize: 25.0,
@@ -344,7 +333,6 @@ class _AddEventWidgetState extends State<AddEventWidget> {
           ColorPicker(
             displayThumbColor: true,
             enableAlpha: false,
-            paletteType: PaletteType.rgb,
             pickerColor: _color,
             onColorChanged: (c) {
               color = c;
@@ -361,8 +349,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
                       _color = color;
                     });
                   }
-                  print(_color);
-                  // context.pop();
+                  context.pop();
                 },
               ),
             ),

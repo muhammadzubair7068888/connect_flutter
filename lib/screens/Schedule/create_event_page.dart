@@ -7,11 +7,17 @@ import 'widgets/add_event_widget.dart';
 class CreateEventPage extends StatefulWidget {
   final bool withDuration;
   final List schedule;
+  final String userId;
+  final String role;
+  final String username;
 
   const CreateEventPage({
     Key? key,
     this.withDuration = false,
+    required this.username,
     required this.schedule,
+    required this.role,
+    required this.userId,
   }) : super(key: key);
 
   @override
@@ -55,6 +61,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
         child: AddEventWidget(
           onEventAdd: context.pop,
           schedule: widget.schedule,
+          userId: widget.userId,
+          role: widget.role,
+          username: widget.username,
         ),
       ),
     );

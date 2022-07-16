@@ -142,6 +142,9 @@ class _formFielfState extends State<formFielf> {
       MaterialPageRoute<void>(
         builder: (BuildContext context) => BottomNavBar(
           role: widget.role,
+          index: null,
+          i: '',
+          u: '',
         ),
       ),
       (route) => false,

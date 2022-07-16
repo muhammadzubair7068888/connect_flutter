@@ -8,8 +8,20 @@ import 'widgets/edit_event_widget.dart';
 class EditEventPage extends StatefulWidget {
   final bool withDuration;
   final String title;
+  final List schedule;
+  final String userId;
+  final String desc;
+  final String role;
+  final String username;
+  final int id;
   const EditEventPage({
     Key? key,
+    required this.desc,
+    required this.schedule,
+    required this.role,
+    required this.userId,
+    required this.username,
+    required this.id,
     this.withDuration = false,
     required this.title,
   }) : super(key: key);
@@ -52,7 +64,13 @@ class _EditEventPageState extends State<EditEventPage> {
         padding: const EdgeInsets.all(20.0),
         child: EditEventWidget(
           onEventAdd: context.pop,
+          username: widget.username,
           title: widget.title,
+          role: widget.role,
+          schedule: widget.schedule,
+          userId: widget.userId,
+          id: widget.id,
+          desc: widget.desc,
         ),
       ),
     );

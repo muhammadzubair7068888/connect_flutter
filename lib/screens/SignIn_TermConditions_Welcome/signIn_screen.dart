@@ -31,6 +31,9 @@ class _SignInScreenState extends State<SignInScreen> {
       MaterialPageRoute<void>(
         builder: (BuildContext context) => BottomNavBar(
           role: role,
+          index: null,
+          i: '',
+          u: '',
         ),
       ),
       (route) => false,

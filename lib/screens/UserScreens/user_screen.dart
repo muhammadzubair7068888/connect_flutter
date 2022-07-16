@@ -465,6 +465,9 @@ class _UserDetailState extends State<UserDetail> {
                     MaterialPageRoute(
                       builder: (context) => BottomNavBar(
                         role: widget.role,
+                        index: null,
+                        i: '',
+                        u: '',
                       ),
                     ),
                   );

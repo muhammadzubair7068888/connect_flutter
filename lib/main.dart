@@ -58,7 +58,12 @@ class _MyAppState extends State<MyApp> {
       // ignore: unnecessary_null_comparison
       home: token == null || token == "" || token!.isEmpty
           ? const WelcomeScreen()
-          : BottomNavBar(role: role!),
+          : BottomNavBar(
+              role: role!,
+              index: null,
+              i: '',
+              u: '',
+            ),
       builder: EasyLoading.init(),
     );
   }

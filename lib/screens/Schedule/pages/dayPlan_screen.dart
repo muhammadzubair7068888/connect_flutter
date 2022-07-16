@@ -1,18 +1,232 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
+import '../../../Globals/globals.dart';
 import 'dayPlanDesc_screen.dart';
 
 class DayPlanScreen extends StatefulWidget {
-  const DayPlanScreen({Key? key}) : super(key: key);
+  final int id;
+  const DayPlanScreen({
+    Key? key,
+    required this.id,
+  }) : super(key: key);
 
   @override
   State<DayPlanScreen> createState() => _DayPlanScreenState();
 }
 
 class _DayPlanScreenState extends State<DayPlanScreen> {
+  final storage = const FlutterSecureStorage();
+  String title = '';
+  String desc = '';
+  List<Widget> wrapper = <Widget>[];
+  bool load = true;
+
+  Future getDetails() async {
+    var url = Uri.parse('${apiURL}exercises/schedule/exercise/${widget.id}');
+    String? token = await storage.read(key: "token");
+    http.Response response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (response.statusCode == 200) {
+      var jsonBody = response.body;
+      var jsonData = jsonDecode(jsonBody);
+      setState(
+        () {
+          var data = jsonData["exercise"];
+          title = data[0]["name"];
+          desc = data[0]["description"];
+          for (var i = 0; i < data[0]["excercise_detail"].length; i++) {
+            wrapper.add(
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Link: ",
+                            style: TextStyle(
+                              color: HexColor("#1C1C1C"),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                            ),
+                          ),
+                          TextSpan(
+                            text: data[0]["excercise_detail"][i]["link"],
+                            style: TextStyle(
+                              color: HexColor("#1777E3"),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Notes: ",
+                            style: TextStyle(
+                              color: HexColor("#1C1C1C"),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                            ),
+                          ),
+                          TextSpan(
+                            text: data[0]["excercise_detail"][i]["notes"],
+                            style: TextStyle(
+                              color: HexColor("#1C1C1C"),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Sets: ",
+                            style: TextStyle(
+                              color: HexColor("#161717"),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                            ),
+                          ),
+                          TextSpan(
+                            // ignore: prefer_if_null_operators
+                            text: data[0]["excercise_detail"][i]["sets"] != ""
+                                ? data[0]["excercise_detail"][i]["sets"]
+                                : " n/a",
+                            style: TextStyle(
+                              color: HexColor("#161717"),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Reps: ",
+                            style: TextStyle(
+                              color: HexColor("#161717"),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                            ),
+                          ),
+                          TextSpan(
+                            // ignore: prefer_if_null_operators
+                            text: data[0]["excercise_detail"][i]["reps"] != ""
+                                ? data[0]["excercise_detail"][i]["reps"]
+                                : " n/a",
+                            style: TextStyle(
+                              color: HexColor("#161717"),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Strength:",
+                        style: TextStyle(
+                          color: HexColor("#161717"),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    autofocus: false,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      hintText: '0',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    initialValue: data[0]["excercise_detail"][i]["strength"] !=
+                            null
+                        ? data[0]["excercise_detail"][i]["strength"].toString()
+                        : 0.toString(),
+                    onChanged: (value) {
+                      // sets.add(value!);
+                    },
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                ],
+              ),
+            );
+          }
+          load = false;
+        },
+      );
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getDetails();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,159 +248,86 @@ class _DayPlanScreenState extends State<DayPlanScreen> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                "Day Plan",
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                ),
+      body: load
+          ? const Center(
+              child: SizedBox(
+                width: 200,
+                height: 200,
+                child: CircularProgressIndicator(),
               ),
-              const SizedBox(
-                height: 10,
-                width: 10,
-              ),
-              Row(
-                children: const [
-                  Text(
-                    "Title:",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                    ),
-                  ),
-                  Text(
-                    " Connection Program",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-                width: 10,
-              ),
-              Row(
-                children: const [
-                  Text(
-                    "Description:",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                    ),
-                  ),
-                  Text(
-                    " Throwing Routine",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                width: 25,
-                height: 25,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DayPlanDescScreen(),
-                    ),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    const Text(
+                      "Day Plan",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       children: [
-                        Text(
-                          "Link:",
+                        const Text(
+                          "Title:",
                           style: TextStyle(
-                            color: HexColor("#161717"),
-                            fontSize: 19,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
                           ),
                         ),
                         Text(
-                          " Connection ball position",
-                          style: TextStyle(
-                            color: HexColor("#1777E3"),
-                            fontSize: 16,
+                          " $title",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
                           ),
                         ),
                       ],
                     ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                onPressed: () {
-                  setState(
-                    () {},
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Link:",
-                          style: TextStyle(
-                            color: HexColor("#161717"),
-                            fontSize: 19,
-                          ),
-                        ),
-                        Text(
-                          " Connection ball position",
-                          style: TextStyle(
-                            color: HexColor("#1777E3"),
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 20,
                     ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Description: ",
+                              style: TextStyle(
+                                color: HexColor("#1C1C1C"),
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
+                            TextSpan(
+                              text: desc,
+                              style: TextStyle(
+                                color: HexColor("#1C1C1C"),
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Column(
+                      children: wrapper,
                     )
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
