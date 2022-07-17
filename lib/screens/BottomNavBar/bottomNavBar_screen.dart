@@ -10,6 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../../Globals/globals.dart';
 import '../Assessments/assessments_screen.dart';
+import '../Chat/chatList_screen.dart';
 import '../Dashboard/dashboard_screen.dart';
 import '../Exercises/exercises_screen.dart';
 import '../Profile/profile_screen.dart';
@@ -207,10 +208,23 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 ),
               ),
               centerTitle: true,
-              actions: const [
+              actions: [
                 Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: Icon(Icons.chat_rounded),
+                  padding: const EdgeInsets.only(right: 20),
+                  child: InkWell(
+                    child: const Icon(Icons.chat_rounded),
+                    onTap: () {
+                      //
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatListScreen(
+                            urC: imgUrl,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
               leading: PopupMenuButton(
@@ -260,7 +274,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                             child: ClipOval(
                               child: imgUrl != null
                                   ? Image.network(
-                                      '$publicUrl$imgUrl',
+                                      '$imgUrl',
+                                      // '$publicUrl$imgUrl',
                                       fit: BoxFit.cover,
                                       width: 80.0,
                                       height: 80.0,
@@ -333,10 +348,23 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 ),
               ),
               centerTitle: true,
-              actions: const [
+              actions: [
                 Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: Icon(Icons.chat_rounded),
+                  padding: const EdgeInsets.only(right: 20),
+                  child: InkWell(
+                    child: const Icon(Icons.chat_rounded),
+                    onTap: () {
+                      //
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatListScreen(
+                            urC: imgUrl,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
               leading: PopupMenuButton(

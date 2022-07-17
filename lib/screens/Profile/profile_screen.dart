@@ -326,7 +326,7 @@ class _formFielfState extends State<formFielf> {
                                 radius: 60.0,
                                 child: ClipOval(
                                   child: Image.network(
-                                    '$publicUrl${widget.imgUrl}',
+                                    '${widget.imgUrl}',
                                     width: 120.0,
                                     height: 120.0,
                                     fit: BoxFit.cover,
