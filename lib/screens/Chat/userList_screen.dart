@@ -6,12 +6,15 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import '../../Globals/globals.dart';
 import 'chat_screen.dart';
+import 'createGroup_screen.dart';
 
 class UserListScreen extends StatefulWidget {
   final String? urC;
+  final String currentName;
   const UserListScreen({
     Key? key,
     required this.urC,
+    required this.currentName,
   }) : super(key: key);
 
   @override
@@ -24,6 +27,7 @@ class _UserListScreenState extends State<UserListScreen> {
   List<Widget> rowsAdd = <Widget>[];
   List data = [];
   List search = [];
+  bool load = true;
 
   onSearch(String text) async {
     search.clear();
@@ -128,6 +132,8 @@ class _UserListScreenState extends State<UserListScreen> {
                             group: 0,
                             id: data[i]["id"].toString(),
                             urC: widget.urC,
+                            isMyContact: false,
+                            currentName: widget.currentName,
                           ),
                         ),
                       );
@@ -182,6 +188,7 @@ class _UserListScreenState extends State<UserListScreen> {
             ),
           );
         }
+        load = false;
       });
     } else {
       if (mounted) {
@@ -212,26 +219,57 @@ class _UserListScreenState extends State<UserListScreen> {
             bottom: Radius.circular(10),
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          TextField(
-            controller: controller,
-            onChanged: onSearch,
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              border: UnderlineInputBorder(),
-              label: Text("Search"),
-            ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateGroupScreen(
+                    imgUrl:
+                        'http://192.168.1.30/connect_laravel/public/assets/chat/images/group-img.png',
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.group_add),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Column(
-            children: rowsAdd,
-          )
         ],
       ),
+      body: load
+          ? Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                ),
+                const Center(
+                  child: SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                TextField(
+                  controller: controller,
+                  onChanged: onSearch,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    border: UnderlineInputBorder(),
+                    label: Text("Search"),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  children: rowsAdd,
+                )
+              ],
+            ),
     );
   }
 }

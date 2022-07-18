@@ -220,6 +220,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         MaterialPageRoute(
                           builder: (context) => ChatListScreen(
                             urC: imgUrl,
+                            currentName: name,
                           ),
                         ),
                       );
@@ -360,6 +361,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                         MaterialPageRoute(
                           builder: (context) => ChatListScreen(
                             urC: imgUrl,
+                            currentName: name,
                           ),
                         ),
                       );

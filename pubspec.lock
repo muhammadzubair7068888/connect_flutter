@@ -139,6 +139,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -317,6 +322,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  multiselect:
+    dependency: "direct main"
+    description:
+      name: multiselect
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7"
   path:
     dependency: transitive
     description:
@@ -455,6 +467,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  states_rebuilder:
+    dependency: transitive
+    description:
+      name: states_rebuilder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.1.0+1"
   stream_channel:
     dependency: transitive
     description:

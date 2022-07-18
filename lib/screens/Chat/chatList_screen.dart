@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-
-import 'groupChatListWidget.dart';
 import 'singleChatListWidget.dart';
 import 'userList_screen.dart';
 
 class ChatListScreen extends StatefulWidget {
   final String? urC;
+  final String currentName;
   const ChatListScreen({
     Key? key,
     required this.urC,
+    required this.currentName,
   }) : super(key: key);
 
   @override
@@ -17,14 +17,6 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  int _selecIndex = 0;
-  // final List<Widget> _widgetOptions = <Widget>[
-  //   SingleChatListScreen(
-  //     urC: widget.urC,
-  //   ),
-  //   // const GroupChatListScreen(),
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +37,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 MaterialPageRoute(
                   builder: (context) => UserListScreen(
                     urC: widget.urC,
+                    currentName: widget.currentName,
                   ),
                 ),
               );
@@ -57,6 +50,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
         children: [
           SingleChatListScreen(
             urC: widget.urC,
+            currentName: widget.currentName,
           ),
         ],
       ),

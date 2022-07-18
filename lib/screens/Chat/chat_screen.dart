@@ -1,21 +1,22 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:connect/screens/Chat/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import '../../Globals/globals.dart';
-import 'model/message_model.dart';
 
 class ChatScreen extends StatefulWidget {
   final String? urC;
+  final bool isMyContact;
   final int group;
   final String id;
+  final String currentName;
   const ChatScreen({
     Key? key,
     required this.group,
+    required this.isMyContact,
     required this.id,
+    required this.currentName,
     required this.urC,
   }) : super(key: key);
 
@@ -26,7 +27,8 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final storage = const FlutterSecureStorage();
   String name = "";
-  final TextEditingController _textController = new TextEditingController();
+  String senderName = "";
+  final TextEditingController _textController = TextEditingController();
   String ur = "";
   int online = 0;
   bool load = true;
@@ -39,6 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future getChat() async {
     var url = Uri.parse('${apiURL}users/${widget.id}/conversation');
     String? token = await storage.read(key: "token");
+    String? id = await storage.read(key: "id");
     http.Response response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -50,29 +53,32 @@ class _ChatScreenState extends State<ChatScreen> {
       var data = jsonData["data"];
       if (mounted) {
         setState(() {
-          currentUser = data["user"]["id"];
+          currentUser = int.parse(id!);
           name = data["user"]["name"];
           online = data["user"]["is_online"];
           ur = data["user"]["avatar"];
-          load = false;
+
           messages = [];
           for (var i = 0; i < data["conversations"].length; i++) {
-            String hello = TimeOfDay.fromDateTime(DateTime.now().subtract(
-                    Duration(
-                        minutes: data["conversations"][i]
-                            ["time_from_now_in_min"])))
-                .toString();
+            String hello = TimeOfDay.fromDateTime(
+              DateTime.now().subtract(
+                Duration(
+                  minutes: data["conversations"][i]["time_from_now_in_min"],
+                ),
+              ),
+            ).toString();
             String ello = hello.substring(10);
             last = ello.substring(0, ello.length - 1);
             messages.add(
               Message(
-                id: data["conversations"][i]["receiver"]["id"],
+                id: data["conversations"][i]["sender"]["id"],
                 imageUrl: data["conversations"][i]["sender"]["avatar"],
                 time: last,
                 text: data["conversations"][i]["message"],
               ),
             );
           }
+          load = false;
         });
       }
     } else {
@@ -90,8 +96,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future getGroupChat() async {
-    var url = Uri.parse('${apiURL}users/${widget.id}/conversation');
+    var url = Uri.parse('${apiURL}users/${widget.id}/conversation?is_group=1');
     String? token = await storage.read(key: "token");
+    String? id = await storage.read(key: "id");
     http.Response response = await http.get(url, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -103,29 +110,40 @@ class _ChatScreenState extends State<ChatScreen> {
       var data = jsonData["data"];
       if (mounted) {
         setState(() {
-          currentUser = data["group"]["created_by_user"]["id"];
-          name = data["user"]["name"];
-          online = data["user"]["is_online"];
-          ur = data["user"]["avatar"];
-          load = false;
+          currentUser = int.parse(id!);
+          name = data["group"]["name"];
+          for (var l = 0; l < data["group"]["users"].length; l++) {
+            if (data["group"]["users"][l]["is_online"] == 1) {
+              setState(() {
+                online = 1;
+              });
+            }
+          }
+
+          ur = data["group"]["avatar"];
           messages = [];
           for (var i = 0; i < data["conversations"].length; i++) {
-            String hello = TimeOfDay.fromDateTime(DateTime.now().subtract(
-                    Duration(
-                        minutes: data["conversations"][i]
-                            ["time_from_now_in_min"])))
-                .toString();
-            String ello = hello.substring(10);
-            last = ello.substring(0, ello.length - 1);
-            messages.add(
-              Message(
-                id: data["conversations"][i]["receiver"]["id"],
-                imageUrl: data["conversations"][i]["sender"]["avatar"],
-                time: last,
-                text: data["conversations"][i]["message"],
-              ),
-            );
+            if (data["conversations"][i]["from_id"] != null) {
+              String hello = TimeOfDay.fromDateTime(
+                DateTime.now().subtract(
+                  Duration(
+                    minutes: data["conversations"][i]["time_from_now_in_min"],
+                  ),
+                ),
+              ).toString();
+              String ello = hello.substring(10);
+              last = ello.substring(0, ello.length - 1);
+              messages.add(
+                Message(
+                  id: data["conversations"][i]["sender"]["id"],
+                  imageUrl: data["conversations"][i]["sender"]["avatar"],
+                  time: last,
+                  text: data["conversations"][i]["message"],
+                ),
+              );
+            } else {}
           }
+          load = false;
         });
       }
     } else {
@@ -142,7 +160,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future addTrack() async {
+  Future sendMessage() async {
     var uri = Uri.parse('${apiURL}send-message');
     String? token = await storage.read(key: "token");
     Map<String, String> headers = {
@@ -157,12 +175,13 @@ class _ChatScreenState extends State<ChatScreen> {
     request.fields['to_id'] = widget.id;
     request.fields['is_archive_chat'] = 0.toString();
     request.fields['message'] = mess;
-    request.fields['is_my_contact'] = 1.toString();
-    request.fields['is_group'] = 0.toString();
+    // widget.isMyContact bool value is passed statically from group chat list and user list
+    request.fields['is_my_contact'] = widget.isMyContact.toString();
+    request.fields['is_group'] = widget.group.toString();
     request.fields['time'] = last;
-    request.fields['senderName'] = name;
+    request.fields['senderName'] = widget.currentName;
     request.fields['senderImg'] = widget.urC.toString();
-    request.fields['randomMsgId'] = Random().nextInt(100).toString();
+    request.fields['randomMsgId'] = (Random().nextInt(9000) + 1000).toString();
     request.fields['replyMessage'] = "";
     request.fields['receiverName'] = "";
     var response = await request.send();
@@ -170,7 +189,6 @@ class _ChatScreenState extends State<ChatScreen> {
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
-
     } else {
       // await EasyLoading.dismiss();
       FocusManager.instance.primaryFocus?.unfocus();
@@ -360,7 +378,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     text: mess,
                   ),
                 );
-                addTrack();
+                sendMessage();
               });
             },
             icon: const Icon(Icons.send),

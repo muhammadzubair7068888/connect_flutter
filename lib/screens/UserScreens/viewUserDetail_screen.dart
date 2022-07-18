@@ -232,7 +232,8 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                             radius: 60.0,
                             child: ClipOval(
                               child: Image.network(
-                                '$publicUrl${widget.imgUrl}',
+                                // '$publicUrl${widget.imgUrl}',
+                                '${widget.imgUrl}',
                                 width: 120.0,
                                 height: 120.0,
                                 fit: BoxFit.cover,
