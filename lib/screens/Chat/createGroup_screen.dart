@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -11,12 +12,25 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:http/http.dart' as http;
 import '../../Globals/globals.dart';
+import 'chatList_screen.dart';
 
 class CreateGroupScreen extends StatefulWidget {
+  final String? urC;
+  final String currentName;
   final String imgUrl;
+  final String role;
+  final int? index;
+  final String? i;
+  final String? u;
   const CreateGroupScreen({
     Key? key,
+    required this.urC,
+    required this.currentName,
     required this.imgUrl,
+    required this.role,
+    required this.index,
+    required this.i,
+    required this.u,
   }) : super(key: key);
 
   @override
@@ -39,10 +53,97 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   String gName = "";
+  String gDesc = "";
   String type = "1";
   String privacy = "1";
   var ids = [];
   bool load = false;
+
+  void _navigate() {
+    Navigator.pushAndRemoveUntil<void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => ChatListScreen(
+          currentName: widget.currentName,
+          urC: widget.urC,
+          i: widget.i,
+          index: widget.index,
+          role: widget.role,
+          u: widget.u,
+        ),
+      ),
+      (route) => false,
+    );
+  }
+
+  Future submit() async {
+    await EasyLoading.show(
+      status: 'Processing...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    String? id = await storage.read(key: "id");
+    var uri = Uri.parse('${apiURL}groups');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    if (_image != null) {
+      request.files
+          .add(await http.MultipartFile.fromPath('photo', _image!.path));
+    }
+    request.fields['id'] = "";
+    request.fields['name'] = gName;
+    request.fields['group_type'] = type;
+    request.fields['privacy'] = privacy;
+    request.fields['description'] = gDesc;
+    for (int item in ids) {
+      request.files
+          .add(http.MultipartFile.fromString('users[]', item.toString()));
+    }
+    var response = await request.send();
+    var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: HexColor("#30CED9"),
+            dismissDirection: DismissDirection.vertical,
+            content: const Text('Created successfully'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+      await EasyLoading.dismiss();
+      _navigate();
+    } else {
+      await EasyLoading.dismiss();
+      final result = jsonDecode(responseDecode.body);
+      print(result);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,16 +224,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                         ),
                                   ]
                                 : <Widget>[
-                                    CircleAvatar(
+                                    const CircleAvatar(
                                       radius: 60.0,
-                                      child: ClipOval(
-                                        child: Image.network(
-                                          '${widget.imgUrl}',
-                                          width: 120.0,
-                                          height: 120.0,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
                                     ),
                                     SizedBox(
                                         child:
@@ -193,9 +286,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               return null;
                             },
                             onChanged: (value) {
-                              setState(() {
-                                gName = value;
-                              });
+                              gName = value;
                             },
                           ),
                           const SizedBox(
@@ -229,8 +320,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
                               return null;
                             },
-                            onSaved: (value) {
-                              // notes.add(value!);
+                            onChanged: (value) {
+                              gDesc = value;
                             },
                           ),
                           const SizedBox(
@@ -314,8 +405,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             onChanged: (value) {
                               for (var i = 0; i < value.length; i++) {
                                 ids.add(value[i].id);
-                                print(ids);
                               }
+                            },
+                            validator: (value) {
+                              if (value == null || value == []) {
+                                return "required*";
+                              }
+
+                              return null;
                             },
                             dropdownDecoratorProps:
                                 const DropDownDecoratorProps(
@@ -329,6 +426,31 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               showSearchBox: true,
                             ),
                             compareFn: (item, sItem) => item.id == sItem.id,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 30.0),
+                            child: SizedBox(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size.fromHeight(50),
+                                  primary: HexColor("#30CED9"),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (!(_form.currentState?.validate() ??
+                                      true)) {
+                                    return;
+                                  }
+                                  submit();
+                                },
+                                child: const Text(
+                                  "Save",
+                                  style: TextStyle(fontSize: 20.0),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),

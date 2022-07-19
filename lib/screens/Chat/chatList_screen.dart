@@ -1,3 +1,4 @@
+import 'package:connect/screens/BottomNavBar/bottomNavBar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'singleChatListWidget.dart';
@@ -6,10 +7,18 @@ import 'userList_screen.dart';
 class ChatListScreen extends StatefulWidget {
   final String? urC;
   final String currentName;
+  final String role;
+  final int? index;
+  final String? i;
+  final String? u;
   const ChatListScreen({
     Key? key,
     required this.urC,
     required this.currentName,
+    required this.role,
+    required this.index,
+    required this.i,
+    required this.u,
   }) : super(key: key);
 
   @override
@@ -24,7 +33,18 @@ class _ChatListScreenState extends State<ChatListScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BottomNavBar(
+                  i: widget.i,
+                  index: widget.index,
+                  role: widget.role,
+                  u: widget.u,
+                ),
+              ),
+            );
           },
         ),
         centerTitle: true,
@@ -38,6 +58,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   builder: (context) => UserListScreen(
                     urC: widget.urC,
                     currentName: widget.currentName,
+                    i: widget.i,
+                    index: widget.index,
+                    role: widget.role,
+                    u: widget.u,
                   ),
                 ),
               );

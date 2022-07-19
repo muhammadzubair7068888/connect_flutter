@@ -221,6 +221,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
                           builder: (context) => ChatListScreen(
                             urC: imgUrl,
                             currentName: name,
+                            i: widget.i,
+                            index: widget.index,
+                            role: widget.role,
+                            u: widget.u,
                           ),
                         ),
                       );
@@ -362,6 +366,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
                           builder: (context) => ChatListScreen(
                             urC: imgUrl,
                             currentName: name,
+                            i: widget.i,
+                            index: widget.index,
+                            role: widget.role,
+                            u: widget.u,
                           ),
                         ),
                       );

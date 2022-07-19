@@ -294,6 +294,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  laravel_echo:
+    dependency: "direct main"
+    description:
+      name: laravel_echo
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.9"
   lints:
     dependency: transitive
     description:
@@ -441,6 +448,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  pusher_client:
+    dependency: "direct main"
+    description:
+      name: pusher_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   regexed_validator:
     dependency: "direct main"
     description:

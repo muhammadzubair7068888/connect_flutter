@@ -184,7 +184,7 @@ class _formFielfState extends State<formFielf> {
     request.fields['email'] = widget.email;
     request.fields['name'] = widget.name;
     var response = await request.send();
-    // var responseDecode = await http.Response.fromStream(response);
+    var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;

@@ -11,10 +11,18 @@ import 'createGroup_screen.dart';
 class UserListScreen extends StatefulWidget {
   final String? urC;
   final String currentName;
+  final String role;
+  final int? index;
+  final String? i;
+  final String? u;
   const UserListScreen({
     Key? key,
     required this.urC,
     required this.currentName,
+    required this.role,
+    required this.index,
+    required this.i,
+    required this.u,
   }) : super(key: key);
 
   @override
@@ -225,9 +233,15 @@ class _UserListScreenState extends State<UserListScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CreateGroupScreen(
+                  builder: (context) => CreateGroupScreen(
                     imgUrl:
                         'http://192.168.1.30/connect_laravel/public/assets/chat/images/group-img.png',
+                    currentName: widget.currentName,
+                    urC: widget.urC,
+                    i: widget.i,
+                    index: widget.index,
+                    role: widget.role,
+                    u: widget.u,
                   ),
                 ),
               );
