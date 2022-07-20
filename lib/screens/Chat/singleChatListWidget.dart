@@ -1,20 +1,28 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_pusher_client/flutter_pusher.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:laravel_echo/laravel_echo.dart';
+import '../../Globals/api_constants.dart';
 import '../../Globals/globals.dart';
 import 'chat_screen.dart';
 
 class SingleChatListScreen extends StatefulWidget {
   final String? urC;
   final String currentName;
+  final String? token;
+  final String? id;
   const SingleChatListScreen({
     Key? key,
     required this.urC,
     required this.currentName,
+    required this.token,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -28,6 +36,35 @@ class _SingleChatListScreenState extends State<SingleChatListScreen> {
   String last = "";
   int online = 0;
   bool load = true;
+
+  late FlutterPusher pusherClient;
+  late Echo echo;
+
+  void onConnectionStateChange(ConnectionStateChange event) {
+    print("STATE:${event.currentState}");
+    if (event.currentState == 'CONNECTED') {
+      print('connected');
+    } else if (event.currentState == 'DISCONNECTED') {
+      print('disconnected');
+    }
+  }
+
+  void _setUpEcho() {
+    // final token = Prefer.prefs.getString('token');
+
+    pusherClient = getPusherClient(widget.token!);
+
+    echo = echoSetup(widget.token!, pusherClient);
+
+    pusherClient.connect(onConnectionStateChange: onConnectionStateChange);
+
+    echo.private("user.${widget.id}").listen(
+          "UserEvent",
+          (e) => {
+            getConversations(),
+          },
+        );
+  }
 
   Future getConversations() async {
     var url = Uri.parse('${apiURL}conversations');
@@ -75,6 +112,8 @@ class _SingleChatListScreenState extends State<SingleChatListScreen> {
                                   urC: widget.urC,
                                   isMyContact: data[i]["is_my_contact"],
                                   currentName: widget.currentName,
+                                  currentid: widget.id,
+                                  token: widget.token,
                                 ),
                               ),
                             );
@@ -174,6 +213,8 @@ class _SingleChatListScreenState extends State<SingleChatListScreen> {
                                   urC: widget.urC,
                                   isMyContact: true,
                                   currentName: widget.currentName,
+                                  currentid: widget.id,
+                                  token: widget.token,
                                 ),
                               ),
                             );
@@ -208,16 +249,16 @@ class _SingleChatListScreenState extends State<SingleChatListScreen> {
                                   ),
                                 ),
                               ),
-                              Positioned(
-                                bottom: 5,
-                                child: online == 1
-                                    ? const Icon(
-                                        Icons.circle,
-                                        color: Colors.green,
-                                        size: 12,
-                                      )
-                                    : const SizedBox(),
-                              ),
+                              // Positioned(
+                              //   bottom: 5,
+                              //   child: online == 1
+                              //       ? const Icon(
+                              //           Icons.circle,
+                              //           color: Colors.green,
+                              //           size: 12,
+                              //         )
+                              //       : const SizedBox(),
+                              // ),
                             ],
                           ),
                           title: Text(text),
@@ -287,6 +328,7 @@ class _SingleChatListScreenState extends State<SingleChatListScreen> {
   void initState() {
     super.initState();
     getConversations();
+    _setUpEcho();
   }
 
   @override

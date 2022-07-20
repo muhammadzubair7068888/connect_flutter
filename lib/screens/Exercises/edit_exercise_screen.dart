@@ -226,155 +226,157 @@ class _EditExerciseState extends State<EditExercise> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        for (var i = 0; i < jsonData['data'].length; i++) {
-          rows.add(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Divider(
-                  thickness: 1,
-                  color: Colors.black,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(10),
-                          labelText: 'Title',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        initialValue: jsonData['data'][i]['title'],
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter title";
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          title.add(value!);
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Link",
-                          contentPadding: const EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        initialValue: jsonData['data'][i]['link'],
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter link";
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          link.add(value!);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(10),
-                          hintText: 'Sets',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        initialValue: jsonData['data'][i]['sets'],
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter sets";
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          sets.add(value!);
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Reps",
-                          contentPadding: const EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        initialValue: jsonData['data'][i]['reps'],
-                        validator: (value) {
-                          if (value == null || value == "") {
-                            return "Please enter reps";
-                          }
-
-                          return null;
-                        },
-                        onSaved: (value) {
-                          reps.add(value!);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Notes",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(10),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+      if (mounted) {
+        setState(() {
+          for (var i = 0; i < jsonData['data'].length; i++) {
+            rows.add(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(
+                    thickness: 1,
+                    color: Colors.black,
                   ),
-                  initialValue: jsonData['data'][i]['notes'],
-                  validator: (value) {
-                    if (value == null || value == "") {
-                      return "Please enter notes";
-                    }
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          autofocus: false,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(10),
+                            labelText: 'Title',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          initialValue: jsonData['data'][i]['title'],
+                          validator: (value) {
+                            if (value == null || value == "") {
+                              return "Please enter title";
+                            }
 
-                    return null;
-                  },
-                  onSaved: (value) {
-                    notes.add(value!);
-                  },
-                ),
-              ],
-            ),
-          );
-        }
-      });
+                            return null;
+                          },
+                          onSaved: (value) {
+                            title.add(value!);
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Link",
+                            contentPadding: const EdgeInsets.all(10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          initialValue: jsonData['data'][i]['link'],
+                          validator: (value) {
+                            if (value == null || value == "") {
+                              return "Please enter link";
+                            }
+
+                            return null;
+                          },
+                          onSaved: (value) {
+                            link.add(value!);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          autofocus: false,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(10),
+                            hintText: 'Sets',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          initialValue: jsonData['data'][i]['sets'],
+                          validator: (value) {
+                            if (value == null || value == "") {
+                              return "Please enter sets";
+                            }
+
+                            return null;
+                          },
+                          onSaved: (value) {
+                            sets.add(value!);
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Reps",
+                            contentPadding: const EdgeInsets.all(10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          initialValue: jsonData['data'][i]['reps'],
+                          validator: (value) {
+                            if (value == null || value == "") {
+                              return "Please enter reps";
+                            }
+
+                            return null;
+                          },
+                          onSaved: (value) {
+                            reps.add(value!);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Notes",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    initialValue: jsonData['data'][i]['notes'],
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return "Please enter notes";
+                      }
+
+                      return null;
+                    },
+                    onSaved: (value) {
+                      notes.add(value!);
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();
@@ -402,9 +404,11 @@ class _EditExerciseState extends State<EditExercise> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        items = jsonData['data'];
-      });
+      if (mounted) {
+        setState(() {
+          items = jsonData['data'];
+        });
+      }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

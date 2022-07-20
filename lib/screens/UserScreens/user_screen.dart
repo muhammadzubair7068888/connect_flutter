@@ -259,158 +259,163 @@ class _UserDetailState extends State<UserDetail> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        data = jsonData['data'];
-        rowsAdd = [];
-        if (jsonData["data"] == []) {
-          userName!.isEmpty;
-        } else {
-          userName = jsonData['user_name'];
-        }
-        for (var i = 0; i < jsonData['data'].length; i++) {
-          if (jsonData['data'][i]['last_login'] == null) {
-            jsonData['data'][i]['last_login'] = "";
+      if (mounted) {
+        setState(() {
+          data = jsonData['data'];
+          rowsAdd = [];
+          if (jsonData["data"] == []) {
+            userName!.isEmpty;
+          } else {
+            userName = jsonData['user_name'];
           }
-          rowsAdd.add(
-            DataRow(
-              cells: [
-                //  DataCell(Text("${jsonData['data'][i]['id']}")),
-                DataCell(Text(jsonData['data'][i]['name'])),
-                DataCell(Text(jsonData['data'][i]['role'])),
-                DataCell(Text(userName!)),
-                DataCell(Text(jsonData['data'][i]['height'])),
-                DataCell(Text(jsonData['data'][i]['starting_weight'])),
-                DataCell(Text(jsonData['data'][i]['last_login'])),
-                DataCell(
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 30,
-                        child: IconButton(
-                          icon: const Icon(Icons.remove_red_eye),
-                          color: Colors.black,
-                          iconSize: 18,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewUserDetailScreen(
-                                  age: jsonData['data'][i]['age'],
-                                  email: jsonData['data'][i]['email'],
-                                  handedness: jsonData['data'][i]['handedness'],
-                                  height: jsonData['data'][i]['height'],
-                                  imgUrl: jsonData['data'][i]['avatar'],
-                                  lvl: jsonData['data'][i]['level'],
-                                  name: jsonData['data'][i]['name'],
-                                  school: jsonData['data'][i]['school'],
-                                  strWeight: jsonData['data'][i]
-                                      ['starting_weight'],
-                                  id: jsonData['data'][i]['id'],
+          for (var i = 0; i < jsonData['data'].length; i++) {
+            if (jsonData['data'][i]['last_login'] == null) {
+              jsonData['data'][i]['last_login'] = "";
+            }
+            rowsAdd.add(
+              DataRow(
+                cells: [
+                  //  DataCell(Text("${jsonData['data'][i]['id']}")),
+                  DataCell(Text(jsonData['data'][i]['name'])),
+                  DataCell(Text(jsonData['data'][i]['role'])),
+                  DataCell(Text(userName!)),
+                  DataCell(Text(jsonData['data'][i]['height'])),
+                  DataCell(Text(jsonData['data'][i]['starting_weight'])),
+                  DataCell(Text(jsonData['data'][i]['last_login'])),
+                  DataCell(
+                    Wrap(
+                      alignment: WrapAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.remove_red_eye),
+                            color: Colors.black,
+                            iconSize: 18,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewUserDetailScreen(
+                                    age: jsonData['data'][i]['age'],
+                                    email: jsonData['data'][i]['email'],
+                                    handedness: jsonData['data'][i]
+                                        ['handedness'],
+                                    height: jsonData['data'][i]['height'],
+                                    imgUrl: jsonData['data'][i]['avatar'],
+                                    lvl: jsonData['data'][i]['level'],
+                                    name: jsonData['data'][i]['name'],
+                                    school: jsonData['data'][i]['school'],
+                                    strWeight: jsonData['data'][i]
+                                        ['starting_weight'],
+                                    id: jsonData['data'][i]['id'],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        child: IconButton(
-                          icon: const Icon(Icons.edit),
-                          color: Colors.black,
-                          iconSize: 18,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditUserScreen(
-                                  age: jsonData['data'][i]['age'],
-                                  email: jsonData['data'][i]['email'],
-                                  handedness: jsonData['data'][i]['handedness'],
-                                  height: jsonData['data'][i]['height'],
-                                  imgUrl: jsonData['data'][i]['avatar'],
-                                  lvl: jsonData['data'][i]['level'],
-                                  name: jsonData['data'][i]['name'],
-                                  school: jsonData['data'][i]['school'],
-                                  strWeight: jsonData['data'][i]
-                                      ['starting_weight'],
-                                  id: jsonData['data'][i]['id'],
-                                  status:
-                                      int.parse(jsonData['data'][i]['status']),
-                                  role: widget.role,
+                        SizedBox(
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.edit),
+                            color: Colors.black,
+                            iconSize: 18,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditUserScreen(
+                                    age: jsonData['data'][i]['age'],
+                                    email: jsonData['data'][i]['email'],
+                                    handedness: jsonData['data'][i]
+                                        ['handedness'],
+                                    height: jsonData['data'][i]['height'],
+                                    imgUrl: jsonData['data'][i]['avatar'],
+                                    lvl: jsonData['data'][i]['level'],
+                                    name: jsonData['data'][i]['name'],
+                                    school: jsonData['data'][i]['school'],
+                                    strWeight: jsonData['data'][i]
+                                        ['starting_weight'],
+                                    id: jsonData['data'][i]['id'],
+                                    status: int.parse(
+                                        jsonData['data'][i]['status']),
+                                    role: widget.role,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        child: IconButton(
-                          icon: const Icon(Icons.delete),
-                          color: Colors.red,
-                          iconSize: 18,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  actionsAlignment: MainAxisAlignment.center,
-                                  title: Column(
-                                    children: const [
-                                      Image(
-                                        image: AssetImage("images/delete.png"),
-                                        width: 30,
-                                        height: 30,
+                        SizedBox(
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            color: Colors.red,
+                            iconSize: 18,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    actionsAlignment: MainAxisAlignment.center,
+                                    title: Column(
+                                      children: const [
+                                        Image(
+                                          image:
+                                              AssetImage("images/delete.png"),
+                                          width: 30,
+                                          height: 30,
+                                        ),
+                                      ],
+                                    ),
+                                    content: const Text(
+                                      "Are you sure want to delete?",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          delete(jsonData['data'][i]['id']);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Yes"),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("No"),
                                       ),
                                     ],
-                                  ),
-                                  content: const Text(
-                                    "Are you sure want to delete?",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  actions: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        delete(jsonData['data'][i]['id']);
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Yes"),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("No"),
-                                    ),
-                                  ],
-                                  elevation: 24,
-                                );
-                              },
-                            );
-                          },
+                                    elevation: 24,
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        }
-      });
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();

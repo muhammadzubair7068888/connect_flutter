@@ -222,131 +222,134 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        data = jsonData['data'];
-        rowsAdd = [];
-        for (var i = 0; i < jsonData['data'].length; i++) {
-          rowsAdd.add(
-            DataRow(
-              cells: [
-                DataCell(Text(jsonData['data'][i]['name'])),
-                DataCell(Text(jsonData['data'][i]['exercise_type']['name'])),
-                DataCell(Text(jsonData['data'][i]['description'])),
-                DataCell(
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 30,
-                        child: IconButton(
-                          icon: const Icon(Icons.remove_red_eye),
-                          iconSize: 18,
-                          color: HexColor("#30CED9"),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewExerciseScreen(
-                                  id: jsonData['data'][i]['id'],
-                                  description: jsonData['data'][i]
-                                      ['description'],
-                                  title: jsonData['data'][i]['name'],
+      if (mounted) {
+        setState(() {
+          data = jsonData['data'];
+          rowsAdd = [];
+          for (var i = 0; i < jsonData['data'].length; i++) {
+            rowsAdd.add(
+              DataRow(
+                cells: [
+                  DataCell(Text(jsonData['data'][i]['name'])),
+                  DataCell(Text(jsonData['data'][i]['exercise_type']['name'])),
+                  DataCell(Text(jsonData['data'][i]['description'])),
+                  DataCell(
+                    Wrap(
+                      alignment: WrapAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.remove_red_eye),
+                            iconSize: 18,
+                            color: HexColor("#30CED9"),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewExerciseScreen(
+                                    id: jsonData['data'][i]['id'],
+                                    description: jsonData['data'][i]
+                                        ['description'],
+                                    title: jsonData['data'][i]['name'],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        child: IconButton(
-                          icon: const Icon(Icons.edit_outlined),
-                          iconSize: 18,
-                          color: HexColor("#30CED9"),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditExercise(
-                                  id: jsonData['data'][i]['id'],
-                                  description: jsonData['data'][i]
-                                      ['description'],
-                                  title: jsonData['data'][i]['name'],
-                                  type: jsonData['data'][i]['exercise_type']
-                                      ['name'],
+                        SizedBox(
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.edit_outlined),
+                            iconSize: 18,
+                            color: HexColor("#30CED9"),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditExercise(
+                                    id: jsonData['data'][i]['id'],
+                                    description: jsonData['data'][i]
+                                        ['description'],
+                                    title: jsonData['data'][i]['name'],
+                                    type: jsonData['data'][i]['exercise_type']
+                                        ['name'],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        child: IconButton(
-                          icon: const Icon(Icons.delete),
-                          iconSize: 18,
-                          color: Colors.red,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  actionsAlignment: MainAxisAlignment.center,
-                                  title: Column(
-                                    children: const [
-                                      Image(
-                                        image: AssetImage("images/delete.png"),
-                                        width: 30,
-                                        height: 30,
+                        SizedBox(
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            iconSize: 18,
+                            color: Colors.red,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    actionsAlignment: MainAxisAlignment.center,
+                                    title: Column(
+                                      children: const [
+                                        Image(
+                                          image:
+                                              AssetImage("images/delete.png"),
+                                          width: 30,
+                                          height: 30,
+                                        ),
+                                      ],
+                                    ),
+                                    content: const Text(
+                                      "Are you sure want to delete?",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          delete(jsonData['data'][i]['id']);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Yes"),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("No"),
                                       ),
                                     ],
-                                  ),
-                                  content: const Text(
-                                    "Are you sure want to delete?",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  actions: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        delete(jsonData['data'][i]['id']);
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Yes"),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("No"),
-                                    ),
-                                  ],
-                                  elevation: 24,
-                                );
-                              },
-                            );
-                          },
+                                    elevation: 24,
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        }
-      });
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();

@@ -5,6 +5,8 @@ import 'singleChatListWidget.dart';
 import 'userList_screen.dart';
 
 class ChatListScreen extends StatefulWidget {
+  final String? token;
+  final String? id;
   final String? urC;
   final String currentName;
   final String role;
@@ -13,6 +15,8 @@ class ChatListScreen extends StatefulWidget {
   final String? u;
   const ChatListScreen({
     Key? key,
+    required this.token,
+    required this.id,
     required this.urC,
     required this.currentName,
     required this.role,
@@ -56,6 +60,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => UserListScreen(
+                    id: widget.id,
+                    token: widget.token,
                     urC: widget.urC,
                     currentName: widget.currentName,
                     i: widget.i,
@@ -75,6 +81,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
           SingleChatListScreen(
             urC: widget.urC,
             currentName: widget.currentName,
+            id: widget.id,
+            token: widget.token,
           ),
         ],
       ),

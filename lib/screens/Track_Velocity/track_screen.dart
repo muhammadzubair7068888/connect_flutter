@@ -231,76 +231,78 @@ class _TrackScreenState extends State<TrackScreen> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        data = jsonData['data'];
-        rowsAdd = [];
-        for (var i = 0; i < jsonData['data'].length; i++) {
-          rowsAdd.add(
-            DataRow(
-              cells: [
-                DataCell(Text(jsonData['data'][i]['date'])),
-                DataCell(Text(jsonData['data'][i]['weight'])),
-                DataCell(Text("${jsonData['data'][i]['arm_pain']}")),
-                DataCell(
-                  const Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  ),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          actionsAlignment: MainAxisAlignment.center,
-                          title: Column(
-                            children: const [
-                              Image(
-                                image: AssetImage("images/delete.png"),
-                                width: 30,
-                                height: 30,
+      if (mounted) {
+        setState(() {
+          data = jsonData['data'];
+          rowsAdd = [];
+          for (var i = 0; i < jsonData['data'].length; i++) {
+            rowsAdd.add(
+              DataRow(
+                cells: [
+                  DataCell(Text(jsonData['data'][i]['date'])),
+                  DataCell(Text(jsonData['data'][i]['weight'])),
+                  DataCell(Text("${jsonData['data'][i]['arm_pain']}")),
+                  DataCell(
+                    const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            actionsAlignment: MainAxisAlignment.center,
+                            title: Column(
+                              children: const [
+                                Image(
+                                  image: AssetImage("images/delete.png"),
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              ],
+                            ),
+                            content: const Text(
+                              "Are you sure want to delete?",
+                              textAlign: TextAlign.center,
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  delete(jsonData['data'][i]['id']);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Yes"),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("No"),
                               ),
                             ],
-                          ),
-                          content: const Text(
-                            "Are you sure want to delete?",
-                            textAlign: TextAlign.center,
-                          ),
-                          actions: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                delete(jsonData['data'][i]['id']);
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Yes"),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text("No"),
-                            ),
-                          ],
-                          elevation: 24,
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-          );
-        }
-      });
+                            elevation: 24,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();

@@ -41,39 +41,41 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        rowsAdd = [];
-        for (var i = 0; i < jsonData['data'].length; i++) {
-          rowsAdd.add(
-            DataRow(
-              cells: [
-                DataCell(
-                  Wrap(
-                    children: const [
-                      Text(
-                        "What are your biggest fears in regarding to training ?",
-                      ),
-                    ],
+      if (mounted) {
+        setState(() {
+          rowsAdd = [];
+          for (var i = 0; i < jsonData['data'].length; i++) {
+            rowsAdd.add(
+              DataRow(
+                cells: [
+                  DataCell(
+                    Wrap(
+                      children: const [
+                        Text(
+                          "What are your biggest fears in regarding to training ?",
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                DataCell(
-                  const Icon(
-                    Icons.delete,
-                    color: Colors.red,
+                  DataCell(
+                    const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialogWidget();
+                          });
+                    },
                   ),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const AlertDialogWidget();
-                        });
-                  },
-                ),
-              ],
-            ),
-          );
-        }
-      });
+                ],
+              ),
+            );
+          }
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();

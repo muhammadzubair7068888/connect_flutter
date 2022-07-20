@@ -223,9 +223,11 @@ class _NewExerciseState extends State<NewExercise> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        items = jsonData['data'];
-      });
+      if (mounted) {
+        setState(() {
+          items = jsonData['data'];
+        });
+      }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

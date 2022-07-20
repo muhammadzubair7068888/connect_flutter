@@ -22,6 +22,8 @@ class CreateGroupScreen extends StatefulWidget {
   final int? index;
   final String? i;
   final String? u;
+  final String? token;
+  final String? id;
   const CreateGroupScreen({
     Key? key,
     required this.urC,
@@ -31,6 +33,8 @@ class CreateGroupScreen extends StatefulWidget {
     required this.index,
     required this.i,
     required this.u,
+    required this.token,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -64,6 +68,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       context,
       MaterialPageRoute<void>(
         builder: (BuildContext context) => ChatListScreen(
+          id: widget.id,
+          token: widget.token,
           currentName: widget.currentName,
           urC: widget.urC,
           i: widget.i,

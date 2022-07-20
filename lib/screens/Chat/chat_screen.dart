@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_pusher_client/flutter_pusher.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:laravel_echo/laravel_echo.dart';
+import '../../Globals/api_constants.dart';
 import '../../Globals/globals.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -11,6 +14,8 @@ class ChatScreen extends StatefulWidget {
   final int group;
   final String id;
   final String currentName;
+  final String? token;
+  final String? currentid;
   const ChatScreen({
     Key? key,
     required this.group,
@@ -18,6 +23,8 @@ class ChatScreen extends StatefulWidget {
     required this.id,
     required this.currentName,
     required this.urC,
+    required this.token,
+    required this.currentid,
   }) : super(key: key);
 
   @override
@@ -32,11 +39,70 @@ class _ChatScreenState extends State<ChatScreen> {
   String ur = "";
   int online = 0;
   bool load = true;
+  bool read = true;
   String last = "";
   String mess = "";
   int? currentUser;
 
+  var ids = [];
   List<Message> messages = [];
+
+  late FlutterPusher pusherClient;
+  late Echo echo;
+
+  void onConnectionStateChange(ConnectionStateChange event) {
+    print("STATE:${event.currentState}");
+    if (event.currentState == 'CONNECTED') {
+      print('connected');
+    } else if (event.currentState == 'DISCONNECTED') {
+      print('disconnected');
+    }
+  }
+
+  void _setUpEcho() {
+    // final token = Prefer.prefs.getString('token');
+
+    pusherClient = getPusherClient(widget.token!);
+
+    echo = echoSetup(widget.token!, pusherClient);
+
+    pusherClient.connect(onConnectionStateChange: onConnectionStateChange);
+
+    echo.private("user.${widget.currentid}").listen(
+          "UserEvent",
+          (e) => {
+            if (e["type"] == 2)
+              {
+                print("e.message"),
+                print(e),
+                if (mounted)
+                  {
+                    setState(() {
+                      ids.add(e["id"]);
+                      String hello = TimeOfDay.fromDateTime(DateTime.now()
+                              .subtract(
+                                  Duration(minutes: e["time_from_now_in_min"])))
+                          .toString();
+                      String ello = hello.substring(10);
+                      last = ello.substring(0, ello.length - 1);
+                      messages.insert(
+                        0,
+                        Message(
+                          id: e["from_id"],
+                          imageUrl: e["sender"]["avatar"].toString(),
+                          time: last.toString(),
+                          text: e["message"].toString(),
+                        ),
+                      );
+                      readMessages(true);
+                    })
+                  }
+              }
+
+            // getConversations(),
+          },
+        );
+  }
 
   Future getChat() async {
     var url = Uri.parse('${apiURL}users/${widget.id}/conversation');
@@ -60,6 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           messages = [];
           for (var i = 0; i < data["conversations"].length; i++) {
+            ids.add(data["conversations"][i]["id"]);
             String hello = TimeOfDay.fromDateTime(
               DateTime.now().subtract(
                 Duration(
@@ -123,6 +190,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ur = data["group"]["avatar"];
           messages = [];
           for (var i = 0; i < data["conversations"].length; i++) {
+            ids.add(data["conversations"][i]["id"]);
             if (data["conversations"][i]["from_id"] != null) {
               String hello = TimeOfDay.fromDateTime(
                 DateTime.now().subtract(
@@ -143,6 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
               );
             } else {}
           }
+          print(ids);
           load = false;
         });
       }
@@ -156,6 +225,47 @@ class _ChatScreenState extends State<ChatScreen> {
             duration: Duration(seconds: 2),
           ),
         );
+      }
+    }
+  }
+
+  Future readMessages(bool read) async {
+    if (read) {
+      var uri = Uri.parse('${apiURL}read-message');
+      String? token = await storage.read(key: "token");
+      Map<String, String> headers = {
+        'Content-Type': 'multipart/form-data',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      var request = http.MultipartRequest(
+        'POST',
+        uri,
+      )..headers.addAll(headers);
+      for (int item in ids) {
+        request.files
+            .add(http.MultipartFile.fromString('ids[]', item.toString()));
+      }
+      request.fields['is_group'] = widget.group.toString();
+      request.fields['group_id'] = widget.id;
+      var response = await request.send();
+      // var responseDecode = await http.Response.fromStream(response);
+      if (response.statusCode == 200) {
+        // final result = jsonDecode(responseDecode.body);
+        // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      } else {
+        // await EasyLoading.dismiss();
+        FocusManager.instance.primaryFocus?.unfocus();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.redAccent,
+              dismissDirection: DismissDirection.vertical,
+              content: Text('Server Error'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       }
     }
   }
@@ -350,36 +460,50 @@ class _ChatScreenState extends State<ChatScreen> {
             color: Theme.of(context).primaryColor,
           ),
           Expanded(
-            child: TextField(
-              controller: _textController,
-              decoration: const InputDecoration.collapsed(
-                  hintText: "Send a message .."),
-              textCapitalization: TextCapitalization.sentences,
-              onChanged: (value) {
-                mess = value;
-              },
+            child: FocusScope(
+              child: Focus(
+                onFocusChange: (focus) {
+                  readMessages(read);
+                  if (mounted) {
+                    setState(() {
+                      read = false;
+                    });
+                  }
+                },
+                child: TextField(
+                  controller: _textController,
+                  decoration: const InputDecoration.collapsed(
+                      hintText: "Send a message .."),
+                  textCapitalization: TextCapitalization.sentences,
+                  onChanged: (value) {
+                    mess = value;
+                  },
+                ),
+              ),
             ),
           ),
           IconButton(
             onPressed: () {
-              setState(() {
-                _textController.clear();
-                String hello = TimeOfDay.fromDateTime(
-                        DateTime.now().subtract(const Duration(minutes: 1)))
-                    .toString();
-                String ello = hello.substring(10);
-                last = ello.substring(0, ello.length - 1);
-                messages.insert(
-                  0,
-                  Message(
-                    id: currentUser!,
-                    imageUrl: widget.urC!,
-                    time: last,
-                    text: mess,
-                  ),
-                );
-                sendMessage();
-              });
+              if (mounted) {
+                setState(() {
+                  _textController.clear();
+                  String hello = TimeOfDay.fromDateTime(
+                          DateTime.now().subtract(const Duration(minutes: 1)))
+                      .toString();
+                  String ello = hello.substring(10);
+                  last = ello.substring(0, ello.length - 1);
+                  messages.insert(
+                    0,
+                    Message(
+                      id: currentUser!,
+                      imageUrl: widget.urC!,
+                      time: last,
+                      text: mess,
+                    ),
+                  );
+                  sendMessage();
+                });
+              }
             },
             icon: const Icon(Icons.send),
             iconSize: 25,
@@ -398,6 +522,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } else {
       getGroupChat();
     }
+    _setUpEcho();
   }
 
   @override

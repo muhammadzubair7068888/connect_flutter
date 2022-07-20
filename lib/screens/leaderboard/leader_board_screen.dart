@@ -161,86 +161,97 @@ class _LeaderBoardState extends State<LeaderBoard> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        data = jsonData['uservelocity'];
-        var outputList = jsonData["velocitynames"] as List;
-        var filteredList;
-        filteredList = outputList.where((e) => e["key"] == "weight").toList();
-        wgh = filteredList[0]["name"];
-        filteredList = outputList.where((e) => e["key"] == "arm_pain").toList();
-        armP = filteredList[0]["name"];
-        filteredList =
-            outputList.where((e) => e["key"] == "pull_down_velocity").toList();
-        pDVel = filteredList[0]["name"];
-        filteredList = outputList
-            .where((e) => e["key"] == "mound_throws_velocity")
-            .toList();
-        mTVel = filteredList[0]["name"];
-        filteredList =
-            outputList.where((e) => e["key"] == "pull_down_3").toList();
-        pD3 = filteredList[0]["name"];
-        filteredList =
-            outputList.where((e) => e["key"] == "pull_down_4").toList();
-        pD4 = filteredList[0]["name"];
-        filteredList =
-            outputList.where((e) => e["key"] == "pull_down_5").toList();
-        pD5 = filteredList[0]["name"];
-        filteredList =
-            outputList.where((e) => e["key"] == "pull_down_6").toList();
-        pD6 = filteredList[0]["name"];
-        filteredList =
-            outputList.where((e) => e["key"] == "pull_down_7").toList();
-        pD7 = filteredList[0]["name"];
-        filteredList =
-            outputList.where((e) => e["key"] == "long_toss_distance").toList();
-        lTDist = filteredList[0]["name"];
-        filteredList = outputList.where((e) => e["key"] == "pylo_7").toList();
-        p7Lab = filteredList[0]["name"];
-        filteredList = outputList.where((e) => e["key"] == "pylo_5").toList();
-        p5Lab = filteredList[0]["name"];
-        filteredList = outputList.where((e) => e["key"] == "pylo_3").toList();
-        p3 = filteredList[0]["name"];
-        filteredList = outputList.where((e) => e["key"] == "bench").toList();
-        ben = filteredList[0]["name"];
-        filteredList = outputList.where((e) => e["key"] == "squat").toList();
-        sqt = filteredList[0]["name"];
-        filteredList = outputList.where((e) => e["key"] == "deadlift").toList();
-        dLift = filteredList[0]["name"];
-        filteredList =
-            outputList.where((e) => e["key"] == "vertical_jump").toList();
-        vJump = filteredList[0]["name"];
-        rowsAdd = [];
-        for (var i = 0; i < jsonData['uservelocity'].length; i++) {
-          rowsAdd.add(
-            DataRow(
-              cells: [
-                DataCell(Text(jsonData['uservelocity'][i]["name"])),
-                DataCell(Text("${jsonData['uservelocity'][i]["weight"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["arm_pain"]}")),
-                DataCell(Text(
-                    "${jsonData['uservelocity'][i]["pull_down_velocity"]}")),
-                DataCell(Text(
-                    "${jsonData['uservelocity'][i]["mound_throws_velocity"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_3"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_4"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_5"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_6"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["pull_down_7"]}")),
-                DataCell(Text(
-                    "${jsonData['uservelocity'][i]["long_toss_distance"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["pylo_7"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["pylo_5"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["pylo_3"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["bench"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["squat"]}")),
-                DataCell(Text("${jsonData['uservelocity'][i]["deadlift"]}")),
-                DataCell(
-                    Text("${jsonData['uservelocity'][i]["vertical_jump"]}")),
-              ],
-            ),
-          );
-        }
-      });
+      if (mounted) {
+        setState(() {
+          data = jsonData['uservelocity'];
+          var outputList = jsonData["velocitynames"] as List;
+          var filteredList;
+          filteredList = outputList.where((e) => e["key"] == "weight").toList();
+          wgh = filteredList[0]["name"];
+          filteredList =
+              outputList.where((e) => e["key"] == "arm_pain").toList();
+          armP = filteredList[0]["name"];
+          filteredList = outputList
+              .where((e) => e["key"] == "pull_down_velocity")
+              .toList();
+          pDVel = filteredList[0]["name"];
+          filteredList = outputList
+              .where((e) => e["key"] == "mound_throws_velocity")
+              .toList();
+          mTVel = filteredList[0]["name"];
+          filteredList =
+              outputList.where((e) => e["key"] == "pull_down_3").toList();
+          pD3 = filteredList[0]["name"];
+          filteredList =
+              outputList.where((e) => e["key"] == "pull_down_4").toList();
+          pD4 = filteredList[0]["name"];
+          filteredList =
+              outputList.where((e) => e["key"] == "pull_down_5").toList();
+          pD5 = filteredList[0]["name"];
+          filteredList =
+              outputList.where((e) => e["key"] == "pull_down_6").toList();
+          pD6 = filteredList[0]["name"];
+          filteredList =
+              outputList.where((e) => e["key"] == "pull_down_7").toList();
+          pD7 = filteredList[0]["name"];
+          filteredList = outputList
+              .where((e) => e["key"] == "long_toss_distance")
+              .toList();
+          lTDist = filteredList[0]["name"];
+          filteredList = outputList.where((e) => e["key"] == "pylo_7").toList();
+          p7Lab = filteredList[0]["name"];
+          filteredList = outputList.where((e) => e["key"] == "pylo_5").toList();
+          p5Lab = filteredList[0]["name"];
+          filteredList = outputList.where((e) => e["key"] == "pylo_3").toList();
+          p3 = filteredList[0]["name"];
+          filteredList = outputList.where((e) => e["key"] == "bench").toList();
+          ben = filteredList[0]["name"];
+          filteredList = outputList.where((e) => e["key"] == "squat").toList();
+          sqt = filteredList[0]["name"];
+          filteredList =
+              outputList.where((e) => e["key"] == "deadlift").toList();
+          dLift = filteredList[0]["name"];
+          filteredList =
+              outputList.where((e) => e["key"] == "vertical_jump").toList();
+          vJump = filteredList[0]["name"];
+          rowsAdd = [];
+          for (var i = 0; i < jsonData['uservelocity'].length; i++) {
+            rowsAdd.add(
+              DataRow(
+                cells: [
+                  DataCell(Text(jsonData['uservelocity'][i]["name"])),
+                  DataCell(Text("${jsonData['uservelocity'][i]["weight"]}")),
+                  DataCell(Text("${jsonData['uservelocity'][i]["arm_pain"]}")),
+                  DataCell(Text(
+                      "${jsonData['uservelocity'][i]["pull_down_velocity"]}")),
+                  DataCell(Text(
+                      "${jsonData['uservelocity'][i]["mound_throws_velocity"]}")),
+                  DataCell(
+                      Text("${jsonData['uservelocity'][i]["pull_down_3"]}")),
+                  DataCell(
+                      Text("${jsonData['uservelocity'][i]["pull_down_4"]}")),
+                  DataCell(
+                      Text("${jsonData['uservelocity'][i]["pull_down_5"]}")),
+                  DataCell(
+                      Text("${jsonData['uservelocity'][i]["pull_down_6"]}")),
+                  DataCell(
+                      Text("${jsonData['uservelocity'][i]["pull_down_7"]}")),
+                  DataCell(Text(
+                      "${jsonData['uservelocity'][i]["long_toss_distance"]}")),
+                  DataCell(Text("${jsonData['uservelocity'][i]["pylo_7"]}")),
+                  DataCell(Text("${jsonData['uservelocity'][i]["pylo_5"]}")),
+                  DataCell(Text("${jsonData['uservelocity'][i]["pylo_3"]}")),
+                  DataCell(Text("${jsonData['uservelocity'][i]["bench"]}")),
+                  DataCell(Text("${jsonData['uservelocity'][i]["squat"]}")),
+                  DataCell(Text("${jsonData['uservelocity'][i]["deadlift"]}")),
+                  DataCell(
+                      Text("${jsonData['uservelocity'][i]["vertical_jump"]}")),
+                ],
+              ),
+            );
+          }
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();

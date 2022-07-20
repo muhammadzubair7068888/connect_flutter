@@ -91,7 +91,7 @@ class _AddUserState extends State<AddUser> {
     )..headers.addAll(headers);
     if (_image != null) {
       request.files
-          .add(await http.MultipartFile.fromPath('file', _image!.path));
+          .add(await http.MultipartFile.fromPath('photo', _image!.path));
     }
     request.fields['name'] = name;
     request.fields['email'] = email;
@@ -115,6 +115,11 @@ class _AddUserState extends State<AddUser> {
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();
+      final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      final result1 = jsonDecode(responseDecode.body);
+      print(result);
+      print(result1);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

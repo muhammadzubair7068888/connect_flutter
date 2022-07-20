@@ -173,16 +173,17 @@ class _formFielfState extends State<formFielf> {
     )..headers.addAll(headers);
     if (_image != null) {
       request.files
-          .add(await http.MultipartFile.fromPath('file', _image!.path));
+          .add(await http.MultipartFile.fromPath('photo', _image!.path));
     }
     request.fields['height'] = widget.height;
     request.fields['level'] = widget.lvl;
     request.fields['starting_weight'] = widget.strWeight;
     request.fields['age'] = widget.age.toString();
-    request.fields['handedeness'] = widget.handedness;
+    request.fields['hand_type'] = widget.handedness;
     request.fields['school'] = widget.school;
     request.fields['email'] = widget.email;
     request.fields['name'] = widget.name;
+    request.fields['user_status'] = "1";
     var response = await request.send();
     var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
@@ -201,6 +202,9 @@ class _formFielfState extends State<formFielf> {
       }
       await EasyLoading.dismiss();
     } else {
+      final result = jsonDecode(responseDecode.body);
+      print("result");
+      print(result);
       await EasyLoading.dismiss();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -13,6 +13,8 @@ class UserListScreen extends StatefulWidget {
   final String currentName;
   final String role;
   final int? index;
+  final String? token;
+  final String? id;
   final String? i;
   final String? u;
   const UserListScreen({
@@ -22,6 +24,8 @@ class UserListScreen extends StatefulWidget {
     required this.role,
     required this.index,
     required this.i,
+    required this.token,
+    required this.id,
     required this.u,
   }) : super(key: key);
 
@@ -48,17 +52,109 @@ class _UserListScreenState extends State<UserListScreen> {
         search.add(f);
       }
     }
-    setState(
-      () {
-        if (search.isNotEmpty) {
+    if (mounted) {
+      setState(
+        () {
+          if (search.isNotEmpty) {
+            rowsAdd = [];
+            for (var i = 0; i < search.length; i++) {
+              rowsAdd.add(
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: ListTile(
+                        leading: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                  color: HexColor(
+                                      "#30CED9"), // red as border color
+                                ),
+                              ),
+                              child: CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.transparent,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(1),
+                                  child: ClipOval(
+                                    child: search[i]['avatar'] != null ||
+                                            search[i]['avatar'] != ""
+                                        ? Image.network(
+                                            search[i]['avatar'],
+                                            fit: BoxFit.cover,
+                                            width: 60.0,
+                                            height: 60.0,
+                                          )
+                                        : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Positioned(
+                              bottom: 5,
+                              child: Icon(
+                                Icons.circle,
+                                color: Colors.green,
+                                size: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: Text(search[i]['name']),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }
+        },
+      );
+    }
+  }
+
+  Future getUsers() async {
+    var url = Uri.parse('${apiURL}users-list');
+    String? token = await storage.read(key: "token");
+    http.Response response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (response.statusCode == 200) {
+      var jsonBody = response.body;
+      var jsonData = jsonDecode(jsonBody);
+
+      if (mounted) {
+        setState(() {
+          data = jsonData['data']["users"];
           rowsAdd = [];
-          for (var i = 0; i < search.length; i++) {
+          for (var i = 0; i < jsonData['data']["users"].length; i++) {
             rowsAdd.add(
               Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatScreen(
+                              group: 0,
+                              id: data[i]["id"].toString(),
+                              urC: widget.urC,
+                              isMyContact: false,
+                              currentName: widget.currentName,
+                              currentid: widget.id,
+                              token: widget.token,
+                            ),
+                          ),
+                        );
+                      },
                       leading: Stack(
                         children: [
                           Container(
@@ -75,10 +171,15 @@ class _UserListScreenState extends State<UserListScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(1),
                                 child: ClipOval(
-                                  child: search[i]['avatar'] != null ||
-                                          search[i]['avatar'] != ""
+                                  child: jsonData['data']['users'][i]
+                                                  ['avatar'] !=
+                                              null ||
+                                          jsonData['data']['users'][i]
+                                                  ['avatar'] !=
+                                              ""
                                       ? Image.network(
-                                          search[i]['avatar'],
+                                          jsonData['data']['users'][i]
+                                              ['avatar'],
                                           fit: BoxFit.cover,
                                           width: 60.0,
                                           height: 60.0,
@@ -88,116 +189,28 @@ class _UserListScreenState extends State<UserListScreen> {
                               ),
                             ),
                           ),
-                          const Positioned(
+                          Positioned(
                             bottom: 5,
-                            child: Icon(
-                              Icons.circle,
-                              color: Colors.green,
-                              size: 12,
-                            ),
+                            child: data[i]['is_online'] == 1
+                                ? const Icon(
+                                    Icons.circle,
+                                    color: Colors.green,
+                                    size: 12,
+                                  )
+                                : const SizedBox(),
                           ),
                         ],
                       ),
-                      title: Text(search[i]['name']),
+                      title: Text(jsonData['data']['users'][i]['name']),
                     ),
                   ),
                 ],
               ),
             );
           }
-        }
-      },
-    );
-  }
-
-  Future getUsers() async {
-    var url = Uri.parse('${apiURL}users-list');
-    String? token = await storage.read(key: "token");
-    http.Response response = await http.get(url, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
-    if (response.statusCode == 200) {
-      var jsonBody = response.body;
-      var jsonData = jsonDecode(jsonBody);
-
-      setState(() {
-        data = jsonData['data']["users"];
-        rowsAdd = [];
-        for (var i = 0; i < jsonData['data']["users"].length; i++) {
-          rowsAdd.add(
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatScreen(
-                            group: 0,
-                            id: data[i]["id"].toString(),
-                            urC: widget.urC,
-                            isMyContact: false,
-                            currentName: widget.currentName,
-                          ),
-                        ),
-                      );
-                    },
-                    leading: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              color: HexColor("#30CED9"), // red as border color
-                            ),
-                          ),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.transparent,
-                            child: Padding(
-                              padding: const EdgeInsets.all(1),
-                              child: ClipOval(
-                                child: jsonData['data']['users'][i]['avatar'] !=
-                                            null ||
-                                        jsonData['data']['users'][i]
-                                                ['avatar'] !=
-                                            ""
-                                    ? Image.network(
-                                        jsonData['data']['users'][i]['avatar'],
-                                        fit: BoxFit.cover,
-                                        width: 60.0,
-                                        height: 60.0,
-                                      )
-                                    : null,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 5,
-                          child: data[i]['is_online'] == 1
-                              ? const Icon(
-                                  Icons.circle,
-                                  color: Colors.green,
-                                  size: 12,
-                                )
-                              : const SizedBox(),
-                        ),
-                      ],
-                    ),
-                    title: Text(jsonData['data']['users'][i]['name']),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-        load = false;
-      });
+          load = false;
+        });
+      }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -234,6 +247,8 @@ class _UserListScreenState extends State<UserListScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => CreateGroupScreen(
+                    id: widget.id,
+                    token: widget.token,
                     imgUrl:
                         'http://192.168.1.30/connect_laravel/public/assets/chat/images/group-img.png',
                     currentName: widget.currentName,

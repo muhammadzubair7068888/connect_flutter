@@ -125,10 +125,12 @@ class _EditEventWidgetState extends State<EditEventWidget> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      free_id = widget.id;
-      exercise = widget.title;
-    });
+    if (mounted) {
+      setState(() {
+        free_id = widget.id;
+        exercise = widget.title;
+      });
+    }
     _titleNode = FocusNode();
     _dateNode = FocusNode();
     _startDateController = TextEditingController();

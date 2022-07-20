@@ -47,5 +47,11 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs to use Photos</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs to use Photos library</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs to use Camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs to use Microphone</string>
 </dict>
 </plist>

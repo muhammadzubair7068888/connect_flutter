@@ -55,6 +55,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int age = 0;
   String school = "";
   String lvl = "";
+  String? token;
+  String? id;
 
   late final List<Widget> _widgetOptions = <Widget>[
     const DashboardScreen(
@@ -160,17 +162,19 @@ class _BottomNavBarState extends State<BottomNavBar> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        name = jsonData["data"]["name"];
-        height = jsonData["data"]["height"];
-        email = jsonData["data"]["email"];
-        strWeight = jsonData["data"]["starting_weight"];
-        handedness = jsonData["data"]["handedness"];
-        age = jsonData["data"]["age"];
-        school = jsonData["data"]["school"];
-        lvl = jsonData["data"]["level"];
-        imgUrl = jsonData["data"]["avatar"];
-      });
+      if (mounted) {
+        setState(() {
+          name = jsonData["data"]["name"];
+          height = jsonData["data"]["height"];
+          email = jsonData["data"]["email"];
+          strWeight = jsonData["data"]["starting_weight"];
+          handedness = jsonData["data"]["handedness"];
+          age = jsonData["data"]["age"];
+          school = jsonData["data"]["school"];
+          lvl = jsonData["data"]["level"];
+          imgUrl = jsonData["data"]["avatar"];
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();
@@ -186,6 +190,20 @@ class _BottomNavBarState extends State<BottomNavBar> {
       }
     }
   }
+
+  Future<void> _readToken() async {
+    final t = await storage.read(key: "token");
+    setState(() {
+      token = t;
+    });
+  }
+
+  Future<void> _readRole() async {
+    final i = await storage.read(key: "id");
+    setState(() {
+      id = i;
+    });
+  }
 // --                                                               -- //
 // --                           END                                 -- //
 // --                                                               -- //
@@ -193,6 +211,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   void initState() {
     super.initState();
+    _readToken();
+    _readRole();
     check();
     getProfile();
   }
@@ -225,6 +245,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                             index: widget.index,
                             role: widget.role,
                             u: widget.u,
+                            id: id,
+                            token: token,
                           ),
                         ),
                       );
@@ -370,6 +392,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                             index: widget.index,
                             role: widget.role,
                             u: widget.u,
+                            id: id,
+                            token: token,
                           ),
                         ),
                       );

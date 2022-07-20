@@ -41,9 +41,11 @@ class _PhysicalAssessmentsState extends State<PhysicalAssessments> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        data = jsonData["data"];
-      });
+      if (mounted) {
+        setState(() {
+          data = jsonData["data"];
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();

@@ -191,7 +191,7 @@ class _FileScreenState extends State<FileScreen> {
     request.fields['title'] = title;
     request.fields['id'] = user;
     var response = await request.send();
-    // var responseDecode = await http.Response.fromStream(response);
+    var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
@@ -212,6 +212,9 @@ class _FileScreenState extends State<FileScreen> {
         );
       }
     } else {
+      final result = jsonDecode(responseDecode.body);
+      print("result");
+      print(result);
       // await EasyLoading.dismiss();
       FocusManager.instance.primaryFocus?.unfocus();
       if (mounted) {
@@ -244,12 +247,14 @@ class _FileScreenState extends State<FileScreen> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        users = jsonData['data'];
-        var uId =
-            jsonData['data'].where((o) => o['id'] == int.parse(id!)).toList();
-        user = uId[0]['name'];
-      });
+      if (mounted) {
+        setState(() {
+          users = jsonData['data'];
+          var uId =
+              jsonData['data'].where((o) => o['id'] == int.parse(id!)).toList();
+          user = uId[0]['name'];
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();
@@ -282,106 +287,109 @@ class _FileScreenState extends State<FileScreen> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      setState(() {
-        rowsAdd = [];
-        for (var i = 0; i < jsonData['data'].length; i++) {
-          rowsAdd.add(
-            DataRow(
-              cells: [
-                DataCell(Text(jsonData['data'][i]['title'])),
-                DataCell(Text(jsonData['data'][i]['file'])),
-                DataCell(
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 30,
-                        child: IconButton(
-                          icon: const Icon(Icons.download),
-                          iconSize: 18,
-                          color: Colors.black,
-                          onPressed: () {
-                            // showDialog(
-                            //   context: context,
-                            //   builder: (BuildContext context) =>
-                            //       DownloadingDialog(
-                            //     fileName: jsonData['data'][i]['file'],
-                            //   ),
-                            // );
-                            downloadFile(
-                              "$downloadUrl${jsonData['data'][i]['file']}",
-                              jsonData['data'][i]['file'],
-                            );
-                          },
+      if (mounted) {
+        setState(() {
+          rowsAdd = [];
+          for (var i = 0; i < jsonData['data'].length; i++) {
+            rowsAdd.add(
+              DataRow(
+                cells: [
+                  DataCell(Text(jsonData['data'][i]['title'])),
+                  DataCell(Text(jsonData['data'][i]['file'])),
+                  DataCell(
+                    Wrap(
+                      alignment: WrapAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.download),
+                            iconSize: 18,
+                            color: Colors.black,
+                            onPressed: () {
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (BuildContext context) =>
+                              //       DownloadingDialog(
+                              //     fileName: jsonData['data'][i]['file'],
+                              //   ),
+                              // );
+                              downloadFile(
+                                "$downloadUrl${jsonData['data'][i]['file']}",
+                                jsonData['data'][i]['file'],
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        child: IconButton(
-                          icon: const Icon(Icons.delete),
-                          iconSize: 18,
-                          color: Colors.red,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  actionsAlignment: MainAxisAlignment.center,
-                                  title: Column(
-                                    children: const [
-                                      Image(
-                                        image: AssetImage("images/delete.png"),
-                                        width: 30,
-                                        height: 30,
+                        SizedBox(
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            iconSize: 18,
+                            color: Colors.red,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    actionsAlignment: MainAxisAlignment.center,
+                                    title: Column(
+                                      children: const [
+                                        Image(
+                                          image:
+                                              AssetImage("images/delete.png"),
+                                          width: 30,
+                                          height: 30,
+                                        ),
+                                      ],
+                                    ),
+                                    content: const Text(
+                                      "Are you sure want to delete?",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          delete(jsonData['data'][i]['id']);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Yes"),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("No"),
                                       ),
                                     ],
-                                  ),
-                                  content: const Text(
-                                    "Are you sure want to delete?",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  actions: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        delete(jsonData['data'][i]['id']);
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Yes"),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("No"),
-                                    ),
-                                  ],
-                                  elevation: 24,
-                                );
-                              },
-                            );
-                          },
+                                    elevation: 24,
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }
-      });
+                ],
+              ),
+            );
+          }
+        });
+      }
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();
@@ -497,8 +505,8 @@ class _FileScreenState extends State<FileScreen> {
                                 name = file!.name;
                                 visible = true;
                               });
-                              // print(file!.path);
-                              // print(file!.name);
+                              print(file!.path);
+                              print(file!.name);
                             },
                             style: ElevatedButton.styleFrom(
                               primary: HexColor("#13D13F"),
