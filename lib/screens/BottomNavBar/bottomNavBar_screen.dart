@@ -448,7 +448,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                             child: ClipOval(
                               child: imgUrl != null
                                   ? Image.network(
-                                      '$publicUrl$imgUrl',
+                                      '$imgUrl',
                                       fit: BoxFit.cover,
                                       width: 80.0,
                                       height: 80.0,
