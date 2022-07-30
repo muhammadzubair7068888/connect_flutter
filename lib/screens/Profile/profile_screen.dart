@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -136,6 +135,9 @@ class _formFielfState extends State<formFielf> {
     }
   }
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   void _navigate() {
     Navigator.pushAndRemoveUntil<void>(
       context,
@@ -151,9 +153,6 @@ class _formFielfState extends State<formFielf> {
     );
   }
 
-// --                                                               -- //
-// --                          START                                -- //
-// --                                                               -- //
   Future submit() async {
     await EasyLoading.show(
       status: 'Processing...',
@@ -185,7 +184,7 @@ class _formFielfState extends State<formFielf> {
     request.fields['name'] = widget.name;
     request.fields['user_status'] = "1";
     var response = await request.send();
-    var responseDecode = await http.Response.fromStream(response);
+    // var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
@@ -202,9 +201,6 @@ class _formFielfState extends State<formFielf> {
       }
       await EasyLoading.dismiss();
     } else {
-      final result = jsonDecode(responseDecode.body);
-      print("result");
-      print(result);
       await EasyLoading.dismiss();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

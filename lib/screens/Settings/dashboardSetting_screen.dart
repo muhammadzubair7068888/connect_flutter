@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -128,10 +130,10 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
       }
     }
   }
-
 // --                                                               -- //
 // --                           END                                 -- //
 // --                                                               -- //
+
   @override
   void initState() {
     super.initState();
@@ -271,7 +273,7 @@ class _DashboardSettingScreenState extends State<DashboardSettingScreen> {
                         if (!(_form.currentState?.validate() ?? true)) {
                           return;
                         }
-                        print(list.length);
+                        // print(list.length);
                         addTrack();
                       },
                       child: const Text(

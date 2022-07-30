@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -250,12 +249,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           dynamic min4 = jsonData['mount_throw_velocit'].first;
           dynamic max4 = jsonData['mount_throw_velocit'].first;
           jsonData['mount_throw_velocit'].forEach((e) {
-            if (e['mount_throw_velocit'] < min4['mount_throw_velocit'])
+            if (e['mount_throw_velocit'] < min4['mount_throw_velocit']) {
               min4 = e;
+            }
           });
           jsonData['mount_throw_velocit'].forEach((e) {
-            if (e['mount_throw_velocit'] > max4['mount_throw_velocit'])
+            if (e['mount_throw_velocit'] > max4['mount_throw_velocit']) {
               max4 = e;
+            }
           });
           minMTVel = min4['mount_throw_velocit'];
           maxMTVel = max4['mount_throw_velocit'];
@@ -330,12 +331,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           dynamic min10 = jsonData['long_toss_distance'].first;
           dynamic max10 = jsonData['long_toss_distance'].first;
           jsonData['long_toss_distance'].forEach((e) {
-            if (e['long_toss_distance'] < min10['long_toss_distance'])
+            if (e['long_toss_distance'] < min10['long_toss_distance']) {
               min10 = e;
+            }
           });
           jsonData['long_toss_distance'].forEach((e) {
-            if (e['long_toss_distance'] > max10['long_toss_distance'])
+            if (e['long_toss_distance'] > max10['long_toss_distance']) {
               max10 = e;
+            }
           });
           minLTDis = min10['long_toss_distance'];
           maxLTDis = max10['long_toss_distance'];
@@ -806,7 +809,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ElevatedButton(
                     onPressed: () {
                       // Respond to button press
-                      print(weight);
+                      // print(weight);
                     },
                     style: ElevatedButton.styleFrom(
                       maximumSize: const Size(150, 50),

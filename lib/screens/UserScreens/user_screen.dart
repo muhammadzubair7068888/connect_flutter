@@ -9,7 +9,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 
 import '../../Globals/globals.dart';
-import '../Track_Velocity/alertDialogWidget.dart';
 import 'add_user_screen.dart';
 import 'edit_user_screen.dart';
 
@@ -200,7 +199,6 @@ class _UserDetailState extends State<UserDetail> {
 // --                                                               -- //
 // --                          START                                -- //
 // --                                                               -- //
-
   Future delete(int id) async {
     var uri = Uri.parse('${apiURL}users/delete/$id');
     String? token = await storage.read(key: "token");
@@ -431,7 +429,6 @@ class _UserDetailState extends State<UserDetail> {
       }
     }
   }
-
 // --                                                               -- //
 // --                           END                                 -- //
 // --                                                               -- //

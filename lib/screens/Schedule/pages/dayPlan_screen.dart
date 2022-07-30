@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -26,6 +28,9 @@ class _DayPlanScreenState extends State<DayPlanScreen> {
   List<Widget> wrapper = <Widget>[];
   bool load = true;
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future updateStrength(String strength, int id) async {
     var uri = Uri.parse('${apiURL}exercises/schedule/exercise/$id/strength');
     String? token = await storage.read(key: "token");
@@ -262,6 +267,9 @@ class _DayPlanScreenState extends State<DayPlanScreen> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {

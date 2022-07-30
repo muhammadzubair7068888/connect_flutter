@@ -1,9 +1,7 @@
-import 'dart:convert';
+// ignore_for_file: file_names
 
 import 'package:connect/screens/Info/info_screen.dart';
-import 'package:connect/screens/Schedule/extension.dart';
-import 'package:date_field/date_field.dart';
-import 'package:dropdown_search/dropdown_search.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

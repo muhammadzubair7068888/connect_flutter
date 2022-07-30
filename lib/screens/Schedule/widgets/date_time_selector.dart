@@ -19,6 +19,7 @@ class DateTimeSelectorFormField extends StatefulWidget {
   final InputDecoration? decoration;
   final TextEditingController controller;
 
+  // ignore: use_key_in_widget_constructors
   const DateTimeSelectorFormField({
     this.onSelect,
     this.type,
@@ -33,6 +34,7 @@ class DateTimeSelectorFormField extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _DateTimeSelectorFormFieldState createState() =>
       _DateTimeSelectorFormFieldState();
 }

@@ -20,7 +20,7 @@ class UserModel {
 
   ///this method will prevent the override of toString
   String userAsString() {
-    return '#${this.id} ${this.name}';
+    return '#$id $name';
   }
 
   ///this method will prevent the override of toString
@@ -30,7 +30,7 @@ class UserModel {
 
   ///custom comparing function to check if two users are equal
   bool isEqual(UserModel model) {
-    return this.id == model.id;
+    return id == model.id;
   }
 
   @override

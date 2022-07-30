@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../File/file_screen.dart';
-import '../Profile/profile_screen.dart';
 import '../Questionieries/questioneries_screen.dart';
 import '../Settings/dashboardSetting_screen.dart';
-import '../Settings/settings_screen.dart';
 import '../Track_Velocity/vel_and_track_screen.dart';
 import '../UserScreens/user_screen.dart';
 import '../leaderboard/leader_board_screen.dart';

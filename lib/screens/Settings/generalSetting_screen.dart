@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -12,7 +14,6 @@ class _GeneralSettingScreenState extends State<GeneralSettingScreen> {
   bool weight = true;
   @override
   Widget build(BuildContext context) {
-    bool switchBtn = true;
     return Scaffold(
       appBar: AppBar(
         shape: const RoundedRectangleBorder(

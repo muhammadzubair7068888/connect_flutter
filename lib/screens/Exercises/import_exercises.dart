@@ -48,7 +48,7 @@ class _ImportExerciseState extends State<ImportExercise> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
+                SizedBox(
                   height: 50,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 30.0),
@@ -82,10 +82,10 @@ class _ImportExerciseState extends State<ImportExercise> {
               width: 120,
               child: ElevatedButton(
                 onPressed: () {},
-                child: const Text("Upload"),
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0))),
+                child: const Text("Upload"),
               ),
             ),
           )

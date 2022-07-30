@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -116,6 +118,9 @@ class _UserListScreenState extends State<UserListScreen> {
     }
   }
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future getUsers() async {
     var url = Uri.parse('${apiURL}users-list');
     String? token = await storage.read(key: "token");
@@ -224,6 +229,9 @@ class _UserListScreenState extends State<UserListScreen> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {

@@ -10,6 +10,7 @@ class Event {
   bool operator ==(Object other) => other is Event && title == other.title;
 
   @override
+  // ignore: unnecessary_overrides
   int get hashCode => super.hashCode;
 
   @override

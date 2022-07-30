@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: import_of_legacy_library_into_null_safe, file_names
 
 import 'dart:convert';
 
@@ -40,12 +40,15 @@ class _SingleChatListScreenState extends State<SingleChatListScreen> {
   late FlutterPusher pusherClient;
   late Echo echo;
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   void onConnectionStateChange(ConnectionStateChange event) {
-    print("STATE:${event.currentState}");
+    // print("STATE:${event.currentState}");
     if (event.currentState == 'CONNECTED') {
-      print('connected');
+      // print('connected');
     } else if (event.currentState == 'DISCONNECTED') {
-      print('disconnected');
+      // print('disconnected');
     }
   }
 
@@ -323,6 +326,9 @@ class _SingleChatListScreenState extends State<SingleChatListScreen> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {

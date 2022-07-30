@@ -41,6 +41,9 @@ class _FileScreenState extends State<FileScreen> {
   final Dio dio = Dio();
   double progress = 0.0;
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future<bool> saveFile(String url, String filename) async {
     Directory directory;
     try {
@@ -120,9 +123,9 @@ class _FileScreenState extends State<FileScreen> {
     });
     bool downloaded = await saveFile(url, filename);
     if (downloaded) {
-      print("File Downloaded");
+      // print("File Downloaded");
     } else {
-      print("Problem Downloading File");
+      // print("Problem Downloading File");
     }
 
     setState(() {
@@ -213,7 +216,7 @@ class _FileScreenState extends State<FileScreen> {
       }
     } else {
       final result = jsonDecode(responseDecode.body);
-      print(result);
+      // print(result);
       // await EasyLoading.dismiss();
       FocusManager.instance.primaryFocus?.unfocus();
       if (mounted) {
@@ -222,7 +225,7 @@ class _FileScreenState extends State<FileScreen> {
             backgroundColor: Colors.redAccent,
             dismissDirection: DismissDirection.vertical,
             content: Text("${result["message"]}"),
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
@@ -413,6 +416,9 @@ class _FileScreenState extends State<FileScreen> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {
@@ -513,7 +519,7 @@ class _FileScreenState extends State<FileScreen> {
                                 name = file!.name;
                                 visible = true;
                               });
-                              print(file!.path);
+                              // print(file!.path);
                             },
                             style: ElevatedButton.styleFrom(
                               maximumSize: const Size(150, 50),

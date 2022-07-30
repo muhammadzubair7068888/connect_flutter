@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:connect/screens/Exercises/exercises_screen.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -46,7 +45,7 @@ class _NewExerciseState extends State<NewExercise> {
     });
   }
 
-  var _details = <Widget>[];
+  final _details = <Widget>[];
 
   void _addCardWidget() {
     setState(() {
@@ -313,10 +312,10 @@ class _NewExerciseState extends State<NewExercise> {
       }
     }
   }
-
 // --                                                               -- //
 // --                           END                                 -- //
 // --                                                               -- //
+
   @override
   void initState() {
     super.initState();

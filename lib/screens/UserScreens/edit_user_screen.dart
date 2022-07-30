@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:io';
 
 import 'package:connect/screens/UserScreens/user_screen.dart';
@@ -64,6 +66,9 @@ class _EditUserScreenState extends State<EditUserScreen> {
     }
   }
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   void _navigate() {
     Navigator.pushAndRemoveUntil<void>(
       context,
@@ -77,9 +82,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
     );
   }
 
-// --                                                               -- //
-// --                          START                                -- //
-// --                                                               -- //
   Future updateUser() async {
     var uri = Uri.parse('${apiURL}users/update/${widget.id}');
     String? token = await storage.read(key: "token");

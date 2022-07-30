@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -25,6 +27,9 @@ class _PhysicalAssessmentsState extends State<PhysicalAssessments> {
   List<DataRow> rowsAdd = [];
   List<int> groupValue = [];
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future getPhyAsses() async {
     await EasyLoading.show(
       status: 'Loading...',
@@ -61,6 +66,9 @@ class _PhysicalAssessmentsState extends State<PhysicalAssessments> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {

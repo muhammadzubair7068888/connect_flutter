@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 import '../../Globals/globals.dart';
 
+// ignore: must_be_immutable
 class EditExercise extends StatefulWidget {
   final int id;
   late String title;
@@ -209,7 +210,6 @@ class _EditExerciseState extends State<EditExercise> {
 // --                                                               -- //
 // --                          START                                -- //
 // --                                                               -- //
-
   Future getExDetail() async {
     await EasyLoading.show(
       status: 'Loading...',
@@ -460,7 +460,7 @@ class _EditExerciseState extends State<EditExercise> {
       request.files.add(http.MultipartFile.fromString('notes[]', item));
     }
     var response = await request.send();
-    var responseDecode = await http.Response.fromStream(response);
+    // var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       await EasyLoading.dismiss();
       if (mounted) {
@@ -475,8 +475,8 @@ class _EditExerciseState extends State<EditExercise> {
       }
     } else {
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
-      final result = jsonDecode(responseDecode.body);
-      print(result);
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
       await EasyLoading.dismiss();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -490,10 +490,10 @@ class _EditExerciseState extends State<EditExercise> {
       }
     }
   }
-
 // --                                                               -- //
 // --                           END                                 -- //
 // --                                                               -- //
+
   @override
   void initState() {
     super.initState();

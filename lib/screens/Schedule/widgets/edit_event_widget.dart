@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:convert';
 
 import 'package:calendar_view/calendar_view.dart';
@@ -14,12 +16,10 @@ import '../../../Globals/globals.dart';
 import '../../BottomNavBar/bottomNavBar_screen.dart';
 import '../../Exercises/user_model.dart';
 import '../app_colors.dart';
-import '../constants.dart';
 import '../extension.dart';
 import '../model/event.dart';
 import 'add_event_widget.dart';
 import 'custom_button.dart';
-import 'date_time_selector.dart';
 
 class EditEventWidget extends StatefulWidget {
   final void Function(CalendarEventData<Event>)? onEventAdd;
@@ -50,16 +50,18 @@ class _EditEventWidgetState extends State<EditEventWidget> {
   final GlobalKey<FormState> _form = GlobalKey();
   late FocusNode _dateNode;
   late TextEditingController _startDateController;
-  late DateTime _startDate;
   late FocusNode _titleNode;
-  String _title = "";
   Color _color = const Color(0xff30CED9);
   String exercise = "";
+  // ignore: non_constant_identifier_names
   int? free_id;
   int id = 0;
   String? dateTime;
   final storage = const FlutterSecureStorage();
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future addExercise() async {
     var uri = Uri.parse('${apiURL}exercises/schedule/update');
     String? token = await storage.read(key: "token");
@@ -69,7 +71,7 @@ class _EditEventWidgetState extends State<EditEventWidget> {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var body = widget.schedule;
+    // var body = widget.schedule;
     var request = http.MultipartRequest(
       'POST',
       uri,
@@ -121,6 +123,9 @@ class _EditEventWidgetState extends State<EditEventWidget> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {
@@ -381,7 +386,7 @@ class _EditEventWidgetState extends State<EditEventWidget> {
     bool isSelected,
   ) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: !isSelected
           ? null
           : BoxDecoration(

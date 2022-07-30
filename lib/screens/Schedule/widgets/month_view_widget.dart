@@ -39,6 +39,9 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
   int id = 0;
   final storage = const FlutterSecureStorage();
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future addExercise() async {
     var uri = Uri.parse('${apiURL}exercises/schedule/update');
     String? token = await storage.read(key: "token");
@@ -48,7 +51,7 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var body = widget.schedule;
+    // var body = widget.schedule;
     var request = http.MultipartRequest(
       'POST',
       uri,
@@ -61,7 +64,6 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
       // final result = jsonDecode(responseDecode.body);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
       FocusManager.instance.primaryFocus?.unfocus();
-      // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -99,6 +101,9 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   Widget build(BuildContext context) {

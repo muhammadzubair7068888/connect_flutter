@@ -1,7 +1,6 @@
 import 'package:connect/screens/Schedule/extension.dart';
 import 'package:flutter/material.dart';
 
-import 'app_colors.dart';
 import 'widgets/add_event_widget.dart';
 
 class CreateEventPage extends StatefulWidget {
@@ -21,6 +20,7 @@ class CreateEventPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CreateEventPageState createState() => _CreateEventPageState();
 }
 

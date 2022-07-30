@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
@@ -106,7 +105,7 @@ class _AddUserState extends State<AddUser> {
     request.fields['user_status'] = groupvalue.toString();
 
     var response = await request.send();
-    var responseDecode = await http.Response.fromStream(response);
+    // var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
       // final result = jsonDecode(responseDecode.body);
@@ -115,10 +114,10 @@ class _AddUserState extends State<AddUser> {
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();
-      final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
-      final result1 = jsonDecode(responseDecode.body);
-      print(result);
-      print(result1);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      // final result1 = jsonDecode(responseDecode.body);
+      // print(result);
+      // print(result1);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

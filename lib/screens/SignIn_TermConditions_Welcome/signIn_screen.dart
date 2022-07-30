@@ -1,11 +1,13 @@
-// ignore: file_names
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
+
 import '../../Globals/globals.dart';
 import '../BottomNavBar/bottomNavBar_screen.dart';
 import 'term_and_condition.dart';
@@ -25,6 +27,9 @@ class _SignInScreenState extends State<SignInScreen> {
   String? password;
   final GlobalKey<FormState> _form = GlobalKey();
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   void _navigate(String role) {
     Navigator.pushAndRemoveUntil<void>(
       context,
@@ -40,9 +45,6 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-// --                                                               -- //
-// --                          START                                -- //
-// --                                                               -- //
   Future signIn() async {
     await EasyLoading.show(
       status: 'Processing...',

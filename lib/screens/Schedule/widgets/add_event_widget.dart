@@ -16,9 +16,9 @@ import '../../BottomNavBar/bottomNavBar_screen.dart';
 import '../../Exercises/user_model.dart';
 import '../app_colors.dart';
 import '../model/event.dart';
-import '../pages/month_view_page.dart';
 import 'custom_button.dart';
 
+// ignore: must_be_immutable
 class AddEventWidget extends StatefulWidget {
   final void Function(CalendarEventData<Event>)? onEventAdd;
   List schedule;
@@ -35,6 +35,7 @@ class AddEventWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddEventWidgetState createState() => _AddEventWidgetState();
 }
 
@@ -47,10 +48,14 @@ class _AddEventWidgetState extends State<AddEventWidget> {
   String exercise = "";
   List<String> exercises = [];
   List exer = [];
+  // ignore: non_constant_identifier_names
   int? free_id;
   String? dateTime;
   final storage = const FlutterSecureStorage();
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future addExercise() async {
     var uri = Uri.parse('${apiURL}exercises/schedule/update');
     String? token = await storage.read(key: "token");
@@ -60,7 +65,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var body = widget.schedule;
+    // var body = widget.schedule;
     var request = http.MultipartRequest(
       'POST',
       uri,
@@ -112,6 +117,9 @@ class _AddEventWidgetState extends State<AddEventWidget> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {
@@ -365,7 +373,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
     bool isSelected,
   ) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: !isSelected
           ? null
           : BoxDecoration(
@@ -405,6 +413,7 @@ class _AddEventWidgetState extends State<AddEventWidget> {
   }
 }
 
+// ignore: camel_case_types
 class dataObject {
   String start;
   String title;
@@ -437,10 +446,12 @@ class dataObject {
 }
 
 class ExtendedProps {
+  // ignore: non_constant_identifier_names
   String user_id;
   String exerciseID;
 
   ExtendedProps({
+    // ignore: non_constant_identifier_names
     required this.user_id,
     required this.exerciseID,
   });

@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'dart:io';
 
 import 'package:flutter_pusher_client/flutter_pusher.dart';
@@ -50,10 +52,10 @@ FlutterPusher getPusherClient(String token) {
 }
 
 void onConnectionStateChange(ConnectionStateChange event) {
-  print(event.currentState);
+  // print(event.currentState);
   if (event.currentState == 'CONNECTED') {
-    print('connected');
+    // print('connected');
   } else if (event.currentState == 'DISCONNECTED') {
-    print('disconnected');
+    // print('disconnected');
   }
 }

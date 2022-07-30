@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -51,14 +53,17 @@ class _ChatScreenState extends State<ChatScreen> {
   late Echo echo;
 
   void onConnectionStateChange(ConnectionStateChange event) {
-    print("STATE:${event.currentState}");
+    // print("STATE:${event.currentState}");
     if (event.currentState == 'CONNECTED') {
-      print('connected');
+      // print('connected');
     } else if (event.currentState == 'DISCONNECTED') {
-      print('disconnected');
+      // print('disconnected');
     }
   }
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   void _setUpEcho() {
     // final token = Prefer.prefs.getString('token');
 
@@ -73,8 +78,8 @@ class _ChatScreenState extends State<ChatScreen> {
           (e) => {
             if (e["type"] == 2)
               {
-                print("e.message"),
-                print(e),
+                // print("e.message"),
+                // print(e),
                 if (mounted)
                   {
                     setState(() {
@@ -211,7 +216,7 @@ class _ChatScreenState extends State<ChatScreen> {
               );
             } else {}
           }
-          print(ids);
+          // print(ids);
           load = false;
         });
       }
@@ -513,6 +518,9 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {
@@ -559,6 +567,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(1),
                         child: ClipOval(
+                          // ignore: unnecessary_null_comparison
                           child: ur != null || ur != ""
                               ? Image.network(
                                   ur,

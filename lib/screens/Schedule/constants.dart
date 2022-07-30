@@ -7,7 +7,7 @@ class AppConstants {
 
   static OutlineInputBorder inputBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(7),
-    borderSide: BorderSide(
+    borderSide: const BorderSide(
       width: 2,
       color: AppColors.lightNavyBlue,
     ),
@@ -17,7 +17,7 @@ class AppConstants {
         border: inputBorder,
         disabledBorder: inputBorder,
         errorBorder: inputBorder.copyWith(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             width: 2,
             color: AppColors.red,
           ),
@@ -26,23 +26,23 @@ class AppConstants {
         focusedBorder: inputBorder,
         focusedErrorBorder: inputBorder,
         hintText: "Event Title",
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
           color: AppColors.black,
           fontSize: 17,
         ),
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           color: AppColors.black,
           fontSize: 17,
         ),
-        helperStyle: TextStyle(
+        helperStyle: const TextStyle(
           color: AppColors.black,
           fontSize: 17,
         ),
-        errorStyle: TextStyle(
+        errorStyle: const TextStyle(
           color: AppColors.red,
           fontSize: 12,
         ),
-        contentPadding: EdgeInsets.symmetric(
+        contentPadding: const EdgeInsets.symmetric(
           vertical: 10,
           horizontal: 20,
         ),

@@ -17,8 +17,6 @@ import '../create_event_page.dart';
 import '../model/event.dart';
 import '../widgets/month_view_widget.dart';
 
-DateTime get _now => DateTime.now();
-
 class MonthViewPageDemo extends StatefulWidget {
   final String role;
   final String? i;
@@ -43,6 +41,10 @@ class _MonthViewPageDemoState extends State<MonthViewPageDemo> {
   late String userName = widget.u == "" ? "Me" : widget.u.toString();
   DateFormat format = DateFormat("yyyy-MM-dd");
   List<CalendarEventData<Event>> _events = [];
+
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future getEvents(String? id) async {
     setState(() {
       loading = true;
@@ -85,7 +87,7 @@ class _MonthViewPageDemoState extends State<MonthViewPageDemo> {
               ),
             );
           }
-          print(_events);
+          // print(_events);
           loading = false;
         });
       }
@@ -104,6 +106,9 @@ class _MonthViewPageDemoState extends State<MonthViewPageDemo> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   getd() async {
     String? idUser = await storage.read(key: "id");

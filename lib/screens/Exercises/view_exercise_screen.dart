@@ -26,6 +26,9 @@ class _ViewExerciseScreenState extends State<ViewExerciseScreen> {
   final storage = const FlutterSecureStorage();
   final rowsAdd = <Widget>[];
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future getExDetail() async {
     await EasyLoading.show(
       status: 'Loading...',
@@ -152,6 +155,9 @@ class _ViewExerciseScreenState extends State<ViewExerciseScreen> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {

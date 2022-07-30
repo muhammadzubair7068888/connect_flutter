@@ -1,6 +1,6 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class AlertDialogWidget extends StatefulWidget {
   const AlertDialogWidget({Key? key}) : super(key: key);

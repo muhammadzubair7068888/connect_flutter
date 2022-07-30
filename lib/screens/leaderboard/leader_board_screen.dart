@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:connect/screens/Track_Velocity/alertDialogWidget.dart';
 import 'package:date_field/date_field.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -98,54 +96,6 @@ class _LeaderBoardState extends State<LeaderBoard> {
 // --                                                               -- //
 // --                          START                                -- //
 // --                                                               -- //
-  // Future filterL() async {
-  //   var uri = Uri.parse('${apiURL}users/leaderboard/filter');
-  //   String? token = await storage.read(key: "token");
-  //   Map<String, String> headers = {
-  //     'Content-Type': 'multipart/form-data',
-  //     'Accept': 'application/json',
-  //     'Authorization': 'Bearer $token',
-  //   };
-  //   var request = http.MultipartRequest(
-  //     'POST',
-  //     uri,
-  //   )..headers.addAll(headers);
-  //   request.fields['start'] = dateTime.toString();
-  //   request.fields['end'] = dateTimeEnd.toString();
-  //   var response = await request.send();
-  //   // var responseDecode = await http.Response.fromStream(response);
-  //   if (response.statusCode == 200) {
-  //     // final result = jsonDecode(responseDecode.body);
-  //     // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
-  //     FocusManager.instance.primaryFocus?.unfocus();
-  //     _resetForm();
-  //     getLeaderBoard();
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           backgroundColor: HexColor("#30CED9"),
-  //           dismissDirection: DismissDirection.vertical,
-  //           content: const Text('Added successfully'),
-  //           duration: const Duration(seconds: 2),
-  //         ),
-  //       );
-  //     }
-  //   } else {
-  //     // await EasyLoading.dismiss();
-  //     FocusManager.instance.primaryFocus?.unfocus();
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           backgroundColor: Colors.redAccent,
-  //           dismissDirection: DismissDirection.vertical,
-  //           content: Text('Server Error'),
-  //           duration: Duration(seconds: 2),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-
   Future getLeaderBoard() async {
     await EasyLoading.show(
       status: 'Loading...',
@@ -165,7 +115,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
         setState(() {
           data = jsonData['uservelocity'];
           var outputList = jsonData["velocitynames"] as List;
-          var filteredList;
+          List filteredList;
           filteredList = outputList.where((e) => e["key"] == "weight").toList();
           wgh = filteredList[0]["name"];
           filteredList =
@@ -403,6 +353,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                               mode: DateTimeFieldPickerMode.date,
                               autovalidateMode: AutovalidateMode.always,
                               validator: (value) {
+                                // ignore: unrelated_type_equality_checks
                                 if (value == null || value == "") {
                                   return "Enter end date";
                                 }

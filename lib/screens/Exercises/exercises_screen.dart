@@ -13,7 +13,6 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../Globals/globals.dart';
-import '../Track_Velocity/alertDialogWidget.dart';
 import 'package:http/http.dart' as http;
 import 'new_exercise_screen.dart';
 
@@ -37,6 +36,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   String name = "";
   TextEditingController controller = TextEditingController();
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   Future<bool> saveFile(String url, String filename) async {
     Directory directory;
     try {
@@ -116,9 +118,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
     });
     bool downloaded = await saveFile(url, filename);
     if (downloaded) {
-      print("File Downloaded");
+      // print("File Downloaded");
     } else {
-      print("Problem Downloading File");
+      // print("Problem Downloading File");
     }
 
     setState(() {
@@ -468,7 +470,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   }
 
   Future uploadCsv() async {
-    print(file!.path);
+    // print(file!.path);
     var uri = Uri.parse('${apiURL}exercises/csv');
     String? token = await storage.read(key: "token");
     Map<String, String> headers = {
@@ -484,7 +486,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       request.files.add(await http.MultipartFile.fromPath('file', file!.path!));
     }
     var response = await request.send();
-    var responseDecode = await http.Response.fromStream(response);
+    // var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
@@ -515,6 +517,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {

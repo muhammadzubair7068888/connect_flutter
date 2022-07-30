@@ -1,15 +1,15 @@
-// ignore: file_names
+// ignore_for_file: file_names, must_be_immutable
+
 import 'dart:convert';
 
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:http/http.dart' as http;
 
 import '../../Globals/globals.dart';
-import '../Questionieries/questionnaireWidget.dart';
 
 class ViewUserDetailScreen extends StatefulWidget {
   final String? imgUrl;
@@ -53,7 +53,6 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
 // --                                                               -- //
 // --                          START                                -- //
 // --                                                               -- //
-
   Future getPhyAsses() async {
     await EasyLoading.show(
       status: 'Loading...',
@@ -180,7 +179,6 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
       }
     }
   }
-
 // --                                                               -- //
 // --                           END                                 -- //
 // --                                                               -- //

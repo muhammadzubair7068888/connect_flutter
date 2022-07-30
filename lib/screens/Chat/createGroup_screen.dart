@@ -1,4 +1,5 @@
-import 'dart:convert';
+// ignore_for_file: file_names
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -8,9 +9,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:multiselect/multiselect.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+
 import '../../Globals/globals.dart';
 import 'chatList_screen.dart';
 
@@ -63,6 +64,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   var ids = [];
   bool load = false;
 
+// --                                                               -- //
+// --                          START                                -- //
+// --                                                               -- //
   void _navigate() {
     Navigator.pushAndRemoveUntil<void>(
       context,
@@ -87,7 +91,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       status: 'Processing...',
       maskType: EasyLoadingMaskType.black,
     );
-    String? id = await storage.read(key: "id");
+    // String? id = await storage.read(key: "id");
     var uri = Uri.parse('${apiURL}groups');
     String? token = await storage.read(key: "token");
     Map<String, String> headers = {
@@ -113,7 +117,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           .add(http.MultipartFile.fromString('users[]', item.toString()));
     }
     var response = await request.send();
-    var responseDecode = await http.Response.fromStream(response);
+    // var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
@@ -131,8 +135,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       _navigate();
     } else {
       await EasyLoading.dismiss();
-      final result = jsonDecode(responseDecode.body);
-      print(result);
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -145,6 +149,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       }
     }
   }
+// --                                                               -- //
+// --                           END                                 -- //
+// --                                                               -- //
 
   @override
   void initState() {
