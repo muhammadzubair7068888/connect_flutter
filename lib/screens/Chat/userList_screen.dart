@@ -249,8 +249,7 @@ class _UserListScreenState extends State<UserListScreen> {
                   builder: (context) => CreateGroupScreen(
                     id: widget.id,
                     token: widget.token,
-                    imgUrl:
-                        'http://192.168.1.30/connect_laravel/public/assets/chat/images/group-img.png',
+                    imgUrl: '${publicUrl}assets/chat/images/group-img.png',
                     currentName: widget.currentName,
                     urC: widget.urC,
                     i: widget.i,

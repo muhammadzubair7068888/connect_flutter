@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter_pusher_client/flutter_pusher.dart';
 import 'package:laravel_echo/laravel_echo.dart';
 
+import 'globals.dart';
+
 Map<String, String> requestHeaders(String token) {
   return {
     HttpHeaders.contentTypeHeader: 'application/json',
@@ -18,14 +20,13 @@ Echo echoSetup(token, pusherClient) {
   return Echo({
     'broadcaster': 'pusher',
     'client': pusherClient,
-    "wsHost": '192.168.1.30',
-    "httpHost": '192.168.1.30',
+    "wsHost": '192.168.1.34',
+    "httpHost": '192.168.1.34',
     "wsPort": 6001,
     'auth': {
       "headers": {'Authorization': 'Bearer $token'}
     },
-    'authEndpoint':
-        'http://192.168.1.30/connect_laravel/public/api/broadcasting/auth',
+    'authEndpoint': '${publicUrl}api/broadcasting/auth',
     "disableStats": true,
     "forceTLS": false,
     "enabledTransports": 'ws',
@@ -35,11 +36,10 @@ Echo echoSetup(token, pusherClient) {
 FlutterPusher getPusherClient(String token) {
   PusherOptions options = PusherOptions(
       encrypted: false,
-      host: '192.168.1.30',
+      host: '192.168.1.34',
       cluster: 'mt1',
       port: 6001,
-      auth: PusherAuth(
-          'http://192.168.1.30/connect_laravel/public/api/broadcasting/auth',
+      auth: PusherAuth('${publicUrl}api/broadcasting/auth',
           headers: {'Authorization': 'Bearer $token'}));
   return FlutterPusher(
     'connect_123',

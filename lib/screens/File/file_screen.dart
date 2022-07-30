@@ -120,9 +120,9 @@ class _FileScreenState extends State<FileScreen> {
     });
     bool downloaded = await saveFile(url, filename);
     if (downloaded) {
-      // print("File Downloaded");
+      print("File Downloaded");
     } else {
-      // print("Problem Downloading File");
+      print("Problem Downloading File");
     }
 
     setState(() {
@@ -213,16 +213,15 @@ class _FileScreenState extends State<FileScreen> {
       }
     } else {
       final result = jsonDecode(responseDecode.body);
-      print("result");
       print(result);
       // await EasyLoading.dismiss();
       FocusManager.instance.primaryFocus?.unfocus();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: Colors.redAccent,
             dismissDirection: DismissDirection.vertical,
-            content: Text('Server Error'),
+            content: Text("${result["message"]}"),
             duration: Duration(seconds: 2),
           ),
         );
@@ -295,7 +294,13 @@ class _FileScreenState extends State<FileScreen> {
               DataRow(
                 cells: [
                   DataCell(Text(jsonData['data'][i]['title'])),
-                  DataCell(Text(jsonData['data'][i]['file'])),
+                  DataCell(
+                    Text(
+                      jsonData['data'][i]['name'] == null
+                          ? ""
+                          : "${jsonData['data'][i]['name']}",
+                    ),
+                  ),
                   DataCell(
                     Wrap(
                       alignment: WrapAlignment.start,
@@ -315,8 +320,11 @@ class _FileScreenState extends State<FileScreen> {
                               //   ),
                               // );
                               downloadFile(
-                                "$downloadUrl${jsonData['data'][i]['file']}",
+                                // "$downloadUrl${jsonData['data'][i]['file']}",
                                 jsonData['data'][i]['file'],
+                                jsonData['data'][i]['name'],
+                                // "${publicUrl}demo/import_file_demo.csv",
+                                // "CSV"
                               );
                             },
                           ),
@@ -506,9 +514,10 @@ class _FileScreenState extends State<FileScreen> {
                                 visible = true;
                               });
                               print(file!.path);
-                              print(file!.name);
                             },
                             style: ElevatedButton.styleFrom(
+                              maximumSize: const Size(150, 50),
+                              minimumSize: const Size(150, 50),
                               primary: HexColor("#13D13F"),
                             ),
                             child: const Text("Select File"),
@@ -525,7 +534,10 @@ class _FileScreenState extends State<FileScreen> {
                                 }
                                 uploadFile();
                               },
-                              style: ElevatedButton.styleFrom(),
+                              style: ElevatedButton.styleFrom(
+                                maximumSize: const Size(150, 50),
+                                minimumSize: const Size(150, 50),
+                              ),
                               child: const Text("Upload File"),
                             ),
                           ),

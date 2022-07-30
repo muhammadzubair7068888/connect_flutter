@@ -487,7 +487,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 backgroundColor: Colors.grey,
                 child: ClipOval(
                   child: Image.network(
-                    "http://192.168.1.30/connect_laravel/public/assets/chat/images/group-img.png",
+                    "${publicUrl}assets/chat/images/group-img.png",
                     width: 60,
                     height: 60,
                     fit: BoxFit.fill,
