@@ -460,6 +460,12 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                         DataColumn(
                           label: Text("Opportunity"),
                         ),
+                        DataColumn(
+                          label: Text("L"),
+                        ),
+                        DataColumn(
+                          label: Text("R"),
+                        ),
                       ],
                       rows: () {
                         rowsAdd.clear();
@@ -513,6 +519,54 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                       updatePhyAss(data[i]["id"], 3),
                                     },
                                     textPosition: RadioButtonTextPosition.right,
+                                  ),
+                                ),
+                                DataCell(
+                                  SizedBox(
+                                    width: 70,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                              EdgeInsets.only(left: 10),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        initialValue: data[i]["left"],
+                                        onChanged: (value) {
+                                          data[i]["left"] = value;
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  SizedBox(
+                                    width: 70,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                              EdgeInsets.only(left: 10),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        initialValue: data[i]["right"],
+                                        onChanged: (value) {
+                                          data[i]["right"] = value;
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -572,6 +626,12 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                         DataColumn(
                           label: Text("Opportunity"),
                         ),
+                        DataColumn(
+                          label: Text("L"),
+                        ),
+                        DataColumn(
+                          label: Text("R"),
+                        ),
                       ],
                       rows: () {
                         rowsAddM.clear();
@@ -625,6 +685,54 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                       updateMechAss(dataM[i]["id"], 3),
                                     },
                                     textPosition: RadioButtonTextPosition.right,
+                                  ),
+                                ),
+                                DataCell(
+                                  SizedBox(
+                                    width: 70,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                              EdgeInsets.only(left: 10),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        initialValue: dataM[i]["left"],
+                                        onChanged: (value) {
+                                          dataM[i]["left"] = value;
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  SizedBox(
+                                    width: 70,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                              EdgeInsets.only(left: 10),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        initialValue: dataM[i]["right"],
+                                        onChanged: (value) {
+                                          dataM[i]["right"] = value;
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],

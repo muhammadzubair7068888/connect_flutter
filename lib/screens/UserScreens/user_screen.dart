@@ -486,31 +486,30 @@ class _UserDetailState extends State<UserDetail> {
           ),
           Row(
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.1,
-              ),
-
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    maximumSize: const Size(150, 50),
-                    minimumSize: const Size(150, 50),
-                    primary: HexColor("#31D858"),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddUser(
-                          role: widget.role,
-                        ),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: const Size(120, 50),
+                      minimumSize: const Size(120, 50),
+                      primary: HexColor("#31D858"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    );
-                  },
-                  child: const Text("Add New"),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddUser(
+                            role: widget.role,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text("New User"),
+                  ),
                 ),
               ),
               SizedBox(
@@ -537,9 +536,9 @@ class _UserDetailState extends State<UserDetail> {
               //     child: const Text("Import CSV"),
               //   ),
               // ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.1,
-              ),
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * 0.1,
+              // ),
             ],
           ),
           Padding(

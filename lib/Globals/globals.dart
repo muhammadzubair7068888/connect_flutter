@@ -1,7 +1,6 @@
-const String apiURL = "http://192.168.1.34/connect_laravel/public/api/";
-const String downloadUrl =
-    "http://192.168.1.34/connect_laravel/public/uploads/";
-const String publicUrl = "http://192.168.1.34/connect_laravel/public/";
+const String apiURL = "http://192.168.1.2/connect_laravel/public/api/";
+const String downloadUrl = "http://192.168.1.2/connect_laravel/public/uploads/";
+const String publicUrl = "http://192.168.1.2/connect_laravel/public/";
 const Map<String, String> headers = {
   'Content-Type': 'application/json',
   'Charset': 'utf-8'

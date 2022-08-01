@@ -24,9 +24,14 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   List data = [];
   List<DataRow> rowsAdd = [];
   List<int> groupValue = [];
+  List<String> iValueL = [];
+  List<String> iValueR = [];
   List dataM = [];
   List<DataRow> rowsAddM = [];
   List<int> groupValueM = [];
+  List<String> iValueML = [];
+  List<String> iValueMR = [];
+  String? left;
 
   void _resetForm() {
     _form.currentState?.reset();
@@ -106,6 +111,11 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
       var jsonData = jsonDecode(jsonBody);
       if (mounted) {
         setState(() {
+          data = [];
+          rowsAdd = [];
+          groupValue = [];
+          iValueL = [];
+          iValueR = [];
           data = jsonData["data"];
         });
         if (loading == "show") {
@@ -147,6 +157,11 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
       var jsonData = jsonDecode(jsonBody);
       if (mounted) {
         setState(() {
+          dataM = [];
+          rowsAddM = [];
+          groupValueM = [];
+          iValueML = [];
+          iValueMR = [];
           dataM = jsonData["data"];
         });
         await EasyLoading.dismiss();
@@ -303,6 +318,80 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
     // var responseDecode = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  Future updateHands(int id, String valueL, String valueR) async {
+    var uri = Uri.parse('${apiURL}assessment/physical/lr');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['phy_id'] = id.toString();
+    request.fields['left'] = valueL;
+    request.fields['right'] = valueR;
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  Future updateHandsM(int id, String valueML, String valueMR) async {
+    print("first");
+    print("first");
+    print("first");
+    print("first");
+    var uri = Uri.parse('${apiURL}assessment/mechanical/lr');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['mech_id'] = id.toString();
+    request.fields['left'] = valueML;
+    request.fields['right'] = valueMR;
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
     } else {
       if (mounted) {
@@ -492,7 +581,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                     sortAscending: true,
                     columns: const [
                       DataColumn(
-                        label: Text("Assessments"),
+                        label: Text("Assessment"),
                       ),
                       DataColumn(
                         label: Text("Acceptable"),
@@ -513,6 +602,8 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                         String name = data[i]["name"];
                         int val = int.parse(data[i]["status"]);
                         groupValue.add(val);
+                        iValueL.add(data[i]["left"]);
+                        iValueR.add(data[i]["right"]);
                         rowsAdd.add(
                           DataRow(
                             cells: [
@@ -566,10 +657,135 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                                   alignment: WrapAlignment.start,
                                   children: [
                                     SizedBox(
-                                      width: 25,
+                                      width: 30,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.handshake),
+                                        iconSize: 18,
+                                        color: HexColor("#f1b44c"),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                actionsAlignment:
+                                                    MainAxisAlignment.center,
+                                                title: TextFormField(
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        10,
+                                                      ),
+                                                    ),
+                                                    labelText: 'Assessment',
+                                                  ),
+                                                  enabled: false,
+                                                  initialValue: name,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      // email = value;
+                                                    });
+                                                  },
+                                                ),
+                                                content: Wrap(
+                                                  runSpacing: 20,
+                                                  children: [
+                                                    TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            10,
+                                                          ),
+                                                        ),
+                                                        labelText: 'Left',
+                                                      ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      initialValue: iValueL[i],
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          iValueL[i] = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                    TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            10,
+                                                          ),
+                                                        ),
+                                                        labelText: 'Right',
+                                                      ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      initialValue: iValueR[i],
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          iValueR[i] = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text("Cancel"),
+                                                  ),
+                                                  ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      updateHands(
+                                                        data[i]["id"],
+                                                        iValueL[i],
+                                                        iValueR[i],
+                                                      );
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text("Save"),
+                                                  ),
+                                                ],
+                                                elevation: 24,
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
                                       child: IconButton(
                                         icon: const Icon(Icons.delete),
                                         color: Colors.red,
+                                        iconSize: 18,
                                         onPressed: () {
                                           showDialog(
                                             context: context,
@@ -680,7 +896,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                     sortAscending: true,
                     columns: const [
                       DataColumn(
-                        label: Text("Assessments"),
+                        label: Text("Assessment"),
                       ),
                       DataColumn(
                         label: Text("Acceptable"),
@@ -701,6 +917,8 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                         String name = dataM[i]["name"];
                         int val = int.parse(dataM[i]["status"]);
                         groupValueM.add(val);
+                        iValueML.add(dataM[i]["left"]);
+                        iValueMR.add(dataM[i]["right"]);
                         rowsAddM.add(
                           DataRow(
                             cells: [
@@ -754,7 +972,127 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                                   alignment: WrapAlignment.start,
                                   children: [
                                     SizedBox(
-                                      width: 25,
+                                      width: 30,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.handshake),
+                                        iconSize: 18,
+                                        color: HexColor("#f1b44c"),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                actionsAlignment:
+                                                    MainAxisAlignment.center,
+                                                title: TextFormField(
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        10,
+                                                      ),
+                                                    ),
+                                                    labelText: 'Assessment',
+                                                  ),
+                                                  enabled: false,
+                                                  initialValue: name,
+                                                  onChanged: (value) {},
+                                                ),
+                                                content: Wrap(
+                                                  runSpacing: 20,
+                                                  children: [
+                                                    TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            10,
+                                                          ),
+                                                        ),
+                                                        labelText: 'Left',
+                                                      ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      initialValue: iValueML[i],
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          iValueML[i] = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                    TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            10,
+                                                          ),
+                                                        ),
+                                                        labelText: 'Right',
+                                                      ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      initialValue: iValueMR[i],
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          iValueMR[i] = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text("Cancel"),
+                                                  ),
+                                                  ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      updateHandsM(
+                                                        dataM[i]["id"],
+                                                        iValueML[i],
+                                                        iValueMR[i],
+                                                      );
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text("Save"),
+                                                  ),
+                                                ],
+                                                elevation: 24,
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
                                       child: IconButton(
                                         icon: const Icon(Icons.delete),
                                         color: Colors.red,

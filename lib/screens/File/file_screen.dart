@@ -522,11 +522,11 @@ class _FileScreenState extends State<FileScreen> {
                               // print(file!.path);
                             },
                             style: ElevatedButton.styleFrom(
-                              maximumSize: const Size(150, 50),
-                              minimumSize: const Size(150, 50),
+                              maximumSize: const Size(120, 50),
+                              minimumSize: const Size(120, 50),
                               primary: HexColor("#13D13F"),
                             ),
-                            child: const Text("Select File"),
+                            child: const Text("New File"),
                           ),
                           const SizedBox(
                             width: 20,
@@ -550,24 +550,7 @@ class _FileScreenState extends State<FileScreen> {
                         ],
                       ),
                       const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        child: widget.role != "user"
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Uploaded Files",
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w500,
-                                      color: HexColor("#222222"),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : null,
+                        height: 10,
                       ),
                       SizedBox(
                         child: widget.role != "user"
@@ -630,6 +613,26 @@ class _FileScreenState extends State<FileScreen> {
                                     ),
                                   ),
                                 ),
+                              )
+                            : null,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        child: widget.role != "user"
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Uploaded Files",
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500,
+                                      color: HexColor("#222222"),
+                                    ),
+                                  ),
+                                ],
                               )
                             : null,
                       ),

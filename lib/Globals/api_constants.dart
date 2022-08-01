@@ -22,8 +22,8 @@ Echo echoSetup(token, pusherClient) {
   return Echo({
     'broadcaster': 'pusher',
     'client': pusherClient,
-    "wsHost": '192.168.1.34',
-    "httpHost": '192.168.1.34',
+    "wsHost": '192.168.1.2',
+    "httpHost": '192.168.1.2',
     "wsPort": 6001,
     'auth': {
       "headers": {'Authorization': 'Bearer $token'}
@@ -38,7 +38,7 @@ Echo echoSetup(token, pusherClient) {
 FlutterPusher getPusherClient(String token) {
   PusherOptions options = PusherOptions(
       encrypted: false,
-      host: '192.168.1.34',
+      host: '192.168.1.2',
       cluster: 'mt1',
       port: 6001,
       auth: PusherAuth('${publicUrl}api/broadcasting/auth',
