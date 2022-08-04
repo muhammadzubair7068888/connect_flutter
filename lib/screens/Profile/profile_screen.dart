@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,10 +21,12 @@ class ProfileScreen extends StatefulWidget {
   final String strWeight;
   final String handedness;
   final int age;
+  final int id;
   final String school;
   final String lvl;
   const ProfileScreen({
     Key? key,
+    required this.id,
     required this.role,
     required this.imgUrl,
     required this.name,
@@ -41,6 +45,82 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+  final storage = const FlutterSecureStorage();
+  List<DataRow> rowsAdd = [];
+  List<DataRow> rowsAddQ = [];
+  List<DataRow> rowsAddM = [];
+  List data = [];
+  List dataM = [];
+  List<int> groupValue = [];
+  List<int> groupValueM = [];
+
+  Future getPhyAsses() async {
+    await EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    var url = Uri.parse('${apiURL}users/view/${widget.id}');
+    String? token = await storage.read(key: "token");
+    http.Response response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200) {
+      var jsonBody = response.body;
+      var jsonData = jsonDecode(jsonBody);
+      print(jsonData);
+      if (mounted) {
+        setState(() {
+          rowsAddQ = [];
+          data = jsonData["data"]["physical_assessment"];
+          dataM = jsonData["data"]["mechanical_assessment"];
+          for (var i = 0; i < jsonData['data']["question"].length; i++) {
+            rowsAddQ.add(
+              DataRow(
+                cells: [
+                  DataCell(
+                    Wrap(
+                      children: [
+                        Text(jsonData['data']["question"][i]["name"]),
+                      ],
+                    ),
+                  ),
+                  DataCell(
+                    Wrap(
+                      children: const [
+                        Text(""),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        });
+        await EasyLoading.dismiss();
+      }
+    } else {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPhyAsses();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +160,369 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 school: widget.school,
                 strWeight: widget.strWeight,
                 role: widget.role,
-              )
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Physical Assessment",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500,
+                                  color: HexColor("#222222"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        headingRowColor: MaterialStateColor.resolveWith(
+                            (states) => HexColor("#30CED9")),
+                        sortColumnIndex: 0,
+                        sortAscending: true,
+                        columns: const [
+                          DataColumn(
+                            label: Text("Assessments"),
+                          ),
+                          DataColumn(
+                            label: Text("Acceptable"),
+                          ),
+                          DataColumn(
+                            label: Text("Caution"),
+                          ),
+                          DataColumn(
+                            label: Text("Opportunity"),
+                          ),
+                          DataColumn(
+                            label: Text("L"),
+                          ),
+                          DataColumn(
+                            label: Text("R"),
+                          ),
+                        ],
+                        rows: () {
+                          rowsAdd.clear();
+                          for (var i = 0; i < data.length; i++) {
+                            String name = data[i]["name"];
+                            int val = int.parse(data[i]["status"]);
+                            groupValue.add(val);
+                            rowsAdd.add(
+                              DataRow(
+                                cells: [
+                                  DataCell(Text(name)),
+                                  DataCell(
+                                    RadioButton(
+                                      description: "",
+                                      value: 1,
+                                      groupValue: groupValue[i],
+                                      onChanged: (value) => {
+                                        // setState(
+                                        //   () {
+                                        //     groupValue[i] = 1;
+                                        //   },
+                                        // ),
+                                        // updatePhyAss(data[i]["id"], 1),
+                                      },
+                                      textPosition:
+                                          RadioButtonTextPosition.right,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    RadioButton(
+                                      description: "",
+                                      value: 2,
+                                      groupValue: groupValue[i],
+                                      onChanged: (value) => {
+                                        // setState(
+                                        //   () => groupValue[i] = 2,
+                                        // ),
+                                        // updatePhyAss(data[i]["id"], 2),
+                                      },
+                                      textPosition:
+                                          RadioButtonTextPosition.right,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    RadioButton(
+                                      description: "",
+                                      value: 3,
+                                      groupValue: groupValue[i],
+                                      onChanged: (value) => {
+                                        // setState(
+                                        //   () => groupValue[i] = 3,
+                                        // ),
+                                        // updatePhyAss(data[i]["id"], 3),
+                                      },
+                                      textPosition:
+                                          RadioButtonTextPosition.right,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    SizedBox(
+                                      width: 70,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 5, 0, 5),
+                                        child: TextFormField(
+                                          enabled: false,
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                const EdgeInsets.only(left: 10),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                10,
+                                              ),
+                                            ),
+                                          ),
+                                          initialValue: data[i]["left"],
+                                          onChanged: (value) {
+                                            // data[i]["left"] = value;
+                                            // updateHandsL(
+                                            //   data[i]["id"],
+                                            //   data[i]["left"],
+                                            // );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    SizedBox(
+                                      width: 70,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 5, 0, 5),
+                                        child: TextFormField(
+                                          enabled: false,
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                const EdgeInsets.only(left: 10),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                10,
+                                              ),
+                                            ),
+                                          ),
+                                          initialValue: data[i]["right"],
+                                          onChanged: (value) {
+                                            // data[i]["right"] = value;
+                                            // updateHandsR(
+                                            //   data[i]["id"],
+                                            //   data[i]["right"],
+                                            // );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          return rowsAdd;
+                        }(),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Mechanical Assessments",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500,
+                                  color: HexColor("#222222"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        headingRowColor: MaterialStateColor.resolveWith(
+                            (states) => HexColor("#30CED9")),
+                        sortColumnIndex: 0,
+                        sortAscending: true,
+                        columns: const [
+                          DataColumn(
+                            label: Text("Assessments"),
+                          ),
+                          DataColumn(
+                            label: Text("Acceptable"),
+                          ),
+                          DataColumn(
+                            label: Text("Caution"),
+                          ),
+                          DataColumn(
+                            label: Text("Opportunity"),
+                          ),
+                          DataColumn(
+                            label: Text("L"),
+                          ),
+                          DataColumn(
+                            label: Text("R"),
+                          ),
+                        ],
+                        rows: () {
+                          rowsAddM.clear();
+                          for (var i = 0; i < dataM.length; i++) {
+                            String name = dataM[i]["name"];
+                            int val = int.parse(dataM[i]["status"]);
+                            groupValueM.add(val);
+                            rowsAddM.add(
+                              DataRow(
+                                cells: [
+                                  DataCell(Text(name)),
+                                  DataCell(
+                                    RadioButton(
+                                      description: "",
+                                      value: 1,
+                                      groupValue: groupValueM[i],
+                                      onChanged: (value) => {
+                                        // setState(
+                                        //   () {
+                                        //     groupValueM[i] = 1;
+                                        //   },
+                                        // ),
+                                        // updateMechAss(dataM[i]["id"], 1),
+                                      },
+                                      textPosition:
+                                          RadioButtonTextPosition.right,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    RadioButton(
+                                      description: "",
+                                      value: 2,
+                                      groupValue: groupValueM[i],
+                                      onChanged: (value) => {
+                                        // setState(
+                                        //   () => groupValueM[i] = 2,
+                                        // ),
+                                        // updateMechAss(dataM[i]["id"], 2),
+                                      },
+                                      textPosition:
+                                          RadioButtonTextPosition.right,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    RadioButton(
+                                      description: "",
+                                      value: 3,
+                                      groupValue: groupValueM[i],
+                                      onChanged: (value) => {
+                                        // setState(
+                                        //   () => groupValueM[i] = 3,
+                                        // ),
+                                        // updateMechAss(dataM[i]["id"], 3),
+                                      },
+                                      textPosition:
+                                          RadioButtonTextPosition.right,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    SizedBox(
+                                      width: 70,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 5, 0, 5),
+                                        child: TextFormField(
+                                          enabled: false,
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                const EdgeInsets.only(left: 10),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                10,
+                                              ),
+                                            ),
+                                          ),
+                                          initialValue: dataM[i]["left"],
+                                          onChanged: (value) {
+                                            // dataM[i]["left"] = value;
+                                            // updateHandsML(
+                                            //   dataM[i]["id"],
+                                            //   dataM[i]["left"],
+                                            // );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    SizedBox(
+                                      width: 70,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 5, 0, 5),
+                                        child: TextFormField(
+                                          enabled: false,
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                const EdgeInsets.only(left: 10),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                10,
+                                              ),
+                                            ),
+                                          ),
+                                          initialValue: dataM[i]["right"],
+                                          onChanged: (value) {
+                                            // dataM[i]["right"] = value;
+                                            // updateHandsMR(
+                                            //   dataM[i]["id"],
+                                            //   dataM[i]["right"],
+                                            // );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          return rowsAddM;
+                        }(),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),

@@ -270,6 +270,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                           school: school,
                           strWeight: strWeight,
                           role: widget.role,
+                          id: int.parse(id!),
                         ),
                       ),
                     );
@@ -417,6 +418,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                           school: school,
                           strWeight: strWeight,
                           role: widget.role,
+                          id: int.parse(id!),
                         ),
                       ),
                     );

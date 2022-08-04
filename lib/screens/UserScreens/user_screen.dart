@@ -482,12 +482,12 @@ class _UserDetailState extends State<UserDetail> {
       body: Column(
         children: [
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.only(left: 10),
                 child: Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -542,12 +542,9 @@ class _UserDetailState extends State<UserDetail> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                const SizedBox(
-                  height: 10,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
