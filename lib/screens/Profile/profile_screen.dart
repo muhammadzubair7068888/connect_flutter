@@ -70,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (response.statusCode == 200) {
       var jsonBody = response.body;
       var jsonData = jsonDecode(jsonBody);
-      print(jsonData);
+      // print(jsonData);
       if (mounted) {
         setState(() {
           rowsAddQ = [];
