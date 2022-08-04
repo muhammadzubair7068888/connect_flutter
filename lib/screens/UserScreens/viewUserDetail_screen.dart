@@ -179,6 +179,146 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
       }
     }
   }
+
+  Future updateHandsL(int id, String valueL) async {
+    var uri = Uri.parse('${apiURL}assessment/phy/l');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['phy_id'] = id.toString();
+    request.fields['left'] = valueL;
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  Future updateHandsR(int id, String valueR) async {
+    var uri = Uri.parse('${apiURL}assessment/phy/r');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['phy_id'] = id.toString();
+    request.fields['right'] = valueR;
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  Future updateHandsML(int id, String valueML) async {
+    var uri = Uri.parse('${apiURL}assessment/mech/l');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['mech_id'] = id.toString();
+    request.fields['left'] = valueML;
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+    } else {
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  Future updateHandsMR(int id, String valueMR) async {
+    var uri = Uri.parse('${apiURL}assessment/mech/r');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['mech_id'] = id.toString();
+    request.fields['right'] = valueMR;
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+    } else {
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
 // --                                                               -- //
 // --                           END                                 -- //
 // --                                                               -- //
@@ -530,7 +670,7 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                       child: TextFormField(
                                         decoration: InputDecoration(
                                           contentPadding:
-                                              EdgeInsets.only(left: 10),
+                                              const EdgeInsets.only(left: 10),
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               10,
@@ -540,6 +680,10 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                         initialValue: data[i]["left"],
                                         onChanged: (value) {
                                           data[i]["left"] = value;
+                                          updateHandsL(
+                                            data[i]["id"],
+                                            data[i]["left"],
+                                          );
                                         },
                                       ),
                                     ),
@@ -554,7 +698,7 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                       child: TextFormField(
                                         decoration: InputDecoration(
                                           contentPadding:
-                                              EdgeInsets.only(left: 10),
+                                              const EdgeInsets.only(left: 10),
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               10,
@@ -564,6 +708,10 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                         initialValue: data[i]["right"],
                                         onChanged: (value) {
                                           data[i]["right"] = value;
+                                          updateHandsR(
+                                            data[i]["id"],
+                                            data[i]["right"],
+                                          );
                                         },
                                       ),
                                     ),
@@ -696,7 +844,7 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                       child: TextFormField(
                                         decoration: InputDecoration(
                                           contentPadding:
-                                              EdgeInsets.only(left: 10),
+                                              const EdgeInsets.only(left: 10),
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               10,
@@ -706,6 +854,10 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                         initialValue: dataM[i]["left"],
                                         onChanged: (value) {
                                           dataM[i]["left"] = value;
+                                          updateHandsML(
+                                            dataM[i]["id"],
+                                            dataM[i]["left"],
+                                          );
                                         },
                                       ),
                                     ),
@@ -720,7 +872,7 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                       child: TextFormField(
                                         decoration: InputDecoration(
                                           contentPadding:
-                                              EdgeInsets.only(left: 10),
+                                              const EdgeInsets.only(left: 10),
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
                                               10,
@@ -730,6 +882,10 @@ class _ViewUserDetailScreenState extends State<ViewUserDetailScreen> {
                                         initialValue: dataM[i]["right"],
                                         onChanged: (value) {
                                           dataM[i]["right"] = value;
+                                          updateHandsMR(
+                                            dataM[i]["id"],
+                                            dataM[i]["right"],
+                                          );
                                         },
                                       ),
                                     ),

@@ -369,10 +369,6 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   }
 
   Future updateHandsM(int id, String valueML, String valueMR) async {
-    print("first");
-    print("first");
-    print("first");
-    print("first");
     var uri = Uri.parse('${apiURL}assessment/mechanical/lr');
     String? token = await storage.read(key: "token");
     Map<String, String> headers = {

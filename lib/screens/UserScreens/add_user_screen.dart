@@ -109,16 +109,16 @@ class _AddUserState extends State<AddUser> {
     if (response.statusCode == 200) {
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
       // final result = jsonDecode(responseDecode.body);
+      // print(result);
       FocusManager.instance.primaryFocus?.unfocus();
       _navigate();
       await EasyLoading.dismiss();
     } else {
       await EasyLoading.dismiss();
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
-      // final result1 = jsonDecode(responseDecode.body);
-      // print(result);
       // print(result1);
-
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
