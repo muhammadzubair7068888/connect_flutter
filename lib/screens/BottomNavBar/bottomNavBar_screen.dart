@@ -166,7 +166,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           height = jsonData["data"]["height"];
           email = jsonData["data"]["email"];
           strWeight = jsonData["data"]["starting_weight"];
-          handedness = jsonData["data"]["handedness"];
+          handedness = jsonData["data"]["handedness"] ?? "";
           age = jsonData["data"]["age"];
           school = jsonData["data"]["school"];
           lvl = jsonData["data"]["level"];

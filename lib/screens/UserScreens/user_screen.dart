@@ -302,8 +302,8 @@ class _UserDetailState extends State<UserDetail> {
                                   builder: (context) => ViewUserDetailScreen(
                                     age: jsonData['data'][i]['age'],
                                     email: jsonData['data'][i]['email'],
-                                    handedness: jsonData['data'][i]
-                                        ['handedness'],
+                                    handedness:
+                                        jsonData['data'][i]['handedness'] ?? "",
                                     height: jsonData['data'][i]['height'],
                                     imgUrl: jsonData['data'][i]['avatar'],
                                     lvl: jsonData['data'][i]['level'],
@@ -331,8 +331,8 @@ class _UserDetailState extends State<UserDetail> {
                                   builder: (context) => EditUserScreen(
                                     age: jsonData['data'][i]['age'],
                                     email: jsonData['data'][i]['email'],
-                                    handedness: jsonData['data'][i]
-                                        ['handedness'],
+                                    handedness:
+                                        jsonData['data'][i]['handedness'] ?? "",
                                     height: jsonData['data'][i]['height'],
                                     imgUrl: jsonData['data'][i]['avatar'],
                                     lvl: jsonData['data'][i]['level'],

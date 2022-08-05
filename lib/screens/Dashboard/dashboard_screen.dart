@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -102,6 +103,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int vj = 0;
   List<DataRow> rowsAdd = [];
   List data = [];
+  PlatformFile? file;
+  String name = "";
 
 // --                                                               -- //
 // --                          START                                -- //
@@ -703,9 +706,63 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  Future uploadCsv() async {
+    await EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    var uri = Uri.parse('${apiURL}importCSV');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    if (file != null) {
+      request.files.add(await http.MultipartFile.fromPath('file', file!.path!));
+    }
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      FocusManager.instance.primaryFocus?.unfocus();
+      // _resetForm();
+      getUsers();
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: HexColor("#30CED9"),
+            dismissDirection: DismissDirection.vertical,
+            content: const Text('Added successfully'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } else {
+      await EasyLoading.dismiss();
+      FocusManager.instance.primaryFocus?.unfocus();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text("Error importing this file"),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
 // --                                                               -- //
 // --                           END                                 -- //
 // --                                                               -- //
+
   @override
   void initState() {
     super.initState();
@@ -872,7 +929,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       maximumSize: const Size(150, 50),
-                      minimumSize: const Size(150, 50),
+                      minimumSize: const Size(100, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
@@ -889,13 +946,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       maximumSize: const Size(150, 50),
-                      minimumSize: const Size(150, 50),
+                      minimumSize: const Size(100, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
                     child: const Text(
                       'Clear',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final result = await FilePicker.platform
+                          .pickFiles(type: FileType.any);
+                      if (result == null) return;
+                      setState(() {
+                        file = result.files.first;
+                        name = file!.name;
+                      });
+                      uploadCsv();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: const Size(150, 50),
+                      minimumSize: const Size(100, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'Import CSV',
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ),
@@ -963,6 +1043,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       rows: rowsAdd,
                     )
                   : null,
+            ),
+            Padding(
+              padding: rowsAdd.isEmpty
+                  ? const EdgeInsets.only(top: 10)
+                  : const EdgeInsets.all(0),
+              child: SizedBox(
+                child: rowsAdd.isEmpty
+                    ? const Text("No data available in table")
+                    : null,
+              ),
             ),
             const SizedBox(
               height: 30,

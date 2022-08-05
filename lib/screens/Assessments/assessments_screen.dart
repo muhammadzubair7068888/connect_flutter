@@ -444,7 +444,9 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                           suffixIcon: Icon(Icons.arrow_drop_down_sharp),
                           contentPadding: EdgeInsets.all(20),
                           labelStyle: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.black),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                           labelText: 'Select Type',
                         ),
                       ),
@@ -486,7 +488,6 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                         if (value == null || value == "") {
                           return "Please enter label.";
                         }
-
                         return null;
                       },
                       onChanged: (value) {
