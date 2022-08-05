@@ -274,7 +274,12 @@ class _UserDetailState extends State<UserDetail> {
               DataRow(
                 cells: [
                   //  DataCell(Text("${jsonData['data'][i]['id']}")),
-                  DataCell(Text(jsonData['data'][i]['name'])),
+                  DataCell(
+                    Text(
+                      jsonData['data'][i]['name'] ??
+                          "${jsonData['data'][i]['first_name']} ${jsonData['data'][i]['last_name']}",
+                    ),
+                  ),
                   DataCell(Text(jsonData['data'][i]['role'])),
                   DataCell(Text(userName!)),
                   DataCell(Text(jsonData['data'][i]['height'])),
@@ -479,134 +484,136 @@ class _UserDetailState extends State<UserDetail> {
                 },
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      maximumSize: const Size(120, 50),
-                      minimumSize: const Size(120, 50),
-                      primary: HexColor("#31D858"),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddUser(
-                            role: widget.role,
-                          ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        maximumSize: const Size(120, 50),
+                        minimumSize: const Size(120, 50),
+                        primary: HexColor("#31D858"),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                      );
-                    },
-                    child: const Text("New User"),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddUser(
+                              role: widget.role,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text("New User"),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.2,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.3,
-              ),
-              // Expanded(
-              //   child: ElevatedButton(
-              //     style: ElevatedButton.styleFrom(
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(10.0),
-              //       ),
-              //     ),
-              //     onPressed: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => const ImportUser(),
-              //         ),
-              //       );
-              //     },
-              //     child: const Text("Import CSV"),
-              //   ),
-              // ),
-              // SizedBox(
-              //   width: MediaQuery.of(context).size.width * 0.1,
-              // ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: TextField(
-                        controller: controller,
-                        onChanged: onSearch,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          label: const Text("Search"),
-                        ),
-                        // onChanged: searchBook,
-                      ),
-                    )
-                  ],
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.2,
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              headingRowColor: MaterialStateColor.resolveWith(
-                  (states) => HexColor("#30CED9")),
-              sortColumnIndex: 0,
-              sortAscending: true,
-              columns: const [
-                // DataColumn(
-                //   label: Text("S.No"),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                ),
+                // Expanded(
+                //   child: ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(10.0),
+                //       ),
+                //     ),
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) => const ImportUser(),
+                //         ),
+                //       );
+                //     },
+                //     child: const Text("Import CSV"),
+                //   ),
                 // ),
-                DataColumn(
-                  label: Text("Name"),
-                ),
-                DataColumn(
-                  label: Text("Role"),
-                ),
-                DataColumn(
-                  label: Text("Added By"),
-                ),
-                DataColumn(
-                  label: Text("Height"),
-                ),
-                DataColumn(
-                  label: Text("Starting Weight"),
-                ),
-                DataColumn(
-                  label: Text("Last Login"),
-                ),
-                DataColumn(
-                  label: Text("  Action"),
-                ),
+                // SizedBox(
+                //   width: MediaQuery.of(context).size.width * 0.1,
+                // ),
               ],
-              rows: rowsAdd,
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: TextField(
+                          controller: controller,
+                          onChanged: onSearch,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            label: const Text("Search"),
+                          ),
+                          // onChanged: searchBook,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                headingRowColor: MaterialStateColor.resolveWith(
+                    (states) => HexColor("#30CED9")),
+                sortColumnIndex: 0,
+                sortAscending: true,
+                columns: const [
+                  // DataColumn(
+                  //   label: Text("S.No"),
+                  // ),
+                  DataColumn(
+                    label: Text("Name"),
+                  ),
+                  DataColumn(
+                    label: Text("Role"),
+                  ),
+                  DataColumn(
+                    label: Text("Added By"),
+                  ),
+                  DataColumn(
+                    label: Text("Height"),
+                  ),
+                  DataColumn(
+                    label: Text("Starting Weight"),
+                  ),
+                  DataColumn(
+                    label: Text("Last Login"),
+                  ),
+                  DataColumn(
+                    label: Text("  Action"),
+                  ),
+                ],
+                rows: rowsAdd,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -30,6 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   DateTime? startDate;
   DateTime? endDate;
   String user = '';
+  int? userId;
   var users = [];
   List<_SalesData> weight = [];
   int minWeight = 0;
@@ -82,7 +83,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<_SalesData> verticalJump = [];
   int minVerticalJump = 0;
   int maxVerticalJump = 0;
-
   int w = 0;
   int a = 0;
   int pdv = 0;
@@ -100,6 +100,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int s = 0;
   int dl = 0;
   int vj = 0;
+  List<DataRow> rowsAdd = [];
+  List data = [];
 
 // --                                                               -- //
 // --                          START                                -- //
@@ -613,6 +615,76 @@ class _DashboardScreenState extends State<DashboardScreen> {
           var uId =
               jsonData['data'].where((o) => o['id'] == int.parse(id!)).toList();
           user = uId[0]['name'];
+          userId = uId[0]['id'];
+        });
+      }
+      await EasyLoading.dismiss();
+    } else {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  Future getPitch() async {
+    // await EasyLoading.show(
+    //   status: 'Loading...',
+    //   maskType: EasyLoadingMaskType.black,
+    // );
+    var url = Uri.parse('${apiURL}pitch');
+    String? token = await storage.read(key: "token");
+    http.Response response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(<String, String?>{
+        'user_id': userId.toString(),
+      }),
+    );
+    if (response.statusCode == 200) {
+      var jsonBody = response.body;
+      var jsonData = jsonDecode(jsonBody);
+      if (mounted) {
+        setState(() {
+          data = jsonData['data'];
+          rowsAdd = [];
+          if (data == []) {
+            rowsAdd = [];
+          } else {
+            for (var i = 0; i < data.length; i++) {
+              rowsAdd.add(
+                DataRow(
+                  cells: [
+                    DataCell(Text(data[i]['date'])),
+                    DataCell(Text(data[i]['time'])),
+                    DataCell(Text("${data[i]['pa_of_inning']}")),
+                    DataCell(Text("${data[i]['pitch_of_pa']}")),
+                    DataCell(Text("${data[i]['pitcher_id']}")),
+                    DataCell(Text(data[i]['pitcher_throws'])),
+                    DataCell(Text(data[i]['pitcher_team'])),
+                    DataCell(Text(data[i]['batter'])),
+                    DataCell(Text(data[i]['batter_id'])),
+                    DataCell(Text(data[i]['batter_side'])),
+                    DataCell(Text(data[i]['batter_team'])),
+                    DataCell(Text(data[i]['pitcher_set'])),
+                    DataCell(Text(data[i]['inning'])),
+                    DataCell(Text(data[i]['top_bottom'])),
+                  ],
+                ),
+              );
+            }
+          }
         });
       }
       await EasyLoading.dismiss();
@@ -698,6 +770,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           },
                           onChanged: (value) {
                             user = value!;
+                            var uId =
+                                users.where((o) => o['name'] == user).toList();
+                            userId = uId[0]['id'];
                           },
                         ),
                       ),
@@ -792,6 +867,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       if (!(_form.currentState?.validate() ?? true)) {
                         return;
                       }
+                      getPitch();
                       getVelocities();
                     },
                     style: ElevatedButton.styleFrom(
@@ -825,6 +901,68 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: widget.role != "user"
+                  ? DataTable(
+                      headingRowColor: MaterialStateColor.resolveWith(
+                          (states) => HexColor("#30CED9")),
+                      sortColumnIndex: 0,
+                      sortAscending: true,
+                      columns: const [
+                        // DataColumn(
+                        //   label: Text("S.No"),
+                        // ),
+                        DataColumn(
+                          label: Text("Date"),
+                        ),
+                        DataColumn(
+                          label: Text("Time"),
+                        ),
+                        DataColumn(
+                          label: Text("PaOfInning"),
+                        ),
+                        DataColumn(
+                          label: Text("PitchOfPa"),
+                        ),
+                        DataColumn(
+                          label: Text("PitcherID"),
+                        ),
+                        DataColumn(
+                          label: Text("PitcherThrows"),
+                        ),
+                        DataColumn(
+                          label: Text("PitcherTeam"),
+                        ),
+                        DataColumn(
+                          label: Text("Batter"),
+                        ),
+                        DataColumn(
+                          label: Text("BatterID"),
+                        ),
+                        DataColumn(
+                          label: Text("BatterSide"),
+                        ),
+                        DataColumn(
+                          label: Text("BatterTeam"),
+                        ),
+                        DataColumn(
+                          label: Text("PitcherSet"),
+                        ),
+                        DataColumn(
+                          label: Text("Inning"),
+                        ),
+                        DataColumn(
+                          label: Text("Top/Bottom"),
+                        ),
+                      ],
+                      rows: rowsAdd,
+                    )
+                  : null,
             ),
             const SizedBox(
               height: 30,

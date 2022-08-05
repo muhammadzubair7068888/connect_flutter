@@ -287,24 +287,26 @@ class _UserListScreenState extends State<UserListScreen> {
                 ),
               ],
             )
-          : Column(
-              children: [
-                TextField(
-                  controller: controller,
-                  onChanged: onSearch,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.search),
-                    border: UnderlineInputBorder(),
-                    label: Text("Search"),
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextField(
+                    controller: controller,
+                    onChanged: onSearch,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      border: UnderlineInputBorder(),
+                      label: Text("Search"),
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Column(
-                  children: rowsAdd,
-                )
-              ],
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    children: rowsAdd,
+                  )
+                ],
+              ),
             ),
     );
   }
