@@ -6,6 +6,7 @@ import '../Questionieries/questioneries_screen.dart';
 import '../Settings/dashboardSetting_screen.dart';
 import '../Track_Velocity/vel_and_track_screen.dart';
 import '../UserScreens/user_screen.dart';
+import '../answer_screen.dart';
 import '../leaderboard/leader_board_screen.dart';
 
 class Info extends StatefulWidget {
@@ -128,6 +129,44 @@ class _InfoState extends State<Info> {
                   ],
                 ),
               ),
+            ),
+            SizedBox(
+              child: widget.role == "user"
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Answer(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Answer",
+                              style: TextStyle(
+                                color: HexColor("#161717"),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  : null,
             ),
             SizedBox(
               child: widget.role != "user"

@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../../Globals/globals.dart';
+import 'questAns_screen.dart';
 
 class Questioneries extends StatefulWidget {
   const Questioneries({Key? key}) : super(key: key);
@@ -27,6 +28,8 @@ class _QuestioneriesState extends State<Questioneries> {
   List data = [];
   List search = [];
   TextEditingController controller = TextEditingController();
+  List<bool> groupValue = [];
+  bool isSwitched = false;
   onSearch(String text) async {
     search.clear();
     if (text.isEmpty) {
@@ -40,15 +43,47 @@ class _QuestioneriesState extends State<Questioneries> {
     }
     setState(() {
       if (search.isNotEmpty) {
-        rowsAdd = [];
+        rowsAdd.clear();
         for (var i = 0; i < search.length; i++) {
           rowsAdd.add(
             DataRow(
               cells: [
                 DataCell(
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuestionAnswer(
+                            id: search[i]["id"],
+                            question: search[i]["name"],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Wrap(
+                      children: [
+                        Text(search[i]["name"]),
+                      ],
+                    ),
+                  ),
+                ),
+                DataCell(
                   Wrap(
                     children: [
-                      Text(search[i]["name"]),
+                      Switch(
+                        value: groupValue[i],
+                        onChanged: (value) {
+                          setState(() {
+                            groupValue[i] = value;
+                            if (groupValue[i]) {
+                              updateStatus(search[i]["id"], 1);
+                            } else {
+                              updateStatus(search[i]["id"], 0);
+                            }
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -168,6 +203,53 @@ class _QuestioneriesState extends State<Questioneries> {
     }
   }
 
+  Future updateStatus(int id, int status) async {
+    var uri = Uri.parse('${apiURL}questionnaire/status');
+    String? token = await storage.read(key: "token");
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var request = http.MultipartRequest(
+      'POST',
+      uri,
+    )..headers.addAll(headers);
+    request.fields['id'] = id.toString();
+    request.fields['status'] = status.toString();
+    var response = await request.send();
+    // var responseDecode = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      // final result = jsonDecode(responseDecode.body);
+      // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
+      FocusManager.instance.primaryFocus?.unfocus();
+      _resetForm();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: HexColor("#30CED9"),
+            dismissDirection: DismissDirection.vertical,
+            content: const Text('Updated successfully'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } else {
+      // await EasyLoading.dismiss();
+      FocusManager.instance.primaryFocus?.unfocus();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Server Error'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   Future delete(int id) async {
     var uri = Uri.parse('${apiURL}questionnaire/del/$id');
     String? token = await storage.read(key: "token");
@@ -228,77 +310,10 @@ class _QuestioneriesState extends State<Questioneries> {
       var jsonData = jsonDecode(jsonBody);
       if (mounted) {
         setState(() {
-          data = jsonData['data'];
+          data = [];
+          groupValue = [];
           rowsAdd = [];
-          for (var i = 0; i < jsonData['data'].length; i++) {
-            rowsAdd.add(
-              DataRow(
-                cells: [
-                  DataCell(
-                    Wrap(
-                      children: [
-                        Text(jsonData['data'][i]["name"]),
-                      ],
-                    ),
-                  ),
-                  DataCell(
-                    const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              actionsAlignment: MainAxisAlignment.center,
-                              title: Column(
-                                children: const [
-                                  Image(
-                                    image: AssetImage("images/delete.png"),
-                                    width: 30,
-                                    height: 30,
-                                  ),
-                                ],
-                              ),
-                              content: const Text(
-                                "Are you sure want to delete?",
-                                textAlign: TextAlign.center,
-                              ),
-                              actions: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    delete(jsonData['data'][i]['id']);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Yes"),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("No"),
-                                ),
-                              ],
-                              elevation: 24,
-                            );
-                          });
-                    },
-                  ),
-                ],
-              ),
-            );
-          }
+          data = jsonData['data'];
         });
       }
       await EasyLoading.dismiss();
@@ -361,7 +376,7 @@ class _QuestioneriesState extends State<Questioneries> {
             const Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                "Question",
+                "New Question",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
@@ -371,7 +386,6 @@ class _QuestioneriesState extends State<Questioneries> {
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(10),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -477,7 +491,8 @@ class _QuestioneriesState extends State<Questioneries> {
                 ),
                 child: DataTable(
                   headingRowColor: MaterialStateColor.resolveWith(
-                      (states) => HexColor("#30CED9")),
+                    (states) => HexColor("#30CED9"),
+                  ),
                   sortColumnIndex: 0,
                   sortAscending: true,
                   columns: const [
@@ -485,10 +500,128 @@ class _QuestioneriesState extends State<Questioneries> {
                       label: Text("Question"),
                     ),
                     DataColumn(
+                      label: Text("Ans on Daily / One time"),
+                    ),
+                    DataColumn(
                       label: Text("Action"),
                     ),
                   ],
-                  rows: rowsAdd,
+                  rows: () {
+                    // groupValue.clear();
+                    rowsAdd.clear();
+                    for (var i = 0; i < data.length; i++) {
+                      int val = int.parse(data[i]["status"]);
+                      groupValue.add(val == 1 ? true : false);
+                      rowsAdd.add(
+                        DataRow(
+                          cells: [
+                            DataCell(
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => QuestionAnswer(
+                                        id: data[i]["id"],
+                                        question: data[i]["name"],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      data[i]["name"],
+                                      style:
+                                          const TextStyle(color: Colors.blue),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Wrap(
+                                children: [
+                                  Switch(
+                                    value: groupValue[i],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        groupValue[i] = value;
+                                        if (groupValue[i]) {
+                                          updateStatus(data[i]["id"], 1);
+                                        } else {
+                                          updateStatus(data[i]["id"], 0);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            DataCell(
+                              const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        actionsAlignment:
+                                            MainAxisAlignment.center,
+                                        title: Column(
+                                          children: const [
+                                            Image(
+                                              image: AssetImage(
+                                                  "images/delete.png"),
+                                              width: 30,
+                                              height: 30,
+                                            ),
+                                          ],
+                                        ),
+                                        content: const Text(
+                                          "Are you sure want to delete?",
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        actions: [
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              delete(data[i]['id']);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text("Yes"),
+                                          ),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text("No"),
+                                          ),
+                                        ],
+                                        elevation: 24,
+                                      );
+                                    });
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return rowsAdd;
+                  }(),
                 ),
               ),
             ),

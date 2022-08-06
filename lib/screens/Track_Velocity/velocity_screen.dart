@@ -46,7 +46,7 @@ class _VelocityScreenState extends State<VelocityScreen> {
     }
     setState(() {
       if (search.isNotEmpty) {
-        rowsAdd = [];
+        rowsAdd.clear();
         for (var i = 0; i < search.length; i++) {
           rowsAdd.add(
             DataRow(

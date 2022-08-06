@@ -57,9 +57,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   String? id;
 
   late final List<Widget> _widgetOptions = <Widget>[
-    const DashboardScreen(
-      role: 'admin',
-    ),
+    const DashboardScreen(role: 'admin'),
     const ExerciseScreen(),
     const Info(
       role: 'admin',
@@ -72,7 +70,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const AssessmentScreen(),
   ];
   late final List<Widget> _widgetOptionsUser = <Widget>[
-    const DashboardScreen(
+    DashboardScreen(
       role: 'user',
     ),
     const Info(

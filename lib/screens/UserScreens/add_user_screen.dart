@@ -622,6 +622,8 @@ class _AddUserState extends State<AddUser> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      maximumSize: const Size(120, 50),
+                      minimumSize: const Size(120, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
