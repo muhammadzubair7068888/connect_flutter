@@ -69,4 +69,4 @@ class _MyAppState extends State<MyApp> {
   }
 }
 // adb tcpip 5555
-// adb connect 192.168.1.88:5555
+// adb connect 192.168.0.103:5555

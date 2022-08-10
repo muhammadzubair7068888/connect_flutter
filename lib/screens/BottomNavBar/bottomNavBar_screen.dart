@@ -70,7 +70,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const AssessmentScreen(),
   ];
   late final List<Widget> _widgetOptionsUser = <Widget>[
-    DashboardScreen(
+    const DashboardScreen(
       role: 'user',
     ),
     const Info(
