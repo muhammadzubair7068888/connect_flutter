@@ -306,6 +306,8 @@ class _ChatScreenState extends State<ChatScreen> {
       // final result = jsonDecode(responseDecode.body) as Map<String, dynamic>;
     } else {
       // await EasyLoading.dismiss();
+      // final result = jsonDecode(responseDecode.body);
+      // print(result);
       FocusManager.instance.primaryFocus?.unfocus();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

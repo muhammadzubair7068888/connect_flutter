@@ -1,14 +1,11 @@
-const String apiURL = "http://192.168.0.103/connect_laravel/public/api/";
-const String downloadUrl =
-    "http://192.168.0.103/connect_laravel/public/uploads/";
-const String publicUrl = "http://192.168.0.103/connect_laravel/public/";
+// const String apiURL = "http://192.168.0.103/connect_laravel/public/api/";
+// const String downloadUrl =
+//     "http://192.168.0.103/connect_laravel/public/uploads/";
+// const String publicUrl = "http://192.168.0.103/connect_laravel/public/";
 const Map<String, String> headers = {
   'Content-Type': 'application/json',
   'Charset': 'utf-8'
 };
-// const String apiURL =
-//     "http://connectperformance-env.eba-3i2m7pmh.us-east-1.elasticbeanstalk.com/api/";
-// const String downloadUrl =
-//     "http://connectperformance-env.eba-3i2m7pmh.us-east-1.elasticbeanstalk.com/uploads/";
-// const String publicUrl =
-//     "http://connectperformance-env.eba-3i2m7pmh.us-east-1.elasticbeanstalk.com/";
+const String apiURL = "http://connect.connected-performance.com/api/";
+const String downloadUrl = "http://connect.connected-performance.com/uploads/";
+const String publicUrl = "http://connect.connected-performance.com/";
