@@ -296,11 +296,13 @@ class _FileScreenState extends State<FileScreen> {
             rowsAdd.add(
               DataRow(
                 cells: [
-                  DataCell(Text(jsonData['data'][i]['title'])),
+                  DataCell(jsonData['data'][i]['title'] == null
+                      ? const Text("")
+                      : Text(jsonData['data'][i]['title'])),
                   DataCell(
                     Text(
                       jsonData['data'][i]['name'] == null
-                          ? ""
+                          ? "file"
                           : "${jsonData['data'][i]['name']}",
                     ),
                   ),
