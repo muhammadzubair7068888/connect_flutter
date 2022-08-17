@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, unnecessary_null_comparison
 
 import 'dart:io';
 
@@ -339,7 +339,9 @@ class _EditUserScreenState extends State<EditUserScreen> {
                           child: TextFormField(
                             keyboardType: TextInputType.number,
                             controller: TextEditingController()
-                              ..text = widget.height.toString(),
+                              ..text = widget.height == null
+                                  ? ""
+                                  : widget.height.toString(),
                             validator: (value) {
                               if (value == null || value == "") {
                                 return "Please enter height";
@@ -395,7 +397,9 @@ class _EditUserScreenState extends State<EditUserScreen> {
                           child: TextFormField(
                             keyboardType: TextInputType.number,
                             controller: TextEditingController()
-                              ..text = widget.strWeight.toString(),
+                              ..text = widget.strWeight == null
+                                  ? ""
+                                  : widget.strWeight.toString(),
                             validator: (value) {
                               if (value == null || value == "") {
                                 return "Please enter starting weight";
@@ -452,7 +456,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
                             onChanged: (value) {
                               widget.handedness = value!;
                             },
-                            // selectedItem: "Right",
+                            selectedItem: widget.handedness,
                           ),
                         ),
                       ),
@@ -474,7 +478,9 @@ class _EditUserScreenState extends State<EditUserScreen> {
                             ),
                             keyboardType: TextInputType.number,
                             controller: TextEditingController()
-                              ..text = widget.age.toString(),
+                              ..text = widget.age == null
+                                  ? ""
+                                  : widget.age.toString(),
                             validator: (value) {
                               if (value == null || value == "") {
                                 return "Please enter age";
@@ -493,7 +499,9 @@ class _EditUserScreenState extends State<EditUserScreen> {
                           padding: const EdgeInsets.all(10),
                           child: TextFormField(
                             controller: TextEditingController()
-                              ..text = widget.school.toString(),
+                              ..text = widget.school == null
+                                  ? ""
+                                  : widget.school.toString(),
                             validator: (value) {
                               if (value == null || value == "") {
                                 return "Please enter school";
@@ -528,7 +536,8 @@ class _EditUserScreenState extends State<EditUserScreen> {
                       ),
                       keyboardType: TextInputType.number,
                       controller: TextEditingController()
-                        ..text = widget.lvl.toString(),
+                        ..text =
+                            widget.lvl == null ? "" : widget.lvl.toString(),
                       validator: (value) {
                         if (value == null || value == "") {
                           return "Please enter level";

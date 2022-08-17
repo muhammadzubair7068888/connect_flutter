@@ -84,6 +84,18 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         );
       }
+    } else if (response.statusCode == 201) {
+      await EasyLoading.dismiss();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            dismissDirection: DismissDirection.vertical,
+            content: Text('Super admin can not sign in'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     } else {
       await EasyLoading.dismiss();
       if (mounted) {

@@ -31,7 +31,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   List search = [];
   bool loading = false;
   final Dio dio = Dio();
-  double progress = 0.0;
+  double progress = 0;
   PlatformFile? file;
   String name = "";
   TextEditingController controller = TextEditingController();
@@ -39,21 +39,107 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
 // --                                                               -- //
 // --                          START                                -- //
 // --                                                               -- //
-  Future<bool> saveFile(String url, String filename) async {
+  // Future<bool> saveFile(String url, String filename) async {
+  //   Directory directory;
+  //   try {
+  //     if (Platform.isAndroid) {
+  //       if (await _requestPermission(Permission.storage) &&
+  //           // access media location needed for android 10/Q
+  //           await _requestPermission(Permission.accessMediaLocation) &&
+  //           // manage external storage needed for android 11/R
+  //           await _requestPermission(Permission.manageExternalStorage)) {
+  //         directory = (await getExternalStorageDirectory())!;
+  //         // print(directory.path);
+  //         String newPath = "";
+  //         List<String> folders = directory.path.split("/");
+  //         for (int x = 1; x < folders.length; x++) {
+  //           String folder = folders[x];
+  //           if (folder != "Android") {
+  //             newPath += "/$folder";
+  //           } else {
+  //             break;
+  //           }
+  //         }
+  //         newPath = "$newPath/ConnectApp";
+  //         directory = Directory(newPath);
+  //         // print(directory.path);
+  //       } else {
+  //         return false;
+  //       }
+  //     } else {
+  //       //
+  //       if (await _requestPermission(Permission.photos)) {
+  //         directory = await getTemporaryDirectory();
+  //       } else {
+  //         return false;
+  //       }
+  //     }
+  //     if (!await directory.exists()) {
+  //       await directory.create(recursive: true);
+  //     }
+  //     if (await directory.exists()) {
+  //       File saveFile = File("${directory.path}/$filename");
+  //       // print(url);
+  //       // print(saveFile.path);
+  //       await dio.download(url, saveFile.path,
+  //           onReceiveProgress: (downloaded, totalSize) {
+  //         setState(() {
+  //           progress = downloaded / totalSize;
+  //         });
+  //       });
+  //       if (Platform.isIOS) {
+  //         await ImageGallerySaver.saveFile(saveFile.path,
+  //             isReturnPathOfIOS: true);
+  //       }
+  //       return true;
+  //     }
+  //   } catch (e) {
+  //     // print(e);
+  //   }
+  //   return false;
+  // }
+
+  // Future<bool> _requestPermission(Permission permission) async {
+  //   if (await permission.isGranted) {
+  //     return true;
+  //   } else {
+  //     var result = await permission.request();
+  //     if (result == PermissionStatus.granted) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+  // }
+
+  // downloadFile(String url, String filename) async {
+  //   setState(() {
+  //     loading = true;
+  //   });
+  //   bool downloaded = await saveFile(url, filename);
+  //   if (downloaded) {
+  //     print("File Downloaded");
+  //   } else {
+  //     print("Problem Downloading File");
+  //   }
+
+  //   setState(() {
+  //     loading = false;
+  //   });
+  // }
+
+  Future<bool> saveFile(String url, String fileName) async {
     Directory directory;
     try {
       if (Platform.isAndroid) {
-        if (await _requestPermission(Permission.storage) &&
-            // access media location needed for android 10/Q
-            await _requestPermission(Permission.accessMediaLocation) &&
-            // manage external storage needed for android 11/R
-            await _requestPermission(Permission.manageExternalStorage)) {
+        if (await _requestPermission(Permission.storage)) {
           directory = (await getExternalStorageDirectory())!;
-          // print(directory.path);
           String newPath = "";
-          List<String> folders = directory.path.split("/");
-          for (int x = 1; x < folders.length; x++) {
-            String folder = folders[x];
+          print("directory");
+          print(directory);
+          List<String> paths = directory.path.split("/");
+          for (int x = 1; x < paths.length; x++) {
+            String folder = paths[x];
             if (folder != "Android") {
               newPath += "/$folder";
             } else {
@@ -62,12 +148,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
           }
           newPath = "$newPath/ConnectApp";
           directory = Directory(newPath);
-          // print(directory.path);
         } else {
           return false;
         }
       } else {
-        //
         if (await _requestPermission(Permission.photos)) {
           directory = await getTemporaryDirectory();
         } else {
@@ -78,13 +162,15 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         await directory.create(recursive: true);
       }
       if (await directory.exists()) {
-        File saveFile = File("${directory.path}/$filename");
-        // print(url);
-        // print(saveFile.path);
+        File saveFile = File("${directory.path}/$fileName");
+        print("url");
+        print(url);
+        print("saveFile.path");
+        print(saveFile.path);
         await dio.download(url, saveFile.path,
-            onReceiveProgress: (downloaded, totalSize) {
+            onReceiveProgress: (value1, value2) {
           setState(() {
-            progress = downloaded / totalSize;
+            progress = value1 / value2;
           });
         });
         if (Platform.isIOS) {
@@ -93,10 +179,12 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         }
         return true;
       }
+      return false;
     } catch (e) {
-      // print(e);
+      print("e");
+      print(e);
+      return false;
     }
-    return false;
   }
 
   Future<bool> _requestPermission(Permission permission) async {
@@ -106,23 +194,25 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       var result = await permission.request();
       if (result == PermissionStatus.granted) {
         return true;
-      } else {
-        return false;
       }
     }
+    return false;
   }
 
-  downloadFile(String url, String filename) async {
+  downloadFile() async {
     setState(() {
       loading = true;
+      progress = 0;
     });
-    bool downloaded = await saveFile(url, filename);
+    bool downloaded = await saveFile(
+      "${publicUrl}demo/import_file_demo.csv",
+      "import_file_demo.csv",
+    );
     if (downloaded) {
-      // print("File Downloaded");
+      print("File Downloaded");
     } else {
-      // print("Problem Downloading File");
+      print("Problem Downloading File");
     }
-
     setState(() {
       loading = false;
     });
@@ -593,24 +683,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.05,
                       ),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            maximumSize: const Size(150, 50),
-                            minimumSize: const Size(150, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                          onPressed: () {
-                            downloadFile(
-                              "${publicUrl}demo/import_file_demo.csv",
-                              "import_file_demo.csv",
-                            );
-                          },
-                          child: const Text("Demo CSV"),
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: ElevatedButton(
+                      //     style: ElevatedButton.styleFrom(
+                      //       maximumSize: const Size(150, 50),
+                      //       minimumSize: const Size(150, 50),
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(10.0),
+                      //       ),
+                      //     ),
+                      //     onPressed: () {
+                      //       downloadFile();
+                      //     },
+                      //     child: const Text("Demo CSV"),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

@@ -282,8 +282,8 @@ class _UserDetailState extends State<UserDetail> {
                   ),
                   DataCell(Text(jsonData['data'][i]['role'])),
                   DataCell(Text(userName!)),
-                  DataCell(Text(jsonData['data'][i]['height'])),
-                  DataCell(Text(jsonData['data'][i]['starting_weight'])),
+                  DataCell(Text(jsonData['data'][i]['height'] ?? "")),
+                  DataCell(Text(jsonData['data'][i]['starting_weight'] ?? "")),
                   DataCell(Text(jsonData['data'][i]['last_login'])),
                   DataCell(
                     Wrap(

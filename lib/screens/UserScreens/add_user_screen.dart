@@ -378,189 +378,187 @@ class _AddUserState extends State<AddUser> {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            autofocus: false,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.all(10),
-                              labelText: 'Height',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return "Please enter Height";
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) {
-                              height = value;
-                            },
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: "Starting Weight",
-                              contentPadding: const EdgeInsets.all(10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return "Please enter Starting Weight";
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) {
-                              startingWeight = value;
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: DropdownSearch<String>(
-                            dropdownDecoratorProps: DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                hintStyle: const TextStyle(color: Colors.black),
-                                errorStyle:
-                                    const TextStyle(color: Colors.redAccent),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                suffixIcon:
-                                    const Icon(Icons.arrow_drop_down_sharp),
-                                contentPadding: const EdgeInsets.all(10),
-                                labelText: 'Handedness',
-                              ),
-                            ),
-                            popupProps: const PopupProps.menu(
-                              showSelectedItems: true,
-                              // disabledItemFn: (String s) => s.startsWith('I'),
-                            ),
-                            items: const [
-                              "Left",
-                              "Right",
-                            ],
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return "Please select Handedness";
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) {
-                              handedness = value!;
-                            },
-                            // selectedItem: "Right",
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: "Age",
-                              contentPadding: const EdgeInsets.all(10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return "Please enter Age";
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) {
-                              age = value;
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: TextFormField(
-                            autofocus: false,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.all(10),
-                              labelText: 'School',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return "Please enter School";
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) {
-                              school = value;
-                            },
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: "Level",
-                              contentPadding: const EdgeInsets.all(10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return "Please enter Level";
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) {
-                              level = value;
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(10),
+                        labelText: 'Height',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Please enter Height";
+                        }
+
+                        return null;
+                      },
+                      onChanged: (value) {
+                        height = value;
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Starting Weight",
+                        contentPadding: const EdgeInsets.all(10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Please enter Starting Weight";
+                        }
+
+                        return null;
+                      },
+                      onChanged: (value) {
+                        startingWeight = value;
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: DropdownSearch<String>(
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          hintStyle: const TextStyle(color: Colors.black),
+                          errorStyle: const TextStyle(color: Colors.redAccent),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: const Icon(Icons.arrow_drop_down_sharp),
+                          contentPadding: const EdgeInsets.all(10),
+                          labelText: 'Handedness',
+                        ),
+                      ),
+                      popupProps: const PopupProps.menu(
+                        showSelectedItems: true,
+                        // disabledItemFn: (String s) => s.startsWith('I'),
+                      ),
+                      items: const [
+                        "Left",
+                        "Right",
+                      ],
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Please select Handedness";
+                        }
+
+                        return null;
+                      },
+                      onChanged: (value) {
+                        handedness = value!;
+                      },
+                      // selectedItem: "Right",
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Age",
+                        contentPadding: const EdgeInsets.all(10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Please enter Age";
+                        }
+
+                        return null;
+                      },
+                      onChanged: (value) {
+                        age = value;
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextFormField(
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(10),
+                        labelText: 'School',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Please enter School";
+                        }
+
+                        return null;
+                      },
+                      onChanged: (value) {
+                        school = value;
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Level",
+                        contentPadding: const EdgeInsets.all(10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Please enter Level";
+                        }
+
+                        return null;
+                      },
+                      onChanged: (value) {
+                        level = value;
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
             const Padding(
               padding: EdgeInsets.all(10),
