@@ -135,8 +135,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         if (await _requestPermission(Permission.storage)) {
           directory = (await getExternalStorageDirectory())!;
           String newPath = "";
-          print("directory");
-          print(directory);
+          // print("directory");
+          // print(directory);
           List<String> paths = directory.path.split("/");
           for (int x = 1; x < paths.length; x++) {
             String folder = paths[x];
@@ -163,10 +163,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       }
       if (await directory.exists()) {
         File saveFile = File("${directory.path}/$fileName");
-        print("url");
-        print(url);
-        print("saveFile.path");
-        print(saveFile.path);
+        // print("url");
+        // print(url);
+        // print("saveFile.path");
+        // print(saveFile.path);
         await dio.download(url, saveFile.path,
             onReceiveProgress: (value1, value2) {
           setState(() {
@@ -181,8 +181,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       }
       return false;
     } catch (e) {
-      print("e");
-      print(e);
+      // print("e");
+      // print(e);
       return false;
     }
   }
@@ -209,9 +209,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       "import_file_demo.csv",
     );
     if (downloaded) {
-      print("File Downloaded");
+      // print("File Downloaded");
     } else {
-      print("Problem Downloading File");
+      // print("Problem Downloading File");
     }
     setState(() {
       loading = false;
