@@ -20,8 +20,8 @@ import '../widgets/month_view_widget.dart';
 class MonthViewPageDemo extends StatefulWidget {
   final String role;
   final String? i;
-  final String? u;
-  const MonthViewPageDemo({
+  late String? u;
+  MonthViewPageDemo({
     Key? key,
     required this.role,
     required this.i,
@@ -120,6 +120,10 @@ class _MonthViewPageDemoState extends State<MonthViewPageDemo> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      userName = "Me";
+      userId = '';
+    });
     getd();
     getEvents(userId);
   }

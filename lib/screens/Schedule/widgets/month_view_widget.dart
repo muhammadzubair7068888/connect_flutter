@@ -183,7 +183,20 @@ class _MonthViewWidgetState extends State<MonthViewWidget> {
                 },
               );
             }
-          : null,
+          : (event, date) {
+              setState(() {
+                var obj = widget.schedule[int.parse(event.description)];
+                id = int.parse(obj["extendedProps"]["exerciseID"]);
+              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DayPlanScreen(
+                    id: id,
+                  ),
+                ),
+              );
+            },
     );
   }
 }
