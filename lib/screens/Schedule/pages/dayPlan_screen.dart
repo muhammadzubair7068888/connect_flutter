@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/link.dart';
 import '../../../Globals/globals.dart';
 
 class DayPlanScreen extends StatefulWidget {
@@ -90,26 +91,34 @@ class _DayPlanScreenState extends State<DayPlanScreen> {
                   children: [
                     Align(
                       alignment: Alignment.topLeft,
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Link: ",
-                              style: TextStyle(
-                                color: HexColor("#1C1C1C"),
-                                fontWeight: FontWeight.w700,
-                                fontSize: 20,
-                              ),
+                      child: Link(
+                        uri: Uri.parse(data[0]["excercise_detail"][i]["link"]),
+                        builder: (context, followLink) =>
+                            // child:
+                            InkWell(
+                          onTap: followLink,
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Link: ",
+                                  style: TextStyle(
+                                    color: HexColor("#1C1C1C"),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: data[0]["excercise_detail"][i]["title"],
+                                  style: TextStyle(
+                                    color: HexColor("#1777E3"),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
                             ),
-                            TextSpan(
-                              text: data[0]["excercise_detail"][i]["link"],
-                              style: TextStyle(
-                                color: HexColor("#1777E3"),
-                                fontWeight: FontWeight.w400,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),

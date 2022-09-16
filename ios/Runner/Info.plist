@@ -49,6 +49,11 @@
 	<string>If you want to change your profile picture, grant permission of access of photo library to this app to select a picture</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>If you want to change your profile picture, grant permission of access of photo library to this app to select a picture</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>https</string>
+	<string>http</string>
+	</array>
 	<!-- <key>NSCameraUsageDescription</key> -->
 	<!-- <string>This app needs to use Camera</string> -->
 	<!-- <key>NSMicrophoneUsageDescription</key> -->
